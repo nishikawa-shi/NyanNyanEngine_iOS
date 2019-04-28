@@ -65,10 +65,13 @@ Carthage/Build
 # For more information about the recommended setup visit:
 # https://docs.fastlane.tools/best-practices/source-control/#source-control
 
-fastlane/report.xml
-fastlane/Preview.html
-fastlane/screenshots/**/*.png
-fastlane/test_output
+report.xml
+Preview.html
+screenshots/**/*.png
+test_output
+Gemfile.lock
+.bundle/
+vendor/
 
 # Code Injection
 #
