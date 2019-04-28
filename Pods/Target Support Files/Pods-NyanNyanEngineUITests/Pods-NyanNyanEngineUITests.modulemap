@@ -1,0 +1,6 @@
+framework module Pods_NyanNyanEngineUITests {
+  umbrella header "Pods-NyanNyanEngineUITests-umbrella.h"
+
+  export *
+  module * { export * }
+}
