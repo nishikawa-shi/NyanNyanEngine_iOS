@@ -10,7 +10,9 @@ import UIKit
 
 class ViewController: UIViewController {
 
+    @IBOutlet weak var testLabel: UILabel!
     override func viewDidLoad() {
+        testLabel.text = "テスト用出力"
         super.viewDidLoad()
         // Do any additional setup after loading the view.
     }
