@@ -9,6 +9,11 @@ jobs:
       - run:
           name: file list up
           command: ls -latr
+      - run:
+          name: test
+          command: fastlane scan
+          environment:
+            SCAN_DEVICE: iPhone X
 workflows:
   version: 2.1
   build:
