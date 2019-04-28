@@ -1,0 +1,16 @@
+version: 2.1
+jobs:
+  build-and-test:
+    macos:
+      xcode: "10.2.0"
+    shell: /bin/bash --login -o pipefail
+    steps:
+      - checkout
+      - run:
+          name: file list up
+          command: ls -latr
+workflows:
+  version: 2.1
+  build:
+    jobs:
+      - build-and-test
