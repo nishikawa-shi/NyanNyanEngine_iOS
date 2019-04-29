@@ -17,7 +17,6 @@
 		6766616D227527FF004C886C /* NyanNyanEngine.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 6766616B227527FF004C886C /* NyanNyanEngine.xcdatamodeld */; };
 		6766616F227527FF004C886C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6766616E227527FF004C886C /* Assets.xcassets */; };
 		67666172227527FF004C886C /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 67666170227527FF004C886C /* LaunchScreen.storyboard */; };
-		6766617D227527FF004C886C /* NyanNyanEngineTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6766617C227527FF004C886C /* NyanNyanEngineTests.swift */; };
 		67666188227527FF004C886C /* NyanNyanEngineUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67666187227527FF004C886C /* NyanNyanEngineUITests.swift */; };
 		A3EF89A62D1B991E9600FCFA /* Pods_NyanNyanEngine.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9151EC8B3866FB493C75F6A9 /* Pods_NyanNyanEngine.framework */; };
 /* End PBXBuildFile section */
@@ -56,7 +55,6 @@
 		67666171227527FF004C886C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		67666173227527FF004C886C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		67666178227527FF004C886C /* NyanNyanEngineTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = NyanNyanEngineTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		6766617C227527FF004C886C /* NyanNyanEngineTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NyanNyanEngineTests.swift; sourceTree = "<group>"; };
 		6766617E227527FF004C886C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		67666183227527FF004C886C /* NyanNyanEngineUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = NyanNyanEngineUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		67666187227527FF004C886C /* NyanNyanEngineUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NyanNyanEngineUITests.swift; sourceTree = "<group>"; };
@@ -180,7 +178,6 @@
 		6766617B227527FF004C886C /* NyanNyanEngineTests */ = {
 			isa = PBXGroup;
 			children = (
-				6766617C227527FF004C886C /* NyanNyanEngineTests.swift */,
 				6766617E227527FF004C886C /* Info.plist */,
 				6723B285227682F60004FB3D /* JsonDecodeTests.swift */,
 			);
@@ -427,7 +424,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				6766617D227527FF004C886C /* NyanNyanEngineTests.swift in Sources */,
 				6723B286227682F60004FB3D /* JsonDecodeTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
