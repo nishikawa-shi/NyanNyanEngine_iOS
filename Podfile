@@ -6,7 +6,7 @@ target 'NyanNyanEngine' do
   use_frameworks!
 
   # Pods for NyanNyanEngine
-  pod 'Alamofire', '~> 5.0.0-beta.5'
+  pod 'Alamofire', '~> 4.8.1'
 
   target 'NyanNyanEngineTests' do
     inherit! :search_paths
