@@ -7,6 +7,7 @@ target 'NyanNyanEngine' do
 
   # Pods for NyanNyanEngine
   pod 'Alamofire', '~> 4.8.1'
+  pod 'RxSwift',    '~> 4.0'
 
   target 'NyanNyanEngineTests' do
     inherit! :search_paths
