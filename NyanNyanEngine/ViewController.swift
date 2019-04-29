@@ -16,9 +16,9 @@ class ViewController: UIViewController {
     @IBOutlet weak var testLabel: UILabel!
     override func viewDidLoad() {
         getHomeTimeline()
-            .map { self.toResponseBody(dataResponse: $0) }
-            .map { self.toStatuses(data: $0) }
-            .map { [weak self] in self?.set1stTitleToTestLabel(sourceStatuses: $0) }
+            .map { [unowned self] in self.toResponseBody(dataResponse: $0) }
+            .map { [unowned self] in self.toStatuses(data: $0) }
+            .map { [unowned self] in self.set1stTitleToTestLabel(sourceStatuses: $0) }
             .subscribe()
             .disposed(by: disposeBag)
         
