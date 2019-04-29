@@ -15,7 +15,7 @@ class ViewController: UIViewController {
     
     @IBOutlet weak var testLabel: UILabel!
     override func viewDidLoad() {
-        getHomeTimeline()
+        getResponse(url: "https://nyannyanengine-ios-d.firebaseapp.com/1.1/statuses/home_timeline.json")
             .map { [unowned self] in self.toResponseBody(dataResponse: $0) }
             .map { [unowned self] in self.toStatuses(data: $0) }
             .map { [unowned self] in self.set1stTitleToTestLabel(sourceStatuses: $0) }
@@ -26,9 +26,9 @@ class ViewController: UIViewController {
         // Do any additional setup after loading the view.
     }
     
-    func getHomeTimeline() -> Observable<DataResponse<String>> {
+    func getResponse(url: String) -> Observable<DataResponse<String>> {
         return Observable<DataResponse<String>>.create { observer in
-            Alamofire.request("https://nyannyanengine-ios-d.firebaseapp.com/1.1/statuses/home_timeline.json", method: .get)
+            Alamofire.request(url, method: .get)
                 .responseString(encoding: .utf8) { observer.onNext($0) }
             return Disposables.create()
         }
