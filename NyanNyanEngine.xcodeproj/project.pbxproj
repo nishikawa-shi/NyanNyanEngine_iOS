@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		02498891D837FF45831DFE9B /* Pods_NyanNyanEngineUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5CB14DB9062ED19CFBABD8AA /* Pods_NyanNyanEngineUITests.framework */; };
 		084A3E64E6115529C8195800 /* Pods_NyanNyanEngineTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F4077A070BC8D307547E44D6 /* Pods_NyanNyanEngineTests.framework */; };
+		6723B2842276809D0004FB3D /* Url.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6723B2832276809D0004FB3D /* Url.swift */; };
+		6723B286227682F60004FB3D /* JsonDecodeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6723B285227682F60004FB3D /* JsonDecodeTests.swift */; };
 		67666165227527FF004C886C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67666164227527FF004C886C /* AppDelegate.swift */; };
 		67666167227527FF004C886C /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67666166227527FF004C886C /* ViewController.swift */; };
 		6766616A227527FF004C886C /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 67666168227527FF004C886C /* Main.storyboard */; };
@@ -43,6 +45,8 @@
 		3E8BDD934F4FAE17734D4EDF /* Pods-NyanNyanEngineUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NyanNyanEngineUITests.release.xcconfig"; path = "Pods/Target Support Files/Pods-NyanNyanEngineUITests/Pods-NyanNyanEngineUITests.release.xcconfig"; sourceTree = "<group>"; };
 		45D5095DB642CC4A0D0E048C /* Pods-NyanNyanEngineUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NyanNyanEngineUITests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-NyanNyanEngineUITests/Pods-NyanNyanEngineUITests.debug.xcconfig"; sourceTree = "<group>"; };
 		5CB14DB9062ED19CFBABD8AA /* Pods_NyanNyanEngineUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_NyanNyanEngineUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		6723B2832276809D0004FB3D /* Url.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Url.swift; sourceTree = "<group>"; };
+		6723B285227682F60004FB3D /* JsonDecodeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JsonDecodeTests.swift; sourceTree = "<group>"; };
 		67666161227527FF004C886C /* NyanNyanEngine.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NyanNyanEngine.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		67666164227527FF004C886C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		67666166227527FF004C886C /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -104,6 +108,38 @@
 			name = Pods;
 			sourceTree = "<group>";
 		};
+		6723B27F22767C680004FB3D /* model */ = {
+			isa = PBXGroup;
+			children = (
+				6723B28022767C730004FB3D /* entity */,
+			);
+			path = model;
+			sourceTree = "<group>";
+		};
+		6723B28022767C730004FB3D /* entity */ = {
+			isa = PBXGroup;
+			children = (
+				6723B28122767C7F0004FB3D /* dataclass */,
+			);
+			path = entity;
+			sourceTree = "<group>";
+		};
+		6723B28122767C7F0004FB3D /* dataclass */ = {
+			isa = PBXGroup;
+			children = (
+				6723B28222767C8B0004FB3D /* api */,
+			);
+			path = dataclass;
+			sourceTree = "<group>";
+		};
+		6723B28222767C8B0004FB3D /* api */ = {
+			isa = PBXGroup;
+			children = (
+				6723B2832276809D0004FB3D /* Url.swift */,
+			);
+			path = api;
+			sourceTree = "<group>";
+		};
 		67666158227527FF004C886C = {
 			isa = PBXGroup;
 			children = (
@@ -129,6 +165,7 @@
 		67666163227527FF004C886C /* NyanNyanEngine */ = {
 			isa = PBXGroup;
 			children = (
+				6723B27F22767C680004FB3D /* model */,
 				67666164227527FF004C886C /* AppDelegate.swift */,
 				67666166227527FF004C886C /* ViewController.swift */,
 				67666168227527FF004C886C /* Main.storyboard */,
@@ -145,6 +182,7 @@
 			children = (
 				6766617C227527FF004C886C /* NyanNyanEngineTests.swift */,
 				6766617E227527FF004C886C /* Info.plist */,
+				6723B285227682F60004FB3D /* JsonDecodeTests.swift */,
 			);
 			path = NyanNyanEngineTests;
 			sourceTree = "<group>";
@@ -381,6 +419,7 @@
 				67666167227527FF004C886C /* ViewController.swift in Sources */,
 				67666165227527FF004C886C /* AppDelegate.swift in Sources */,
 				6766616D227527FF004C886C /* NyanNyanEngine.xcdatamodeld in Sources */,
+				6723B2842276809D0004FB3D /* Url.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -389,6 +428,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				6766617D227527FF004C886C /* NyanNyanEngineTests.swift in Sources */,
+				6723B286227682F60004FB3D /* JsonDecodeTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
