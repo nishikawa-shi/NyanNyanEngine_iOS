@@ -15,15 +15,14 @@ class ViewController: UIViewController {
     
     @IBOutlet weak var testLabel: UILabel!
     override func viewDidLoad() {
+        super.viewDidLoad()
+
         getResponse(url: "https://nyannyanengine-ios-d.firebaseapp.com/1.1/statuses/home_timeline.json")
             .map { [unowned self] in self.toResponseBody(dataResponse: $0) }
             .map { [unowned self] in self.toStatuses(data: $0) }
             .map { [unowned self] in self.set1stTitleToTestLabel(sourceStatuses: $0) }
             .subscribe()
             .disposed(by: disposeBag)
-        
-        super.viewDidLoad()
-        // Do any additional setup after loading the view.
     }
     
     func getResponse(url: String) -> Observable<DataResponse<String>> {
