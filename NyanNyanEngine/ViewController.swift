@@ -14,7 +14,7 @@ class ViewController: UIViewController {
     @IBOutlet weak var testLabel: UILabel!
     override func viewDidLoad() {
         Alamofire.request("https://nyannyanengine-ios-d.firebaseapp.com/1.1/statuses/home_timeline.json", method: .get)
-            .responseString { [weak self] response in
+            .responseString(encoding: .utf8) { [weak self] response in
                 
                 let decoder = JSONDecoder()
                 decoder.keyDecodingStrategy = .convertFromSnakeCase
