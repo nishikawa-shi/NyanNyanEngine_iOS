@@ -14,11 +14,15 @@ class ViewController: UIViewController {
     @IBOutlet weak var testLabel: UILabel!
     override func viewDidLoad() {
         Alamofire.request("https://nyannyanengine-ios-d.firebaseapp.com/1.1/statuses/home_timeline.json", method: .get)
-            .responseJSON { [weak self] response in
-                if let body = response.result.value as? NSArray,
-                    let firstElement = body.firstObject as? Dictionary<String, AnyObject> {
-                    self?.testLabel.text = (firstElement["text"] as? String) ?? "値が取れなかったよ・・・"
-                }
+            .responseString(encoding: .utf8) { [weak self] response in
+                
+                let decoder = JSONDecoder()
+                decoder.keyDecodingStrategy = .convertFromSnakeCase
+                
+                guard let body = response.value?.data(using: .utf8) else { return }
+                guard let testStatusObj = try? decoder.decode([Status].self, from: body).first else { return }
+                
+                self?.testLabel.text = testStatusObj.text
         }
         super.viewDidLoad()
         // Do any additional setup after loading the view.
