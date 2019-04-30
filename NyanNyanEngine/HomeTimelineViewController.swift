@@ -11,12 +11,28 @@ import Alamofire
 import RxSwift
 
 class HomeTimelineViewController: UIViewController {
+    private let input: HomeTimelineViewModelInput
+    private let output: HomeTimelineViewModelOutput
     private let disposeBag = DisposeBag()
+    
+    //ストーリーボードから呼ばれることが前提のクラスなので、こちらのイニシャライザは呼ばれない想定
+    init(viewModel: HomeTimelineViewModel = HomeTimelineViewModel()) {
+        self.input = viewModel
+        self.output = viewModel
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        let viewModel = HomeTimelineViewModel()
+        self.input = viewModel
+        self.output = viewModel
+        super.init(coder: aDecoder)
+    }
     
     @IBOutlet weak var testLabel: UILabel!
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         getResponse(url: "https://nyannyanengine-ios-d.firebaseapp.com/1.1/statuses/home_timeline.json")
             .map { [unowned self] in self.toResponseBody(dataResponse: $0) }
             .map { [unowned self] in self.toStatuses(data: $0) }
@@ -32,7 +48,7 @@ class HomeTimelineViewController: UIViewController {
             return Disposables.create()
         }
     }
-
+    
     private func toResponseBody(dataResponse: DataResponse<String>) -> Data? {
         return dataResponse.value?.data(using: .utf8)
     }
