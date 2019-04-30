@@ -10,7 +10,7 @@ import UIKit
 import Alamofire
 import RxSwift
 
-class ViewController: UIViewController {
+class HomeTimelineViewController: UIViewController {
     private let disposeBag = DisposeBag()
     
     @IBOutlet weak var testLabel: UILabel!
