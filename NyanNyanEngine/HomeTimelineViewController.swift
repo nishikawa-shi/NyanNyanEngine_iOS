@@ -9,6 +9,7 @@
 import UIKit
 import Alamofire
 import RxSwift
+import RxCocoa
 
 class HomeTimelineViewController: UIViewController {
     private let input: HomeTimelineViewModelInput
@@ -35,6 +36,16 @@ class HomeTimelineViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        testButton.rx.tap
+            .map { "nyannyaaan" }
+            .bind(to: input.refreshExecutedAt)
+            .disposed(by: disposeBag)
+
+        output.statuses
+            .map { $0?.first?.text ?? "shippai"}
+            .bind(to: testLabel.rx.text)
+            .disposed(by: disposeBag)
+
         getResponse(url: "https://nyannyanengine-ios-d.firebaseapp.com/1.1/statuses/home_timeline.json")
             .map { [unowned self] in self.toResponseBody(dataResponse: $0) }
             .map { [unowned self] in self.toStatuses(data: $0) }
