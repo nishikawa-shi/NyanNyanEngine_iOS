@@ -23,6 +23,7 @@
 		6766616F227527FF004C886C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6766616E227527FF004C886C /* Assets.xcassets */; };
 		67666172227527FF004C886C /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 67666170227527FF004C886C /* LaunchScreen.storyboard */; };
 		67666188227527FF004C886C /* NyanNyanEngineUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67666187227527FF004C886C /* NyanNyanEngineUITests.swift */; };
+		6767B0D022791033008913EA /* TweetsRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6767B0CF22791033008913EA /* TweetsRepository.swift */; };
 		A3EF89A62D1B991E9600FCFA /* Pods_NyanNyanEngine.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9151EC8B3866FB493C75F6A9 /* Pods_NyanNyanEngine.framework */; };
 /* End PBXBuildFile section */
 
@@ -69,6 +70,7 @@
 		67666183227527FF004C886C /* NyanNyanEngineUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = NyanNyanEngineUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		67666187227527FF004C886C /* NyanNyanEngineUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NyanNyanEngineUITests.swift; sourceTree = "<group>"; };
 		67666189227527FF004C886C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		6767B0CF22791033008913EA /* TweetsRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TweetsRepository.swift; sourceTree = "<group>"; };
 		6D8A98757771D333C6941F1B /* Pods-NyanNyanEngineTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NyanNyanEngineTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-NyanNyanEngineTests/Pods-NyanNyanEngineTests.release.xcconfig"; sourceTree = "<group>"; };
 		6F7E9C80946FAE4B36BBC437 /* Pods-NyanNyanEngine.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NyanNyanEngine.release.xcconfig"; path = "Pods/Target Support Files/Pods-NyanNyanEngine/Pods-NyanNyanEngine.release.xcconfig"; sourceTree = "<group>"; };
 		9151EC8B3866FB493C75F6A9 /* Pods_NyanNyanEngine.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_NyanNyanEngine.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -119,6 +121,7 @@
 		6723B27F22767C680004FB3D /* model */ = {
 			isa = PBXGroup;
 			children = (
+				6767B0CE2278FE5F008913EA /* repository */,
 				6723B28022767C730004FB3D /* entity */,
 			);
 			path = model;
@@ -206,6 +209,14 @@
 				67666189227527FF004C886C /* Info.plist */,
 			);
 			path = NyanNyanEngineUITests;
+			sourceTree = "<group>";
+		};
+		6767B0CE2278FE5F008913EA /* repository */ = {
+			isa = PBXGroup;
+			children = (
+				6767B0CF22791033008913EA /* TweetsRepository.swift */,
+			);
+			path = repository;
 			sourceTree = "<group>";
 		};
 		B923F2CE3885F3C1104B1558 /* Frameworks */ = {
@@ -435,6 +446,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				67666167227527FF004C886C /* HomeTimelineViewController.swift in Sources */,
+				6767B0D022791033008913EA /* TweetsRepository.swift in Sources */,
 				6723B28822768FCB0004FB3D /* UserMention.swift in Sources */,
 				6723B28C2276970A0004FB3D /* Status.swift in Sources */,
 				6723B2922277DFD60004FB3D /* HomeTimelineViewModel.swift in Sources */,
