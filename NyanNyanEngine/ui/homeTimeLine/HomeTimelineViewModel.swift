@@ -30,7 +30,7 @@ final class HomeTimelineViewModel: HomeTimelineViewModelInput, HomeTimelineViewM
         let _statuses = BehaviorSubject<[Status]?>(value: nil)
         self.statuses = _statuses.asObservable()
         
-        self.refreshExecutedAt = AnyObserver<String>() { updatedAt in
+        self.refreshExecutedAt = AnyObserver<String>() { [unowned self] updatedAt in
             self.tweetsRepository
                 .getHomeTimeLine()
                 .bind(to: _statuses)
