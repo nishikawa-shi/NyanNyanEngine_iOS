@@ -30,7 +30,6 @@ class HomeTimelineViewController: UIViewController {
     }
     
     @IBOutlet weak var testLabel: UILabel!
-    @IBOutlet weak var testButton: UIButton!
     @IBOutlet weak var refreshButton: UIBarButtonItem!
     
     override func viewDidLoad() {
@@ -38,11 +37,6 @@ class HomeTimelineViewController: UIViewController {
         
         refreshButton.rx.tap
             .map { "9999/12/31 23:59:59" }
-            .bind(to: input.refreshExecutedAt!)
-            .disposed(by: disposeBag)
-        
-        testButton.rx.tap
-            .map { "9999/12/31 23:59:99" }
             .bind(to: input.refreshExecutedAt!)
             .disposed(by: disposeBag)
         
