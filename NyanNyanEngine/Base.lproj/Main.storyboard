@@ -30,13 +30,47 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tUf-t7-w8I">
-                                                    <rect key="frame" x="55" y="12" width="42" height="21"/>
+                                                    <rect key="frame" x="308" y="12" width="42" height="21"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
+                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="nsg-uh-dnN">
+                                                    <rect key="frame" x="16" y="16" width="64" height="64"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="64" id="Q0N-ev-ZA6"/>
+                                                        <constraint firstAttribute="width" constant="64" id="gL7-xH-0zo"/>
+                                                    </constraints>
+                                                </imageView>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="にしかわ" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hpO-br-q46" userLabel="User Name">
+                                                    <rect key="frame" x="96" y="16" width="160" height="21"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" constant="160" id="vxd-9S-r1N"/>
+                                                    </constraints>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="@nishikawa_shi" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="A6H-dr-b3W" userLabel="User Id">
+                                                    <rect key="frame" x="272" y="16" width="96" height="21"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" constant="96" id="cKu-2r-aIA"/>
+                                                    </constraints>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
                                             </subviews>
+                                            <constraints>
+                                                <constraint firstItem="A6H-dr-b3W" firstAttribute="top" secondItem="nsg-uh-dnN" secondAttribute="top" id="1bt-kp-0gS"/>
+                                                <constraint firstItem="hpO-br-q46" firstAttribute="top" secondItem="nsg-uh-dnN" secondAttribute="top" id="DIB-qf-Orr"/>
+                                                <constraint firstItem="hpO-br-q46" firstAttribute="leading" secondItem="nsg-uh-dnN" secondAttribute="trailing" constant="16" id="PWp-Tf-vsk"/>
+                                                <constraint firstItem="nsg-uh-dnN" firstAttribute="leading" secondItem="3yw-Hu-2gQ" secondAttribute="leading" constant="16" id="aG9-LE-T29"/>
+                                                <constraint firstItem="A6H-dr-b3W" firstAttribute="height" secondItem="hpO-br-q46" secondAttribute="height" id="nXP-3q-MVe"/>
+                                                <constraint firstItem="A6H-dr-b3W" firstAttribute="leading" secondItem="hpO-br-q46" secondAttribute="trailing" constant="16" id="xlN-zg-45l"/>
+                                                <constraint firstItem="nsg-uh-dnN" firstAttribute="top" secondItem="3yw-Hu-2gQ" secondAttribute="top" constant="16" id="xqe-Wj-ji3"/>
+                                            </constraints>
                                         </tableViewCellContentView>
                                         <connections>
                                             <outlet property="tweetBody" destination="tUf-t7-w8I" id="Eh8-hA-cEo"/>
