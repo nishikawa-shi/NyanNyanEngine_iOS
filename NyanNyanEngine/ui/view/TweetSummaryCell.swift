@@ -9,5 +9,8 @@
 import UIKit
 
 class TweetSummaryCell: UITableViewCell {
+    @IBOutlet weak var userName: UILabel!
+    @IBOutlet weak var userId: UILabel!
+    @IBOutlet weak var publishedAt: UILabel!
     @IBOutlet weak var tweetBody: UILabel!
 }

@@ -87,7 +87,10 @@
                                         </tableViewCellContentView>
                                         <color key="backgroundColor" red="0.99215686270000003" green="0.96470588239999999" blue="0.89019607840000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <connections>
+                                            <outlet property="publishedAt" destination="PEj-Gh-Mzy" id="g4k-gb-v8N"/>
                                             <outlet property="tweetBody" destination="tUf-t7-w8I" id="Eh8-hA-cEo"/>
+                                            <outlet property="userId" destination="A6H-dr-b3W" id="goy-Pn-ibU"/>
+                                            <outlet property="userName" destination="hpO-br-q46" id="aFd-jJ-xgw"/>
                                         </connections>
                                     </tableViewCell>
                                 </prototypes>
