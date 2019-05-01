@@ -24,11 +24,24 @@ class ApiClient: BaseApiClient {
     }
     
     private func getRequest(url: String) -> Observable<DataResponse<String>> {
+        guard let urlRequest = self.createGetUrlRequest(url: url) else { return Observable<DataResponse<String>>.empty() }
+        
         return Observable<DataResponse<String>>.create { observer in
             Alamofire
-                .request(url, method: .get)
+                .request(urlRequest)
                 .responseString(encoding: .utf8) { observer.onNext($0) }
             return Disposables.create()
         }
+    }
+    
+    private func createGetUrlRequest(url: String) -> URLRequest? {
+        guard let urlObj = URL(string: url) else { return nil }
+
+        var urlRequest = URLRequest(url: urlObj,
+                                    cachePolicy: .reloadIgnoringLocalCacheData,
+                                    timeoutInterval: 5)
+        urlRequest.httpMethod = HTTPMethod.get.rawValue
+        
+        return urlRequest
     }
 }
