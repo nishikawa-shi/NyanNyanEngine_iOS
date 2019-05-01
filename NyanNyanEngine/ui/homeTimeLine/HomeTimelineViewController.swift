@@ -29,8 +29,8 @@ class HomeTimelineViewController: UIViewController {
         super.init(coder: aDecoder)
     }
     
-    @IBOutlet weak var testLabel: UILabel!
     @IBOutlet weak var refreshButton: UIBarButtonItem!
+    @IBOutlet weak var tweetList: UITableView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -41,8 +41,8 @@ class HomeTimelineViewController: UIViewController {
             .disposed(by: disposeBag)
         
         output.statuses
-            .map { $0?.first?.text ?? "shippai"}
-            .bind(to: testLabel.rx.text)
+            .flatMap{ $0.flatMap { Observable<[Status]>.just($0) } ?? Observable<[Status]>.empty() }
+            .bind(to: tweetList.rx.items(dataSource: TweetSummaryDataSource()))
             .disposed(by: disposeBag)
         
         input.refreshExecutedAt?.onNext("2019/04/30 12:12:12")
