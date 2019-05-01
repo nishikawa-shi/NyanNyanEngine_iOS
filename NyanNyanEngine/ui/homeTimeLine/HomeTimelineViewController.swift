@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import Alamofire
 import RxSwift
 import RxCocoa
 
@@ -31,13 +30,13 @@ class HomeTimelineViewController: UIViewController {
     }
     
     @IBOutlet weak var testLabel: UILabel!
-    @IBOutlet weak var testButton: UIButton!
+    @IBOutlet weak var refreshButton: UIBarButtonItem!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        testButton.rx.tap
-            .map { "9999/12/31 23:59:99" }
+        refreshButton.rx.tap
+            .map { "9999/12/31 23:59:59" }
             .bind(to: input.refreshExecutedAt!)
             .disposed(by: disposeBag)
         
