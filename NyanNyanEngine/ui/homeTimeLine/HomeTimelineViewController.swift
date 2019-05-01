@@ -17,7 +17,7 @@ class HomeTimelineViewController: UIViewController {
     private let disposeBag = DisposeBag()
     
     //ストーリーボードから呼ばれることが前提のクラスなので、こちらのイニシャライザは呼ばれない想定
-    init(viewModel: HomeTimelineViewModel = HomeTimelineViewModel()) {
+    init(viewModel: HomeTimelineViewModelInput & HomeTimelineViewModelOutput = HomeTimelineViewModel()) {
         self.input = viewModel
         self.output = viewModel
         super.init(nibName: nil, bundle: nil)
