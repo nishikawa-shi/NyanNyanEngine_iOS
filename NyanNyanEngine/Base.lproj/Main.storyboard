@@ -29,9 +29,8 @@
                                             <rect key="frame" x="0.0" y="0.0" width="414" height="119.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tUf-t7-w8I">
-                                                    <rect key="frame" x="308" y="12" width="42" height="21"/>
-                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tUf-t7-w8I">
+                                                    <rect key="frame" x="96" y="53" width="302" height="42"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
@@ -65,10 +64,14 @@
                                             </subviews>
                                             <constraints>
                                                 <constraint firstItem="A6H-dr-b3W" firstAttribute="top" secondItem="nsg-uh-dnN" secondAttribute="top" id="1bt-kp-0gS"/>
+                                                <constraint firstItem="tUf-t7-w8I" firstAttribute="trailing" secondItem="3yw-Hu-2gQ" secondAttribute="trailing" constant="-16" id="9R4-Ud-2lt"/>
                                                 <constraint firstItem="hpO-br-q46" firstAttribute="top" secondItem="nsg-uh-dnN" secondAttribute="top" id="DIB-qf-Orr"/>
+                                                <constraint firstItem="tUf-t7-w8I" firstAttribute="height" secondItem="hpO-br-q46" secondAttribute="height" multiplier="2" id="FSq-N7-xUL"/>
                                                 <constraint firstItem="hpO-br-q46" firstAttribute="leading" secondItem="nsg-uh-dnN" secondAttribute="trailing" constant="16" id="PWp-Tf-vsk"/>
                                                 <constraint firstItem="nsg-uh-dnN" firstAttribute="leading" secondItem="3yw-Hu-2gQ" secondAttribute="leading" constant="16" id="aG9-LE-T29"/>
+                                                <constraint firstItem="tUf-t7-w8I" firstAttribute="top" secondItem="hpO-br-q46" secondAttribute="bottom" constant="16" id="gxj-kH-q6j"/>
                                                 <constraint firstItem="A6H-dr-b3W" firstAttribute="height" secondItem="hpO-br-q46" secondAttribute="height" id="nXP-3q-MVe"/>
+                                                <constraint firstItem="tUf-t7-w8I" firstAttribute="leading" secondItem="hpO-br-q46" secondAttribute="leading" id="v4A-MV-OwQ"/>
                                                 <constraint firstItem="A6H-dr-b3W" firstAttribute="leading" secondItem="hpO-br-q46" secondAttribute="trailing" constant="16" id="xlN-zg-45l"/>
                                                 <constraint firstItem="nsg-uh-dnN" firstAttribute="top" secondItem="3yw-Hu-2gQ" secondAttribute="top" constant="16" id="xqe-Wj-ji3"/>
                                             </constraints>
