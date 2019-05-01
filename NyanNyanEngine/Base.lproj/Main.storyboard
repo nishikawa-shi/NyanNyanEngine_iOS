@@ -30,7 +30,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="none" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tUf-t7-w8I">
-                                                    <rect key="frame" x="72" y="45" width="326" height="42"/>
+                                                    <rect key="frame" x="72" y="45" width="326" height="20.5"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
@@ -46,7 +46,7 @@
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="にしかわ" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hpO-br-q46" userLabel="User Name">
                                                     <rect key="frame" x="72" y="16" width="112" height="21"/>
                                                     <constraints>
-                                                        <constraint firstAttribute="width" constant="112" id="vxd-9S-r1N"/>
+                                                        <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="112" id="vxd-9S-r1N"/>
                                                     </constraints>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <nil key="textColor"/>
@@ -55,7 +55,7 @@
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="@nishikawa_shi" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="A6H-dr-b3W" userLabel="User Id">
                                                     <rect key="frame" x="192" y="16" width="128" height="21"/>
                                                     <constraints>
-                                                        <constraint firstAttribute="width" constant="128" id="cKu-2r-aIA"/>
+                                                        <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="128" id="cKu-2r-aIA"/>
                                                     </constraints>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <nil key="textColor"/>
@@ -66,9 +66,9 @@
                                                 <constraint firstItem="A6H-dr-b3W" firstAttribute="top" secondItem="nsg-uh-dnN" secondAttribute="top" id="1bt-kp-0gS"/>
                                                 <constraint firstItem="tUf-t7-w8I" firstAttribute="trailing" secondItem="3yw-Hu-2gQ" secondAttribute="trailing" constant="-16" id="9R4-Ud-2lt"/>
                                                 <constraint firstItem="hpO-br-q46" firstAttribute="top" secondItem="nsg-uh-dnN" secondAttribute="top" id="DIB-qf-Orr"/>
-                                                <constraint firstItem="tUf-t7-w8I" firstAttribute="height" secondItem="hpO-br-q46" secondAttribute="height" multiplier="2" id="FSq-N7-xUL"/>
                                                 <constraint firstItem="hpO-br-q46" firstAttribute="leading" secondItem="nsg-uh-dnN" secondAttribute="trailing" constant="8" id="PWp-Tf-vsk"/>
                                                 <constraint firstItem="nsg-uh-dnN" firstAttribute="leading" secondItem="3yw-Hu-2gQ" secondAttribute="leading" constant="16" id="aG9-LE-T29"/>
+                                                <constraint firstItem="A6H-dr-b3W" firstAttribute="trailing" relation="lessThanOrEqual" secondItem="3yw-Hu-2gQ" secondAttribute="trailing" constant="20" symbolic="YES" id="f1f-Um-W1M"/>
                                                 <constraint firstItem="tUf-t7-w8I" firstAttribute="top" secondItem="hpO-br-q46" secondAttribute="bottom" constant="8" id="gxj-kH-q6j"/>
                                                 <constraint firstItem="A6H-dr-b3W" firstAttribute="height" secondItem="hpO-br-q46" secondAttribute="height" id="nXP-3q-MVe"/>
                                                 <constraint firstItem="tUf-t7-w8I" firstAttribute="leading" secondItem="hpO-br-q46" secondAttribute="leading" id="v4A-MV-OwQ"/>
