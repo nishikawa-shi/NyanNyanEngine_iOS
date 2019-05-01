@@ -62,18 +62,18 @@
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="22 h" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="PEj-Gh-Mzy" userLabel="Published At">
-                                                    <rect key="frame" x="369" y="16" width="29" height="17"/>
+                                                    <rect key="frame" x="369" y="18.5" width="29" height="17"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                             </subviews>
                                             <constraints>
-                                                <constraint firstItem="A6H-dr-b3W" firstAttribute="top" secondItem="nsg-uh-dnN" secondAttribute="top" id="1bt-kp-0gS"/>
                                                 <constraint firstItem="tUf-t7-w8I" firstAttribute="trailing" secondItem="3yw-Hu-2gQ" secondAttribute="trailing" constant="-16" id="9R4-Ud-2lt"/>
-                                                <constraint firstItem="PEj-Gh-Mzy" firstAttribute="top" secondItem="hpO-br-q46" secondAttribute="top" id="AG4-gh-IQ4"/>
+                                                <constraint firstItem="PEj-Gh-Mzy" firstAttribute="bottom" secondItem="hpO-br-q46" secondAttribute="bottom" id="AG4-gh-IQ4"/>
                                                 <constraint firstItem="hpO-br-q46" firstAttribute="top" secondItem="nsg-uh-dnN" secondAttribute="top" id="DIB-qf-Orr"/>
                                                 <constraint firstItem="PEj-Gh-Mzy" firstAttribute="trailing" secondItem="3yw-Hu-2gQ" secondAttribute="trailing" constant="-16" id="H74-yU-XnA"/>
+                                                <constraint firstItem="A6H-dr-b3W" firstAttribute="bottom" secondItem="hpO-br-q46" secondAttribute="bottom" id="MEK-tK-vc2"/>
                                                 <constraint firstItem="hpO-br-q46" firstAttribute="leading" secondItem="nsg-uh-dnN" secondAttribute="trailing" constant="8" id="PWp-Tf-vsk"/>
                                                 <constraint firstItem="nsg-uh-dnN" firstAttribute="leading" secondItem="3yw-Hu-2gQ" secondAttribute="leading" constant="16" id="aG9-LE-T29"/>
                                                 <constraint firstItem="A6H-dr-b3W" firstAttribute="trailing" relation="lessThanOrEqual" secondItem="3yw-Hu-2gQ" secondAttribute="trailing" constant="20" symbolic="YES" id="f1f-Um-W1M"/>
