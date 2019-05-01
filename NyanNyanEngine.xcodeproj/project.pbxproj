@@ -183,15 +183,14 @@
 		67666163227527FF004C886C /* NyanNyanEngine */ = {
 			isa = PBXGroup;
 			children = (
+				6767B0D422791CF9008913EA /* ui */,
 				6723B27F22767C680004FB3D /* model */,
 				67666164227527FF004C886C /* AppDelegate.swift */,
-				67666166227527FF004C886C /* HomeTimelineViewController.swift */,
 				67666168227527FF004C886C /* Main.storyboard */,
 				6766616E227527FF004C886C /* Assets.xcassets */,
 				67666170227527FF004C886C /* LaunchScreen.storyboard */,
 				67666173227527FF004C886C /* Info.plist */,
 				6766616B227527FF004C886C /* NyanNyanEngine.xcdatamodeld */,
-				6723B2912277DFD60004FB3D /* HomeTimelineViewModel.swift */,
 			);
 			path = NyanNyanEngine;
 			sourceTree = "<group>";
@@ -228,6 +227,23 @@
 				6767B0D222791745008913EA /* ApiClient.swift */,
 			);
 			path = net;
+			sourceTree = "<group>";
+		};
+		6767B0D422791CF9008913EA /* ui */ = {
+			isa = PBXGroup;
+			children = (
+				6767B0D522791D1C008913EA /* homeTimeLine */,
+			);
+			path = ui;
+			sourceTree = "<group>";
+		};
+		6767B0D522791D1C008913EA /* homeTimeLine */ = {
+			isa = PBXGroup;
+			children = (
+				67666166227527FF004C886C /* HomeTimelineViewController.swift */,
+				6723B2912277DFD60004FB3D /* HomeTimelineViewModel.swift */,
+			);
+			path = homeTimeLine;
 			sourceTree = "<group>";
 		};
 		B923F2CE3885F3C1104B1558 /* Frameworks */ = {
