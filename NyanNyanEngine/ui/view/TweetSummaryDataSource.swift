@@ -23,6 +23,8 @@ class TweetSummaryDataSource: NSObject, UITableViewDataSource {
             return UITableViewCell()
         }
         let element = _itemModels[indexPath.row]
+        cell.userName?.text = element.user.name
+        cell.userId?.text = element.user.screenName
         cell.tweetBody?.text = element.text
         return cell
     }
