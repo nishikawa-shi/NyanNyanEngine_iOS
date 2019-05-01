@@ -18,12 +18,6 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="iXa-BO-uJC">
-                                <rect key="frame" x="64" y="152" width="286" height="20.5"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <nil key="textColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="lwQ-LT-5Jj">
                                 <rect key="frame" x="64" y="398" width="286" height="400"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -57,9 +51,6 @@
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="lwQ-LT-5Jj" secondAttribute="bottom" constant="64" id="R4M-jv-8A9"/>
-                            <constraint firstItem="iXa-BO-uJC" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="64" id="Uhr-iW-qXe"/>
-                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="iXa-BO-uJC" secondAttribute="trailing" constant="64" id="idJ-NE-KsX"/>
-                            <constraint firstItem="iXa-BO-uJC" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="64" id="lzj-Av-hoA"/>
                             <constraint firstItem="lwQ-LT-5Jj" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="64" id="rtz-Do-JXE"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="lwQ-LT-5Jj" secondAttribute="trailing" constant="64" id="zlg-oP-Ayk"/>
                         </constraints>
@@ -70,7 +61,6 @@
                     </navigationItem>
                     <connections>
                         <outlet property="refreshButton" destination="qPq-1x-X5L" id="M8u-ap-M8C"/>
-                        <outlet property="testLabel" destination="iXa-BO-uJC" id="T5X-ys-cqw"/>
                         <outlet property="tweetList" destination="lwQ-LT-5Jj" id="Drh-V6-6L7"/>
                     </connections>
                 </viewController>

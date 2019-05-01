@@ -29,7 +29,6 @@ class HomeTimelineViewController: UIViewController {
         super.init(coder: aDecoder)
     }
     
-    @IBOutlet weak var testLabel: UILabel!
     @IBOutlet weak var refreshButton: UIBarButtonItem!
     @IBOutlet weak var tweetList: UITableView!
     
@@ -39,11 +38,6 @@ class HomeTimelineViewController: UIViewController {
         refreshButton.rx.tap
             .map { "9999/12/31 23:59:59" }
             .bind(to: input.refreshExecutedAt!)
-            .disposed(by: disposeBag)
-        
-        output.statuses
-            .map { $0?.first?.text ?? "shippai"}
-            .bind(to: testLabel.rx.text)
             .disposed(by: disposeBag)
         
         output.statuses
