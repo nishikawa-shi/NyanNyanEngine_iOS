@@ -49,6 +49,7 @@
                         <barButtonItem key="rightBarButtonItem" systemItem="refresh" id="qPq-1x-X5L" userLabel="Refresh"/>
                     </navigationItem>
                     <connections>
+                        <outlet property="refreshButton" destination="qPq-1x-X5L" id="M8u-ap-M8C"/>
                         <outlet property="testButton" destination="ZEs-50-3ax" id="rfI-ay-tMn"/>
                         <outlet property="testLabel" destination="iXa-BO-uJC" id="T5X-ys-cqw"/>
                     </connections>
