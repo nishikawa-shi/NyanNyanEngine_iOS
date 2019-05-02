@@ -83,3 +83,7 @@ iOSInjectionProject/
 # Firebase
 
 .firebase/
+
+# API keys
+
+ApiKeys.plist

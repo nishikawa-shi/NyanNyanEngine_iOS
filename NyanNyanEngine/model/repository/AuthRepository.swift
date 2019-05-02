@@ -23,7 +23,9 @@ class AuthRepository: BaseAuthRepository {
     }
     
     func getRequestToken() -> Observable<String?> {
-        guard let urlRequest = ApiRequestFactory().createRequestTokenRequest() else { return Observable<String?>.empty() }
+        guard let apiKey = PlistConnector.shared.getString(withKey: "apiKey"),
+            let apiSecret = PlistConnector.shared.getString(withKey: "apiSecret"),
+            let urlRequest = ApiRequestFactory(apiKey: apiKey, apiSecret: apiSecret, oauthTimeStamp: "1556750456", oauthNonce: "0000").createRequestTokenRequest() else { return Observable<String?>.empty() }
         return self.apiClient
             .postResponse(urlRequest: urlRequest)
             .map { [unowned self] in self.toAuthTokenValue(data: $0) }
