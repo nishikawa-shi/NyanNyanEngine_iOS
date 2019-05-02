@@ -23,9 +23,20 @@ class AuthRepository: BaseAuthRepository {
     }
     
     func getRequestToken() -> Observable<String?> {
+        guard let urlObj = URL(string: "https://nyannyanengine-ios-d.firebaseapp.com/oauth/request_token") else { return Observable<String?>.empty() }
+        var urlRequest = URLRequest(url: urlObj,
+                                    cachePolicy: .reloadIgnoringLocalCacheData,
+                                    timeoutInterval: 5)
+        urlRequest.httpMethod = "POST"
+        let headers: [String: String]? = ["nyan": "nyaan"]
+        if let heads = headers {
+            heads.forEach {
+                urlRequest.addValue($0.value, forHTTPHeaderField: $0.key)
+            }
+        }
+        
         return self.apiClient
-            .postResponse(url: "https://nyannyanengine-ios-d.firebaseapp.com/oauth/request_token",
-                          headers: ["nyan": "nyaan"])
+            .postResponse(urlRequest: urlRequest)
             .map { [unowned self] in self.toAuthTokenValue(data: $0) }
     }
     
