@@ -29,6 +29,7 @@ class HomeTimelineViewController: UIViewController {
         super.init(coder: aDecoder)
     }
     
+    @IBOutlet weak var authButton: UIBarButtonItem!
     @IBOutlet weak var refreshButton: UIBarButtonItem!
     @IBOutlet weak var tweetList: UITableView!
     
