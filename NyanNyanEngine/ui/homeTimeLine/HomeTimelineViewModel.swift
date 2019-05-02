@@ -47,7 +47,9 @@ final class HomeTimelineViewModel: HomeTimelineViewModelInput, HomeTimelineViewM
         self.authExecutedAt = AnyObserver<String>() { [unowned self] authedAt in
             self.authRepository
                 .getRequestToken()
-                .subscribe{ UIApplication.shared.open($0.element!!, options: [:], completionHandler: nil) }
+                .subscribe{
+                    guard let url = $0.element else { return }
+                    UIApplication.shared.open(url, options: [:], completionHandler: nil) }
                 .disposed(by: self.disposeBag)
             print(authedAt.element)
         }
