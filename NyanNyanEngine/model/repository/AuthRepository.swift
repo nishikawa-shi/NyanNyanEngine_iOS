@@ -23,18 +23,7 @@ class AuthRepository: BaseAuthRepository {
     }
     
     func getRequestToken() -> Observable<String?> {
-        guard let urlObj = URL(string: "https://nyannyanengine-ios-d.firebaseapp.com/oauth/request_token") else { return Observable<String?>.empty() }
-        var urlRequest = URLRequest(url: urlObj,
-                                    cachePolicy: .reloadIgnoringLocalCacheData,
-                                    timeoutInterval: 5)
-        urlRequest.httpMethod = "POST"
-        let headers: [String: String]? = ["nyan": "nyaan"]
-        if let heads = headers {
-            heads.forEach {
-                urlRequest.addValue($0.value, forHTTPHeaderField: $0.key)
-            }
-        }
-        
+        guard let urlRequest = ApiRequestFactory().createRequestTokenRequest() else { return Observable<String?>.empty() }
         return self.apiClient
             .postResponse(urlRequest: urlRequest)
             .map { [unowned self] in self.toAuthTokenValue(data: $0) }
