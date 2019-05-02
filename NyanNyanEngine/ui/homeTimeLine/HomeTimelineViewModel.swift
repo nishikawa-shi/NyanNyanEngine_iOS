@@ -21,14 +21,18 @@ protocol HomeTimelineViewModelOutput: AnyObject {
 
 final class HomeTimelineViewModel: HomeTimelineViewModelInput, HomeTimelineViewModelOutput {
     private let tweetsRepository: BaseTweetsRepository
+    private let authRepository: BaseAuthRepository
     private let disposeBag = DisposeBag()
     
     var authExecutedAt: AnyObserver<String>? = nil
     var refreshExecutedAt: AnyObserver<String>? = nil
     let statuses: Observable<[Status]?>
     
-    init(tweetsRepository: BaseTweetsRepository = TweetsRepository.shared) {
+    init(tweetsRepository: BaseTweetsRepository = TweetsRepository.shared,
+         authRepository: BaseAuthRepository = AuthRepository.shared) {
         self.tweetsRepository = tweetsRepository
+        self.authRepository = authRepository
+        
         let _statuses = BehaviorSubject<[Status]?>(value: nil)
         self.statuses = _statuses.asObservable()
         
@@ -41,8 +45,8 @@ final class HomeTimelineViewModel: HomeTimelineViewModelInput, HomeTimelineViewM
         }
         
         self.authExecutedAt = AnyObserver<String>() { [unowned self] authedAt in
-            self.tweetsRepository
-                .getHomeTimeLine()
+            self.authRepository
+                .getRequestToken()
                 .subscribe()
                 .disposed(by: self.disposeBag)
             print(authedAt.element)
