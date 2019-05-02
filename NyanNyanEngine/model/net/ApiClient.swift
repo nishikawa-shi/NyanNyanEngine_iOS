@@ -12,6 +12,7 @@ import Alamofire
 
 protocol BaseApiClient: AnyObject {
     func getResponse(url: String) -> Observable<Data?>
+    func postResponse(url: String, headers: [String: String]?) -> Observable<Data?>
 }
 
 class ApiClient: BaseApiClient {
@@ -20,6 +21,11 @@ class ApiClient: BaseApiClient {
     
     func getResponse(url: String) -> Observable<Data?> {
         return self.getRequest(url: url)
+            .map { $0.value?.data(using: .utf8) }
+    }
+    
+    func postResponse(url: String, headers: [String: String]?) -> Observable<Data?> {
+        return self.postRequest(url: url, headers: headers)
             .map { $0.value?.data(using: .utf8) }
     }
     
@@ -34,13 +40,43 @@ class ApiClient: BaseApiClient {
         }
     }
     
+    private func postRequest(url: String,
+                             headers: [String: String]? = nil) -> Observable<DataResponse<String>> {
+        guard let urlRequest = self.createPostUrlRequest(url: url, headers: headers) else { return Observable<DataResponse<String>>.empty() }
+        
+        return Observable<DataResponse<String>>.create { observer in
+            Alamofire
+                .request(urlRequest)
+                .responseString(encoding: .utf8) { observer.onNext($0) }
+            return Disposables.create()
+        }
+    }
+    
     private func createGetUrlRequest(url: String) -> URLRequest? {
         guard let urlObj = URL(string: url) else { return nil }
-
+        
         var urlRequest = URLRequest(url: urlObj,
                                     cachePolicy: .reloadIgnoringLocalCacheData,
                                     timeoutInterval: 5)
         urlRequest.httpMethod = HTTPMethod.get.rawValue
+        
+        return urlRequest
+    }
+    
+    private func createPostUrlRequest(url: String,
+                                      headers: [String: String]? = nil) -> URLRequest? {
+        guard let urlObj = URL(string: url) else { return nil }
+        
+        var urlRequest = URLRequest(url: urlObj,
+                                    cachePolicy: .reloadIgnoringLocalCacheData,
+                                    timeoutInterval: 5)
+        urlRequest.httpMethod = HTTPMethod.post.rawValue
+        
+        if let heads = headers {
+            heads.forEach {
+                urlRequest.addValue($0.value, forHTTPHeaderField: $0.key)
+            }
+        }
         
         return urlRequest
     }

@@ -29,11 +29,17 @@ class HomeTimelineViewController: UIViewController {
         super.init(coder: aDecoder)
     }
     
+    @IBOutlet weak var authButton: UIBarButtonItem!
     @IBOutlet weak var refreshButton: UIBarButtonItem!
     @IBOutlet weak var tweetList: UITableView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        authButton.rx.tap
+            .map { "0000/01/01 00:00:00" }
+            .bind(to: input.authExecutedAt!)
+            .disposed(by: disposeBag)
         
         refreshButton.rx.tap
             .map { "9999/12/31 23:59:59" }
