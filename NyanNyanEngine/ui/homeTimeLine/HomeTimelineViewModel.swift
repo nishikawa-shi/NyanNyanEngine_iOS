@@ -11,6 +11,7 @@ import RxSwift
 
 protocol HomeTimelineViewModelInput: AnyObject {
     //TODO: 後々、日付型っぽいやつにする
+    var authExecutedAt: AnyObserver<String>? { get }
     var refreshExecutedAt: AnyObserver<String>? { get }
 }
 
@@ -22,6 +23,7 @@ final class HomeTimelineViewModel: HomeTimelineViewModelInput, HomeTimelineViewM
     private let tweetsRepository: BaseTweetsRepository
     private let disposeBag = DisposeBag()
     
+    var authExecutedAt: AnyObserver<String>? = nil
     var refreshExecutedAt: AnyObserver<String>? = nil
     let statuses: Observable<[Status]?>
     
@@ -36,6 +38,14 @@ final class HomeTimelineViewModel: HomeTimelineViewModelInput, HomeTimelineViewM
                 .bind(to: _statuses)
                 .disposed(by: self.disposeBag)
             print(updatedAt.element)
+        }
+        
+        self.authExecutedAt = AnyObserver<String>() { [unowned self] authedAt in
+            self.tweetsRepository
+                .getHomeTimeLine()
+                .subscribe()
+                .disposed(by: self.disposeBag)
+            print(authedAt.element)
         }
     }
 }
