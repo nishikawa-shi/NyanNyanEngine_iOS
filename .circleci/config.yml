@@ -10,6 +10,9 @@ jobs:
           name: file list up
           command: ls -latr
       - run:
+          name: make ignored ApiKeys.plist
+          command: curl https://nyannyanengine-ios-d.firebaseapp.com/circleci/ApiKeys.plist > NyanNyanEngine/ApiKeys.plist
+      - run:
           name: test
           command: fastlane scan
           environment:
