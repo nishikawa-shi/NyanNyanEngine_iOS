@@ -6,9 +6,10 @@ target 'NyanNyanEngine' do
   use_frameworks!
 
   # Pods for NyanNyanEngine
-  pod 'Alamofire', '~> 4.8.1'
-  pod 'RxSwift',    '~> 5'
-  pod 'RxCocoa',    '~> 5'
+  pod 'Alamofire',   '~> 4.8.1'
+  pod 'RxSwift',     '~> 5'
+  pod 'RxCocoa',     '~> 5'
+  pod 'CryptoSwift', '~> 1'
 
   target 'NyanNyanEngineTests' do
     inherit! :search_paths
