@@ -54,14 +54,26 @@ class ApiRequestFactory: BaseApiRequestFactory {
     }
     
     private func makeAuthorizationValue() -> String {
-        var params = ["oauth_callback": oauthCallBackUrl,
-                      "oauth_consumer_key": apiKey,
-                      "oauth_signature_method": oauthSignatureMethod,
-                      "oauth_timestamp": oauthTimeStamp,
-                      "oauth_nonce":  oauthNonce,
-                      "oauth_version": oauthVersion]
-            .sorted(by: { $0.0 < $1.0 })
+        var params = [(key: "oauth_consumer_key", value: apiKey),
+                      (key: "oauth_signature_method", value: oauthSignatureMethod),
+                      (key: "oauth_timestamp", value: oauthTimeStamp),
+                      (key: "oauth_nonce", value: oauthNonce),
+                      (key: "oauth_version", value: oauthVersion)]
+            .map { (key: $0.key, value: $0.value.addingPercentEncoding(withAllowedCharacters: allowedCharacterSet)!) }
+        params.append((key: "oauth_callback", value: oauthCallBackUrl))
+        params.append((key: "oauth_signature", value: createSignature(params: params)))
         
+        let headerParams = params
+            .map { [$0.key.addingPercentEncoding(withAllowedCharacters: allowedCharacterSet)!,
+                    $0.value.addingPercentEncoding(withAllowedCharacters: allowedCharacterSet)!]
+                .joined(separator: "=") }
+            .joined(separator: ",")
+        
+        let headerValuePrefix = "OAuth "
+        return headerValuePrefix + headerParams
+    }
+    
+    private func createSignature(params: [(key: String, value: String)]) -> String {
         let signatureKey = apiSecret.addingPercentEncoding(withAllowedCharacters: allowedCharacterSet)!
             + "&"
             + accessTokenSecret.addingPercentEncoding(withAllowedCharacters: allowedCharacterSet)!
@@ -69,37 +81,19 @@ class ApiRequestFactory: BaseApiRequestFactory {
         let requestMethod = "POST"
         let signatureData = [requestMethod.addingPercentEncoding(withAllowedCharacters: allowedCharacterSet)!,
                              requestTokenApiUrl.addingPercentEncoding(withAllowedCharacters: allowedCharacterSet)!,
-                             makeRequestParams()]
+                             createSignatureBody(params: params)]
             .joined(separator: "&")
         let sigKeyByte = signatureKey.data(using: .utf8)!.bytes
         let sigDataByte = signatureData.data(using: .utf8)!.bytes
         let hmac = try! HMAC(key: sigKeyByte, variant: .sha1).authenticate(sigDataByte)
-        let signature = Data(hmac).base64EncodedString()
-        params.append((key: "oauth_signature", value: signature))
-        
-        let headerParams = params
-            .map { $0.key.addingPercentEncoding(withAllowedCharacters: allowedCharacterSet)!
-                + "="
-                + $0.value.addingPercentEncoding(withAllowedCharacters: allowedCharacterSet)! }
-            .joined(separator: ",")
-        
-        let headerValuePrefix = "OAuth "
-        return headerValuePrefix + headerParams
+        return Data(hmac).base64EncodedString()
     }
     
-    func makeRequestParams() -> String {
-        var params: [String: String] = ["oauth_consumer_key": apiKey,
-                                        "oauth_signature_method": oauthSignatureMethod,
-                                        "oauth_timestamp": oauthTimeStamp,
-                                        "oauth_nonce":  oauthNonce,
-                                        "oauth_version": oauthVersion]
-            .mapValues { return $0.addingPercentEncoding(withAllowedCharacters: allowedCharacterSet)! }
-        params["oauth_callback"] = oauthCallBackUrl
-        
+    func createSignatureBody(params: [(key: String, value: String)]) -> String {
         return params.sorted{ $0.key < $1.key }
-            .map { $0.key.addingPercentEncoding(withAllowedCharacters: allowedCharacterSet)!
-                + "="
-                + $0.value.addingPercentEncoding(withAllowedCharacters: allowedCharacterSet)! }
+            .map { [$0.key.addingPercentEncoding(withAllowedCharacters: allowedCharacterSet)!,
+                    $0.value.addingPercentEncoding(withAllowedCharacters: allowedCharacterSet)!]
+                .joined(separator: "=") }
             .joined(separator: "&")
             .addingPercentEncoding(withAllowedCharacters: allowedCharacterSet)!
     }
