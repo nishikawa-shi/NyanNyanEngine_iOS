@@ -29,7 +29,7 @@ class AuthRepository: BaseAuthRepository {
     func getRequestToken() -> Observable<URL> {
         guard let apiKey = PlistConnector.shared.getString(withKey: "apiKey"),
             let apiSecret = PlistConnector.shared.getString(withKey: "apiSecret"),
-            let urlRequest = ApiRequestFactory(apiKey: apiKey, apiSecret: apiSecret, oauthTimeStamp: "1556750456", oauthNonce: "0000").createRequestTokenRequest() else { return Observable<URL>.empty() }
+            let urlRequest = ApiRequestFactory(apiKey: apiKey, apiSecret: apiSecret, oauthTimeStamp: String(Int(NSDate().timeIntervalSince1970)), oauthNonce: "0000").createRequestTokenRequest() else { return Observable<URL>.empty() }
         return self.apiClient
             .postResponse(urlRequest: urlRequest)
             .map { [unowned self] in self.toAuthTokenValue(data: $0) }
@@ -59,6 +59,7 @@ class AuthRepository: BaseAuthRepository {
     
     private func saveTokens(accessTokenApiResponseQuery: [URLQueryItem]) {
         accessTokenApiResponseQuery.forEach { item in
+            print(item)
             guard let value = item.value else { return }
             self.userDefaultsConnector.registerString(key: item.name, value: value)
         }
