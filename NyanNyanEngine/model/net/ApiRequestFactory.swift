@@ -17,13 +17,14 @@ protocol BaseApiRequestFactory: AnyObject {
 class ApiRequestFactory: BaseApiRequestFactory {
     private let apiKey: String
     private let apiSecret: String
-    private let oauthTimeStamp: String
+    
     private let oauthNonce: String
     private let accessTokenSecret: String
     private let accessToken: String
-
+    
     private let allowedCharacterSet: CharacterSet
     
+    private let oauthTimeStamp = String(Int(NSDate().timeIntervalSince1970))
     private let oauthCallBackUrl = "https://nyannyanengine.firebaseapp.com/authorized/"
     private let oauthSignatureMethod = "HMAC-SHA1"
     private let oauthVersion = "1.0"
@@ -34,13 +35,11 @@ class ApiRequestFactory: BaseApiRequestFactory {
     
     init(apiKey: String = "abcdefghijklMNOPQRSTU0123",
          apiSecret: String = "abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMN",
-         oauthTimeStamp: String = "1234567890",
          oauthNonce: String = "0000",
          accessTokenSecret: String = "",
          accessToken: String = "") {
         self.apiKey = apiKey
         self.apiSecret = apiSecret
-        self.oauthTimeStamp = oauthTimeStamp
         self.oauthNonce = oauthNonce
         self.accessTokenSecret = accessTokenSecret
         self.accessToken = accessToken
@@ -96,7 +95,7 @@ class ApiRequestFactory: BaseApiRequestFactory {
                                     timeoutInterval: 5)
         urlRequest.httpMethod = "GET"
         urlRequest.addValue(headerValue, forHTTPHeaderField: "Authorization")
-
+        
         return urlRequest
     }
     

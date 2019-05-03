@@ -33,7 +33,6 @@ class TweetsRepository: BaseTweetsRepository {
             let accessTokenSecret = UserDefaultsConnector.shared.getString(withKey: "oauth_token_secret"),
             let urlRequest = ApiRequestFactory(apiKey: apiKey,
                                                apiSecret: apiSecret,
-                                               oauthTimeStamp: String(Int(NSDate().timeIntervalSince1970)),
                                                oauthNonce: "0000",
                                                accessTokenSecret: accessTokenSecret,
                                                accessToken: accessToken).createHomeTimelineRequest() else { return Observable<[Status]?>.empty() }

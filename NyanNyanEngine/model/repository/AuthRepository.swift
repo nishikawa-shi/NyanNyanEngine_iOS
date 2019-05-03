@@ -31,7 +31,6 @@ class AuthRepository: BaseAuthRepository {
             let apiSecret = PlistConnector.shared.getString(withKey: "apiSecret"),
             let urlRequest = ApiRequestFactory(apiKey: apiKey,
                                                apiSecret: apiSecret,
-                                               oauthTimeStamp: String(Int(NSDate().timeIntervalSince1970)),
                                                oauthNonce: "0000").createRequestTokenRequest() else { return Observable<URL>.empty() }
         return self.apiClient
             .postResponse(urlRequest: urlRequest)
