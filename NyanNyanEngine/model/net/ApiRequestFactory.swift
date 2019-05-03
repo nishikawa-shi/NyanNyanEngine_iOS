@@ -19,6 +19,7 @@ class ApiRequestFactory: BaseApiRequestFactory {
     private let apiSecret: String
     private let oauthTimeStamp: String
     private let oauthNonce: String
+    private let accessTokenSecret: String
     
     private let allowedCharacterSet: CharacterSet
     
@@ -26,18 +27,19 @@ class ApiRequestFactory: BaseApiRequestFactory {
     private let oauthSignatureMethod = "HMAC-SHA1"
     private let oauthVersion = "1.0"
     
-    private let accessTokenSecret = ""
     private let requestTokenApiUrl = "https://api.twitter.com/oauth/request_token"
     private let accessTokenApiUrl = "https://api.twitter.com/oauth/access_token?"
     
     init(apiKey: String = "abcdefghijklMNOPQRSTU0123",
          apiSecret: String = "abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMN",
          oauthTimeStamp: String = "1234567890",
-         oauthNonce: String = "0000") {
+         oauthNonce: String = "0000",
+         accessTokenSecret: String = "") {
         self.apiKey = apiKey
         self.apiSecret = apiSecret
         self.oauthTimeStamp = oauthTimeStamp
         self.oauthNonce = oauthNonce
+        self.accessTokenSecret = accessTokenSecret
         
         var baseAllowed = CharacterSet.alphanumerics
         baseAllowed.insert(charactersIn: "-._~")
