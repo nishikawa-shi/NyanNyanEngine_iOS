@@ -27,8 +27,12 @@ class TweetsRepository: BaseTweetsRepository {
     }
     
     func getHomeTimeLine() -> Observable<[Status]?> {
+        guard let apiKey = PlistConnector.shared.getString(withKey: "apiKey"),
+            let apiSecret = PlistConnector.shared.getString(withKey: "apiSecret"),
+            let urlRequest = ApiRequestFactory(apiKey: apiKey, apiSecret: apiSecret, oauthTimeStamp: String(Int(NSDate().timeIntervalSince1970)), oauthNonce: "0000", accessTokenSecret: "kanriGamenKaraTottaSecretWoIreru").createHomeTimelineRequest() else { return Observable<[Status]?>.empty() }
+        
         return self.apiClient
-            .getResponse(url: "https://nyannyanengine-ios-d.firebaseapp.com/1.1/statuses/home_timeline.json")
+            .postResponse(urlRequest: urlRequest)
             .map { [unowned self] in self.toStatuses(data: $0) }
     }
     

@@ -29,6 +29,7 @@ class ApiRequestFactory: BaseApiRequestFactory {
     
     private let requestTokenApiUrl = "https://api.twitter.com/oauth/request_token"
     private let accessTokenApiUrl = "https://api.twitter.com/oauth/access_token?"
+    private let homeTimelineApiUrl = "https://api.twitter.com/1.1/statuses/home_timeline.json"
     
     init(apiKey: String = "abcdefghijklMNOPQRSTU0123",
          apiSecret: String = "abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMN",
@@ -69,6 +70,33 @@ class ApiRequestFactory: BaseApiRequestFactory {
         return urlRequest
     }
     
+    func createHomeTimelineRequest() -> URLRequest? {
+        var params = [(key: "oauth_consumer_key", value: apiKey),
+                      (key: "oauth_nonce", value: oauthNonce),
+                      (key: "oauth_signature_method", value: oauthSignatureMethod),
+                      (key: "oauth_timestamp", value: oauthTimeStamp),
+                      (key: "oauth_token", value: "kanriGamenKaraTottaTokenWoIreru"),
+                      (key: "oauth_version", value: oauthVersion)]
+            .map { (key: $0.key, value: $0.value.addingPercentEncoding(withAllowedCharacters: allowedCharacterSet)!) }
+        params.append((key: "oauth_signature", value: createSignature(params: params, requestMethod: "GET", apiUrl: homeTimelineApiUrl)))
+        
+        let headerParams = params
+            .map { [$0.key.addingPercentEncoding(withAllowedCharacters: allowedCharacterSet)!,
+                    $0.value.addingPercentEncoding(withAllowedCharacters: allowedCharacterSet)!]
+                .joined(separator: "=") }
+            .joined(separator: ",")
+        let headerValue = "OAuth " + headerParams
+        
+        guard let urlObj = URL(string: homeTimelineApiUrl) else { return nil }
+        var urlRequest = URLRequest(url: urlObj,
+                                    cachePolicy: .reloadIgnoringLocalCacheData,
+                                    timeoutInterval: 5)
+        urlRequest.httpMethod = "GET"
+        urlRequest.addValue(headerValue, forHTTPHeaderField: "Authorization")
+
+        return urlRequest
+    }
+    
     private func makeAuthorizationValue() -> String {
         var params = [(key: "oauth_consumer_key", value: apiKey),
                       (key: "oauth_signature_method", value: oauthSignatureMethod),
@@ -77,7 +105,7 @@ class ApiRequestFactory: BaseApiRequestFactory {
                       (key: "oauth_version", value: oauthVersion)]
             .map { (key: $0.key, value: $0.value.addingPercentEncoding(withAllowedCharacters: allowedCharacterSet)!) }
         params.append((key: "oauth_callback", value: oauthCallBackUrl))
-        params.append((key: "oauth_signature", value: createSignature(params: params)))
+        params.append((key: "oauth_signature", value: createSignature(params: params, requestMethod: "POST", apiUrl: requestTokenApiUrl)))
         
         let headerParams = params
             .map { [$0.key.addingPercentEncoding(withAllowedCharacters: allowedCharacterSet)!,
@@ -89,14 +117,13 @@ class ApiRequestFactory: BaseApiRequestFactory {
         return headerValuePrefix + headerParams
     }
     
-    private func createSignature(params: [(key: String, value: String)]) -> String {
+    private func createSignature(params: [(key: String, value: String)], requestMethod: String, apiUrl: String) -> String {
         let signatureKey = apiSecret.addingPercentEncoding(withAllowedCharacters: allowedCharacterSet)!
             + "&"
             + accessTokenSecret.addingPercentEncoding(withAllowedCharacters: allowedCharacterSet)!
         
-        let requestMethod = "POST"
         let signatureData = [requestMethod.addingPercentEncoding(withAllowedCharacters: allowedCharacterSet)!,
-                             requestTokenApiUrl.addingPercentEncoding(withAllowedCharacters: allowedCharacterSet)!,
+                             apiUrl.addingPercentEncoding(withAllowedCharacters: allowedCharacterSet)!,
                              createSignatureBody(params: params)]
             .joined(separator: "&")
         let sigKeyByte = signatureKey.data(using: .utf8)!.bytes
