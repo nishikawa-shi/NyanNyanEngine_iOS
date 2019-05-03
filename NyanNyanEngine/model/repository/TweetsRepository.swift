@@ -10,6 +10,7 @@ import Foundation
 import RxSwift
 
 protocol BaseTweetsRepository: AnyObject {
+    func isLoggedIn() -> Bool
     func getHomeTimeLine() -> Observable<[Status]?>
 }
 
@@ -17,15 +18,32 @@ class TweetsRepository: BaseTweetsRepository {
     static let shared = TweetsRepository()
     
     private let apiClient: BaseApiClient
+    private let userDefaultsConnector: BaseUserDefaultsConnector
     
-    private init(apiClient: BaseApiClient = ApiClient.shared) {
+    private init(apiClient: BaseApiClient = ApiClient.shared,
+                 userDefaultsConnector: BaseUserDefaultsConnector = UserDefaultsConnector.shared) {
         self.apiClient = apiClient
+        self.userDefaultsConnector = userDefaultsConnector
     }
     
     func getHomeTimeLine() -> Observable<[Status]?> {
+        guard let apiKey = PlistConnector.shared.getString(withKey: "apiKey"),
+            let apiSecret = PlistConnector.shared.getString(withKey: "apiSecret"),
+            let accessToken = UserDefaultsConnector.shared.getString(withKey: "oauth_token"),
+            let accessTokenSecret = UserDefaultsConnector.shared.getString(withKey: "oauth_token_secret"),
+            let urlRequest = ApiRequestFactory(apiKey: apiKey,
+                                               apiSecret: apiSecret,
+                                               oauthNonce: "0000",
+                                               accessTokenSecret: accessTokenSecret,
+                                               accessToken: accessToken).createHomeTimelineRequest() else { return Observable<[Status]?>.empty() }
+        
         return self.apiClient
-            .getResponse(url: "https://nyannyanengine-ios-d.firebaseapp.com/1.1/statuses/home_timeline.json")
+            .postResponse(urlRequest: urlRequest)
             .map { [unowned self] in self.toStatuses(data: $0) }
+    }
+    
+    func isLoggedIn() -> Bool {
+        return userDefaultsConnector.isRegistered(withKey: "oauth_token")
     }
     
     private func toStatuses(data: Data?) -> [Status]? {
