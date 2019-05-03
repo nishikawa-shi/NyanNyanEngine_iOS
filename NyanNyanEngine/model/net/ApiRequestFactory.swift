@@ -20,7 +20,8 @@ class ApiRequestFactory: BaseApiRequestFactory {
     private let oauthTimeStamp: String
     private let oauthNonce: String
     private let accessTokenSecret: String
-    
+    private let accessToken: String
+
     private let allowedCharacterSet: CharacterSet
     
     private let oauthCallBackUrl = "https://nyannyanengine.firebaseapp.com/authorized/"
@@ -35,12 +36,14 @@ class ApiRequestFactory: BaseApiRequestFactory {
          apiSecret: String = "abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMN",
          oauthTimeStamp: String = "1234567890",
          oauthNonce: String = "0000",
-         accessTokenSecret: String = "") {
+         accessTokenSecret: String = "",
+         accessToken: String = "") {
         self.apiKey = apiKey
         self.apiSecret = apiSecret
         self.oauthTimeStamp = oauthTimeStamp
         self.oauthNonce = oauthNonce
         self.accessTokenSecret = accessTokenSecret
+        self.accessToken = accessToken
         
         var baseAllowed = CharacterSet.alphanumerics
         baseAllowed.insert(charactersIn: "-._~")
@@ -75,7 +78,7 @@ class ApiRequestFactory: BaseApiRequestFactory {
                       (key: "oauth_nonce", value: oauthNonce),
                       (key: "oauth_signature_method", value: oauthSignatureMethod),
                       (key: "oauth_timestamp", value: oauthTimeStamp),
-                      (key: "oauth_token", value: UserDefaultsConnector.shared.getString(withKey: "oauth_token")!),
+                      (key: "oauth_token", value: accessToken),
                       (key: "oauth_version", value: oauthVersion)]
             .map { (key: $0.key, value: $0.value.addingPercentEncoding(withAllowedCharacters: allowedCharacterSet)!) }
         params.append((key: "oauth_signature", value: createSignature(params: params, requestMethod: "GET", apiUrl: homeTimelineApiUrl)))
