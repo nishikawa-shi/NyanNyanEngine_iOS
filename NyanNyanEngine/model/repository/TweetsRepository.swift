@@ -29,7 +29,9 @@ class TweetsRepository: BaseTweetsRepository {
     func getHomeTimeLine() -> Observable<[Status]?> {
         guard let apiKey = PlistConnector.shared.getString(withKey: "apiKey"),
             let apiSecret = PlistConnector.shared.getString(withKey: "apiSecret"),
-            let urlRequest = ApiRequestFactory(apiKey: apiKey, apiSecret: apiSecret, oauthTimeStamp: String(Int(NSDate().timeIntervalSince1970)), oauthNonce: "0000", accessTokenSecret: UserDefaultsConnector.shared.getString(withKey: "oauth_token_secret")!, accessToken: UserDefaultsConnector.shared.getString(withKey: "oauth_token")!).createHomeTimelineRequest() else { return Observable<[Status]?>.empty() }
+            let accessToken = UserDefaultsConnector.shared.getString(withKey: "oauth_token"),
+            let accessTokenSecret = UserDefaultsConnector.shared.getString(withKey: "oauth_token_secret"),
+            let urlRequest = ApiRequestFactory(apiKey: apiKey, apiSecret: apiSecret, oauthTimeStamp: String(Int(NSDate().timeIntervalSince1970)), oauthNonce: "0000", accessTokenSecret: accessTokenSecret, accessToken: accessToken).createHomeTimelineRequest() else { return Observable<[Status]?>.empty() }
         
         return self.apiClient
             .postResponse(urlRequest: urlRequest)
