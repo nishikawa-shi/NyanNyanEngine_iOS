@@ -11,6 +11,7 @@ import CryptoSwift
 
 protocol BaseApiRequestFactory: AnyObject {
     func createRequestTokenRequest() -> URLRequest?
+    func createAccessTokenRequest(redirectedUrl: URL) -> URLRequest?
 }
 
 class ApiRequestFactory: BaseApiRequestFactory {
@@ -27,6 +28,7 @@ class ApiRequestFactory: BaseApiRequestFactory {
     
     private let accessTokenSecret = ""
     private let requestTokenApiUrl = "https://api.twitter.com/oauth/request_token"
+    private let accessTokenApiUrl = "https://api.twitter.com/oauth/access_token?"
     
     init(apiKey: String = "abcdefghijklMNOPQRSTU0123",
          apiSecret: String = "abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMN",
@@ -50,6 +52,18 @@ class ApiRequestFactory: BaseApiRequestFactory {
         urlRequest.httpMethod = "POST"
         urlRequest.addValue(makeAuthorizationValue(), forHTTPHeaderField: "Authorization")
         
+        return urlRequest
+    }
+    
+    func createAccessTokenRequest(redirectedUrl: URL) -> URLRequest? {
+        guard let query = NSURLComponents(string: redirectedUrl.absoluteString)?.query,
+            let urlObj = URL(string: accessTokenApiUrl + query) else { return nil }
+        
+        var urlRequest = URLRequest(url: urlObj,
+                                    cachePolicy: .reloadIgnoringLocalCacheData,
+                                    timeoutInterval: 5)
+        
+        urlRequest.httpMethod = "POST"
         return urlRequest
     }
     
