@@ -21,7 +21,7 @@ class ApiRequestFactory: BaseApiRequestFactory {
     
     private let allowedCharacterSet: CharacterSet
     
-    private let oauthCallBackUrl = "https://rhenium.ntetz.com/nyan-nyan-engine/authorized"
+    private let oauthCallBackUrl = "https://nyannyanengine.firebaseapp.com/authorized/"
     private let oauthSignatureMethod = "HMAC-SHA1"
     private let oauthVersion = "1.0"
     
