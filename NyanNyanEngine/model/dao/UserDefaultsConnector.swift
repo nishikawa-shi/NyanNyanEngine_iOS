@@ -10,6 +10,7 @@ import Foundation
 
 protocol BaseUserDefaultsConnector {
     func registerString(key: String, value: String)
+    func getString(withKey: String) -> String?
     func isRegistered(withKey: String) -> Bool
 }
 
@@ -19,6 +20,10 @@ class UserDefaultsConnector: BaseUserDefaultsConnector {
     
     func isRegistered(withKey: String) -> Bool {
         return UserDefaults.standard.object(forKey: withKey) != nil
+    }
+    
+    func getString(withKey: String) -> String? {
+        return UserDefaults.standard.string(forKey: withKey)
     }
     
     func registerString(key: String, value: String) {
