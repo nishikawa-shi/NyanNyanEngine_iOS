@@ -40,15 +40,27 @@ class AuthRepository: BaseAuthRepository {
         guard let urlRequest = ApiRequestFactory().createAccessTokenRequest(redirectedUrl: redirectedUrl) else { return Observable<Bool>.empty() }
         return self.apiClient
             .postResponse(urlRequest: urlRequest)
-            .map { [unowned self] in
-                print(String(data: $0!, encoding: .utf8))
-            }
-            .map { false }
+            .map { [unowned self] in self.parseTokens(accessTokenApiResponse: $0) }
+            .map { [unowned self] in self.saveTokens(accessTokenApiResponseQuery: $0 ?? [])}
+            .map { true }
     }
     
     private func toAuthTokenValue(data: Data?) -> URL? {
         guard let d = data,
             let str = String(data: d, encoding: .utf8) else { return nil }
-            return URL(string: "https://api.twitter.com/oauth/authenticate?" + str)
+        return URL(string: "https://api.twitter.com/oauth/authenticate?" + str)
+    }
+    
+    private func parseTokens(accessTokenApiResponse: Data?) -> [URLQueryItem]? {
+        guard let d = accessTokenApiResponse,
+            let str = String(data: d, encoding: .utf8) else { return nil }
+        return  NSURLComponents(string: "https://nyannyanengine.firebaseapp.com/tekitou?" + str)?.queryItems
+    }
+    
+    private func saveTokens(accessTokenApiResponseQuery: [URLQueryItem]) {
+        accessTokenApiResponseQuery.forEach { item in
+            guard let value = item.value else { return }
+            self.userDefaultsConnector.registerString(key: item.name, value: value)
+        }
     }
 }
