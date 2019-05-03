@@ -21,7 +21,7 @@ struct User: Codable {
     let isTranslator: Bool
     let profileLinkColor: String
     let defaultProfile: Bool
-    let url: String
+    let url: String?
     let contributorsEnabled: Bool
     let favouritesCount: Int
     let utcOffset: Int?
@@ -45,6 +45,5 @@ struct User: Codable {
     let defaultProfileImage: Bool
     let friendsCount: Int
     let following: Bool
-    let showAllInlineMedia: Bool
     let screenName: String
 }
