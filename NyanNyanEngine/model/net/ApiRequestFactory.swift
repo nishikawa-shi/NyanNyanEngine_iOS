@@ -75,7 +75,7 @@ class ApiRequestFactory: BaseApiRequestFactory {
                       (key: "oauth_nonce", value: oauthNonce),
                       (key: "oauth_signature_method", value: oauthSignatureMethod),
                       (key: "oauth_timestamp", value: oauthTimeStamp),
-                      (key: "oauth_token", value: "kanriGamenKaraTottaTokenWoIreru"),
+                      (key: "oauth_token", value: UserDefaultsConnector.shared.getString(withKey: "oauth_token")!),
                       (key: "oauth_version", value: oauthVersion)]
             .map { (key: $0.key, value: $0.value.addingPercentEncoding(withAllowedCharacters: allowedCharacterSet)!) }
         params.append((key: "oauth_signature", value: createSignature(params: params, requestMethod: "GET", apiUrl: homeTimelineApiUrl)))
