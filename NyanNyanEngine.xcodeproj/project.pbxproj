@@ -64,6 +64,7 @@
 		6723B28B2276970A0004FB3D /* Status.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Status.swift; sourceTree = "<group>"; };
 		6723B28D22769CAE0004FB3D /* Entity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Entity.swift; sourceTree = "<group>"; };
 		6723B2912277DFD60004FB3D /* HomeTimelineViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeTimelineViewModel.swift; sourceTree = "<group>"; };
+		672FA83C227BC2C100BAB1A7 /* NyanNyanEngine.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = NyanNyanEngine.entitlements; sourceTree = "<group>"; };
 		6734D7F22279803200A19044 /* TweetSummaryCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TweetSummaryCell.swift; sourceTree = "<group>"; };
 		6734D7F4227982BE00A19044 /* TweetSummaryDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TweetSummaryDataSource.swift; sourceTree = "<group>"; };
 		67392B0C227AF07900D5E77C /* AuthRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthRepository.swift; sourceTree = "<group>"; };
@@ -205,6 +206,7 @@
 		67666163227527FF004C886C /* NyanNyanEngine */ = {
 			isa = PBXGroup;
 			children = (
+				672FA83C227BC2C100BAB1A7 /* NyanNyanEngine.entitlements */,
 				6767B0D422791CF9008913EA /* ui */,
 				6723B27F22767C680004FB3D /* model */,
 				67666164227527FF004C886C /* AppDelegate.swift */,
@@ -362,6 +364,11 @@
 				TargetAttributes = {
 					67666160227527FF004C886C = {
 						CreatedOnToolsVersion = 10.2.1;
+						SystemCapabilities = {
+							com.apple.SafariKeychain = {
+								enabled = 1;
+							};
+						};
 					};
 					67666177227527FF004C886C = {
 						CreatedOnToolsVersion = 10.2.1;
@@ -700,6 +707,7 @@
 			baseConfigurationReference = 0F29B6DB666E02B7C3169F94 /* Pods-NyanNyanEngine.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = NyanNyanEngine/NyanNyanEngine.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = K85M397W48;
 				INFOPLIST_FILE = NyanNyanEngine/Info.plist;
@@ -719,6 +727,7 @@
 			baseConfigurationReference = 6F7E9C80946FAE4B36BBC437 /* Pods-NyanNyanEngine.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = NyanNyanEngine/NyanNyanEngine.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = K85M397W48;
 				INFOPLIST_FILE = NyanNyanEngine/Info.plist;
