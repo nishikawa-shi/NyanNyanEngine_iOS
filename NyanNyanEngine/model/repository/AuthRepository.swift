@@ -48,7 +48,7 @@ class AuthRepository: BaseAuthRepository {
     private func toAuthTokenValue(data: Data?) -> URL? {
         guard let d = data,
             let str = String(data: d, encoding: .utf8) else { return nil }
-        return URL(string: "https://api.twitter.com/oauth/authenticate?" + str)
+        return URL(string: "https://api.twitter.com/oauth/authorize?" + str)
     }
     
     private func parseTokens(accessTokenApiResponse: Data?) -> [URLQueryItem]? {
