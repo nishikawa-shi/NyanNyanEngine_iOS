@@ -18,9 +18,12 @@ class AuthRepository: BaseAuthRepository {
     static let shared = AuthRepository()
     
     private let apiClient: BaseApiClient
+    private let userDefaultsConnector: BaseUserDefaultsConnector
     
-    private init(apiClient: BaseApiClient = ApiClient.shared) {
+    private init(apiClient: BaseApiClient = ApiClient.shared,
+                 userDefaultsConnector: BaseUserDefaultsConnector = UserDefaultsConnector.shared) {
         self.apiClient = apiClient
+        self.userDefaultsConnector = userDefaultsConnector
     }
     
     func getRequestToken() -> Observable<URL> {

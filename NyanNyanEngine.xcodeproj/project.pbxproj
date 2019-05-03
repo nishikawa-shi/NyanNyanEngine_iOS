@@ -32,6 +32,7 @@
 		679A5E60227B1F250043D0E1 /* ApiRequestFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 679A5E5F227B1F250043D0E1 /* ApiRequestFactory.swift */; };
 		679A5E65227B3B590043D0E1 /* PlistConnector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 679A5E64227B3B590043D0E1 /* PlistConnector.swift */; };
 		679A5E67227B3E960043D0E1 /* ApiKeys.plist in Resources */ = {isa = PBXBuildFile; fileRef = 679A5E66227B3E960043D0E1 /* ApiKeys.plist */; };
+		67F88C0A227C2484004DF44A /* UserDefaultsConnector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67F88C09227C2484004DF44A /* UserDefaultsConnector.swift */; };
 		A3EF89A62D1B991E9600FCFA /* Pods_NyanNyanEngine.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9151EC8B3866FB493C75F6A9 /* Pods_NyanNyanEngine.framework */; };
 /* End PBXBuildFile section */
 
@@ -88,6 +89,7 @@
 		679A5E5F227B1F250043D0E1 /* ApiRequestFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApiRequestFactory.swift; sourceTree = "<group>"; };
 		679A5E64227B3B590043D0E1 /* PlistConnector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlistConnector.swift; sourceTree = "<group>"; };
 		679A5E66227B3E960043D0E1 /* ApiKeys.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = ApiKeys.plist; sourceTree = "<group>"; };
+		67F88C09227C2484004DF44A /* UserDefaultsConnector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaultsConnector.swift; sourceTree = "<group>"; };
 		6D8A98757771D333C6941F1B /* Pods-NyanNyanEngineTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NyanNyanEngineTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-NyanNyanEngineTests/Pods-NyanNyanEngineTests.release.xcconfig"; sourceTree = "<group>"; };
 		6F7E9C80946FAE4B36BBC437 /* Pods-NyanNyanEngine.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NyanNyanEngine.release.xcconfig"; path = "Pods/Target Support Files/Pods-NyanNyanEngine/Pods-NyanNyanEngine.release.xcconfig"; sourceTree = "<group>"; };
 		9151EC8B3866FB493C75F6A9 /* Pods_NyanNyanEngine.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_NyanNyanEngine.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -281,6 +283,7 @@
 			isa = PBXGroup;
 			children = (
 				679A5E64227B3B590043D0E1 /* PlistConnector.swift */,
+				67F88C09227C2484004DF44A /* UserDefaultsConnector.swift */,
 			);
 			path = dao;
 			sourceTree = "<group>";
@@ -525,6 +528,7 @@
 				6723B28C2276970A0004FB3D /* Status.swift in Sources */,
 				6734D7F32279803200A19044 /* TweetSummaryCell.swift in Sources */,
 				6734D7F5227982BE00A19044 /* TweetSummaryDataSource.swift in Sources */,
+				67F88C0A227C2484004DF44A /* UserDefaultsConnector.swift in Sources */,
 				679A5E65227B3B590043D0E1 /* PlistConnector.swift in Sources */,
 				6723B2922277DFD60004FB3D /* HomeTimelineViewModel.swift in Sources */,
 				6723B28A2276926B0004FB3D /* User.swift in Sources */,
