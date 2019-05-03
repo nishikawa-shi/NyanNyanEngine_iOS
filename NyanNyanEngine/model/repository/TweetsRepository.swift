@@ -31,7 +31,12 @@ class TweetsRepository: BaseTweetsRepository {
             let apiSecret = PlistConnector.shared.getString(withKey: "apiSecret"),
             let accessToken = UserDefaultsConnector.shared.getString(withKey: "oauth_token"),
             let accessTokenSecret = UserDefaultsConnector.shared.getString(withKey: "oauth_token_secret"),
-            let urlRequest = ApiRequestFactory(apiKey: apiKey, apiSecret: apiSecret, oauthTimeStamp: String(Int(NSDate().timeIntervalSince1970)), oauthNonce: "0000", accessTokenSecret: accessTokenSecret, accessToken: accessToken).createHomeTimelineRequest() else { return Observable<[Status]?>.empty() }
+            let urlRequest = ApiRequestFactory(apiKey: apiKey,
+                                               apiSecret: apiSecret,
+                                               oauthTimeStamp: String(Int(NSDate().timeIntervalSince1970)),
+                                               oauthNonce: "0000",
+                                               accessTokenSecret: accessTokenSecret,
+                                               accessToken: accessToken).createHomeTimelineRequest() else { return Observable<[Status]?>.empty() }
         
         return self.apiClient
             .postResponse(urlRequest: urlRequest)
