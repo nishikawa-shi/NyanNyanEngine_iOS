@@ -14,6 +14,7 @@ protocol HomeTimelineViewModelInput: AnyObject {
     //TODO: 後々、日付型っぽいやつにする
     var authExecutedAt: AnyObserver<String>? { get }
     var refreshExecutedAt: AnyObserver<String>? { get }
+    var pullToRefreshExecutedAt: AnyObserver<UIRefreshControl>? { get }
 }
 
 protocol HomeTimelineViewModelOutput: AnyObject {
@@ -27,6 +28,7 @@ final class HomeTimelineViewModel: HomeTimelineViewModelInput, HomeTimelineViewM
     
     var authExecutedAt: AnyObserver<String>? = nil
     var refreshExecutedAt: AnyObserver<String>? = nil
+    var pullToRefreshExecutedAt: AnyObserver<UIRefreshControl>? = nil
     let statuses: Observable<[Status]?>
     
     init(tweetsRepository: BaseTweetsRepository = TweetsRepository.shared,
@@ -43,6 +45,17 @@ final class HomeTimelineViewModel: HomeTimelineViewModelInput, HomeTimelineViewM
                 .bind(to: _statuses)
                 .disposed(by: self.disposeBag)
             print(updatedAt.element)
+        }
+
+        self.pullToRefreshExecutedAt = AnyObserver<UIRefreshControl>() { [unowned self] uiRefreshControl in
+            self.tweetsRepository
+                .getHomeTimeLine()
+                .map {
+                    uiRefreshControl.element?.endRefreshing()
+                    return $0 ?? []
+                }
+                .bind(to: _statuses)
+                .disposed(by: self.disposeBag)
         }
         
         self.authExecutedAt = AnyObserver<String>() { [unowned self] authedAt in

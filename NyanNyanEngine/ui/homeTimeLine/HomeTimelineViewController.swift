@@ -53,7 +53,14 @@ class HomeTimelineViewController: UIViewController {
             .bind(to: tweetList.rx.items(dataSource: TweetSummaryDataSource()))
             .disposed(by: disposeBag)
         
+        tweetList.refreshControl = UIRefreshControl()
+        tweetList.refreshControl?.addTarget(self, action: #selector(self.refresh(sender:)), for: .valueChanged)
+        
         input.refreshExecutedAt?.onNext("2019/04/30 12:12:12")
+    }
+    
+    @objc func refresh(sender: UIRefreshControl) {
+        input.pullToRefreshExecutedAt?.onNext(sender)
     }
 }
 
