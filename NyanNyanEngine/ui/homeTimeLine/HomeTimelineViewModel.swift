@@ -8,6 +8,7 @@
 
 import Foundation
 import RxSwift
+import RxRelay
 
 protocol HomeTimelineViewModelInput: AnyObject {
     //TODO: 後々、日付型っぽいやつにする
@@ -33,7 +34,7 @@ final class HomeTimelineViewModel: HomeTimelineViewModelInput, HomeTimelineViewM
         self.tweetsRepository = tweetsRepository
         self.authRepository = authRepository
         
-        let _statuses = BehaviorSubject<[Status]?>(value: nil)
+        let _statuses = BehaviorRelay<[Status]?>(value: nil)
         self.statuses = _statuses.asObservable()
         
         self.refreshExecutedAt = AnyObserver<String>() { [unowned self] updatedAt in
