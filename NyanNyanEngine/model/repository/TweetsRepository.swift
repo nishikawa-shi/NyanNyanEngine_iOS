@@ -11,8 +11,6 @@ import RxSwift
 import RxRelay
 
 protocol BaseTweetsRepository: AnyObject {
-    func getHomeTimeLine(uiRefreshControl: UIRefreshControl?) -> Observable<[Status]?>
-    
     var statuses: Observable<[Status]?> { get }
     var buttonRefreshExecutedAt: AnyObserver<String>? { get }
     var pullToRefreshExecutedAt: AnyObserver<UIRefreshControl?>? { get }
@@ -55,7 +53,7 @@ class TweetsRepository: BaseTweetsRepository {
         }
     }
     
-    func getHomeTimeLine(uiRefreshControl: UIRefreshControl? = nil) -> Observable<[Status]?> {
+    private func getHomeTimeLine(uiRefreshControl: UIRefreshControl? = nil) -> Observable<[Status]?> {
         guard let apiKey = PlistConnector.shared.getString(withKey: "apiKey"),
             let apiSecret = PlistConnector.shared.getString(withKey: "apiSecret"),
             let accessToken = UserDefaultsConnector.shared.getString(withKey: "oauth_token"),
