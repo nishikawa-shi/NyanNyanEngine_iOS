@@ -11,7 +11,8 @@ import RxSwift
 
 protocol BaseAuthRepository: AnyObject {
     func getRequestToken() -> Observable<URL>
-    func downloadAccessToken(redirectedUrl: URL) -> Observable<Bool>
+    func downloadAccessToken(redirectedUrl: URL,
+                             modelUpdateLogic: @escaping(() -> Void) ) -> Observable<Bool>
 }
 
 class AuthRepository: BaseAuthRepository {
@@ -38,12 +39,14 @@ class AuthRepository: BaseAuthRepository {
             .flatMap { $0.flatMap {Observable<URL>.just($0)} ?? Observable<URL>.empty() }
     }
     
-    func downloadAccessToken(redirectedUrl: URL) -> Observable<Bool> {
+    func downloadAccessToken(redirectedUrl: URL,
+                             modelUpdateLogic: @escaping (() -> Void)) -> Observable<Bool> {
         guard let urlRequest = ApiRequestFactory().createAccessTokenRequest(redirectedUrl: redirectedUrl) else { return Observable<Bool>.empty() }
         return self.apiClient
             .postResponse(urlRequest: urlRequest)
             .map { [unowned self] in self.parseTokens(accessTokenApiResponse: $0) }
             .map { [unowned self] in self.saveTokens(accessTokenApiResponseQuery: $0 ?? [])}
+            .map (modelUpdateLogic)
             .map { true }
     }
     
