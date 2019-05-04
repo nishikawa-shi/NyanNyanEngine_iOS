@@ -33,6 +33,7 @@ class HomeTimelineViewController: UIViewController {
     @IBOutlet weak var authButton: UIBarButtonItem!
     @IBOutlet weak var refreshButton: UIBarButtonItem!
     @IBOutlet weak var tweetList: UITableView!
+    @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -57,6 +58,15 @@ class HomeTimelineViewController: UIViewController {
         output.currentUser
             .bind(to: navigationBar.rx.title)
             .disposed(by: disposeBag)
+        
+        output.isLoading
+            .subscribe() { status in
+                if (status.element ?? false) {
+                    self.activityIndicator.startAnimating()
+                } else {
+                    self.activityIndicator.stopAnimating()
+                }
+        }.disposed(by: disposeBag)
         
         tweetList.refreshControl = UIRefreshControl()
         tweetList.refreshControl?.addTarget(self, action: #selector(self.refresh(sender:)), for: .valueChanged)
