@@ -45,14 +45,6 @@ class AuthRepository: BaseAuthRepository {
         }
     }
     
-    func getCurrentUser() -> Observable<String> {
-        let currentUser = userDefaultsConnector.getString(withKey: "screen_name") ?? "にゃんにゃんエンジン"
-        return Observable<String>.create { observer in
-            observer.onNext(currentUser)
-            return Disposables.create()
-        }
-    }
-    
     func getRequestToken() -> Observable<URL> {
         guard let apiKey = PlistConnector.shared.getString(withKey: "apiKey"),
             let apiSecret = PlistConnector.shared.getString(withKey: "apiSecret"),
@@ -74,6 +66,14 @@ class AuthRepository: BaseAuthRepository {
             .map { [unowned self] in self.saveTokens(accessTokenApiResponseQuery: $0 ?? [])}
             .map (modelUpdateLogic)
             .map { true }
+    }
+    
+    private func getCurrentUser() -> Observable<String> {
+        let currentUser = userDefaultsConnector.getString(withKey: "screen_name") ?? "にゃんにゃんエンジン"
+        return Observable<String>.create { observer in
+            observer.onNext(currentUser)
+            return Disposables.create()
+        }
     }
     
     private func toAuthTokenValue(data: Data?) -> URL? {
