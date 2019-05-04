@@ -28,7 +28,7 @@ class TweetsRepository: BaseTweetsRepository {
     let statuses: Observable<[Status]?>
     var buttonRefreshExecutedAt: AnyObserver<String>? = nil
     var pullToRefreshExecutedAt: AnyObserver<UIRefreshControl?>? = nil
-
+    
     private init(apiClient: BaseApiClient = ApiClient.shared,
                  userDefaultsConnector: BaseUserDefaultsConnector = UserDefaultsConnector.shared) {
         self.apiClient = apiClient
@@ -39,8 +39,8 @@ class TweetsRepository: BaseTweetsRepository {
         
         self.buttonRefreshExecutedAt = AnyObserver<String> { [unowned self] updatedAt in
             self.getHomeTimeLine()
-            .bind(to: _statuses)
-            .disposed(by: self.disposeBag)
+                .bind(to: _statuses)
+                .disposed(by: self.disposeBag)
         }
         
         self.pullToRefreshExecutedAt = AnyObserver<UIRefreshControl?> { [unowned self] uiRefreshControl in
@@ -50,8 +50,8 @@ class TweetsRepository: BaseTweetsRepository {
                     uiRefreshControl.element??.endRefreshing()
                     return $0 ?? []
                 }
-            .bind(to: _statuses)
-            .disposed(by: self.disposeBag)
+                .bind(to: _statuses)
+                .disposed(by: self.disposeBag)
         }
     }
     
