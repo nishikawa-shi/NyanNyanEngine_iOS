@@ -12,6 +12,7 @@ import RxSwift
 protocol BaseTweetsRepository: AnyObject {
     func isLoggedIn() -> Bool
     func getHomeTimeLine(uiRefreshControl: UIRefreshControl?) -> Observable<[Status]?>
+    func getCurrentUser() -> Observable<String>
 }
 
 class TweetsRepository: BaseTweetsRepository {
@@ -42,6 +43,14 @@ class TweetsRepository: BaseTweetsRepository {
         return self.apiClient
             .postResponse(urlRequest: urlRequest)
             .map { [unowned self] in self.toStatuses(data: $0) }
+    }
+    
+    func getCurrentUser() -> Observable<String> {
+        let tekitou = userDefaultsConnector.getString(withKey: "screen_name") ?? "にゃんにゃんエンジン"
+        return Observable<String>.create { observer in
+            observer.onNext(tekitou)
+            return Disposables.create()
+        }
     }
     
     func isLoggedIn() -> Bool {

@@ -29,6 +29,7 @@ class HomeTimelineViewController: UIViewController {
         super.init(coder: aDecoder)
     }
     
+    @IBOutlet weak var navigationBar: UINavigationItem!
     @IBOutlet weak var authButton: UIBarButtonItem!
     @IBOutlet weak var refreshButton: UIBarButtonItem!
     @IBOutlet weak var tweetList: UITableView!
@@ -51,6 +52,10 @@ class HomeTimelineViewController: UIViewController {
         output.statuses
             .flatMap{ $0.flatMap { Observable<[Status]>.just($0) } ?? Observable<[Status]>.empty() }
             .bind(to: tweetList.rx.items(dataSource: TweetSummaryDataSource()))
+            .disposed(by: disposeBag)
+        
+        output.currentUser
+            .bind(to: navigationBar.rx.title)
             .disposed(by: disposeBag)
         
         tweetList.refreshControl = UIRefreshControl()
