@@ -11,7 +11,6 @@ import RxSwift
 import RxRelay
 
 protocol BaseTweetsRepository: AnyObject {
-    func isLoggedIn() -> Bool
     func getHomeTimeLine(uiRefreshControl: UIRefreshControl?) -> Observable<[Status]?>
     
     var statuses: Observable<[Status]?> { get }
@@ -72,10 +71,6 @@ class TweetsRepository: BaseTweetsRepository {
         return self.apiClient
             .postResponse(urlRequest: urlRequest)
             .map { [unowned self] in self.toStatuses(data: $0) }
-    }
-    
-    func isLoggedIn() -> Bool {
-        return userDefaultsConnector.isRegistered(withKey: "oauth_token")
     }
     
     private func toStatuses(data: Data?) -> [Status]? {
