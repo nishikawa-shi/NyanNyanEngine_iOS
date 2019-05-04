@@ -29,6 +29,7 @@ class HomeTimelineViewController: UIViewController {
         super.init(coder: aDecoder)
     }
     
+    @IBOutlet weak var navigationBar: UINavigationItem!
     @IBOutlet weak var authButton: UIBarButtonItem!
     @IBOutlet weak var refreshButton: UIBarButtonItem!
     @IBOutlet weak var tweetList: UITableView!
@@ -54,7 +55,7 @@ class HomeTimelineViewController: UIViewController {
             .disposed(by: disposeBag)
         
         output.currentUser
-            .subscribe()
+            .bind(to: navigationBar.rx.title)
             .disposed(by: disposeBag)
         
         tweetList.refreshControl = UIRefreshControl()
