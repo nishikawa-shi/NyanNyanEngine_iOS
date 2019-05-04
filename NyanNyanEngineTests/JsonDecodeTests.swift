@@ -107,11 +107,9 @@ class JsonDecodeTests: XCTestCase {
         
         let testStatusObj = try! decoder!.decode([Status].self, from: testJson).first!
         
-        XCTAssertEqual(testStatusObj.createdAt, "Sun Apr 28 21:00:00 +0000 2019")
         XCTAssertEqual(testStatusObj.text, "28日は、ちょーいい日で、めっちゃ笑って、水飲んで寝た")
         XCTAssertEqual(testStatusObj.user.name, "ハイボールマン 3号")
-        XCTAssertEqual(testStatusObj.favorited, false)
-        XCTAssertEqual(testStatusObj.retweeted, false)
+        XCTAssertEqual(testStatusObj.user.screenName, "oauth_dancer")
     }
     
     func testCanParseStatus() {
@@ -201,11 +199,9 @@ class JsonDecodeTests: XCTestCase {
         
         let testStatusObj = try! decoder!.decode(Status.self, from: testJson)
         
-        XCTAssertEqual(testStatusObj.createdAt, "Sun Apr 28 21:00:00 +0000 2019")
-        XCTAssertEqual(testStatusObj.text, "28日は、ちょーいい日で、めっちゃ笑って、水飲んで寝た")
         XCTAssertEqual(testStatusObj.user.name, "ハイボールマン 3号")
-        XCTAssertEqual(testStatusObj.favorited, false)
-        XCTAssertEqual(testStatusObj.retweeted, false)
+        XCTAssertEqual(testStatusObj.user.screenName, "oauth_dancer")
+        XCTAssertEqual(testStatusObj.text, "28日は、ちょーいい日で、めっちゃ笑って、水飲んで寝た")
     }
     
     func testCanParseUser() {
@@ -271,60 +267,6 @@ class JsonDecodeTests: XCTestCase {
         let testUserObj = try! decoder!.decode(User.self, from: testJson)
         
         XCTAssertEqual(testUserObj.name, "ハイボールマン 3号")
-        XCTAssertEqual(testUserObj.profileImageUrlHttps, "https://si0.twimg.com/profile_images/730275945/oauth-dancer_normal.jpg")
-        XCTAssertEqual(testUserObj.statusesCount, 166)
+        XCTAssertEqual(testUserObj.screenName, "oauth_dancer")
     }
-    
-    func testCanParseEntity() {
-        let testJson = """
-            {
-                "urls": [],
-                "hashtags": [],
-                "user_mentions": []
-            }
-        """.data(using: .utf8)!
-        let testEntityObj = try! decoder!.decode(Entity.self, from: testJson)
-        
-        XCTAssertTrue(testEntityObj.urls.isEmpty)
-        XCTAssertTrue(testEntityObj.userMentions.isEmpty)
-    }
-    
-    func testCanParseUrl() {
-        let testJson = """
-            {
-                "expanded_url": "http://blogs.ischool.berkeley.edu/i290-abdt-s12/",
-                "url": "http://t.co/bfj7zkDJ",
-                "indices": [
-                    79,
-                    99
-                ],
-                "display_url": "blogs.ischool.berkeley.edu/i290-abdt-s12/"
-            }
-        """.data(using: .utf8)!
-        let testUrlObj = try! decoder!.decode(Url.self, from: testJson)
-        
-        XCTAssertEqual(testUrlObj.expandedUrl, "http://blogs.ischool.berkeley.edu/i290-abdt-s12/")
-        XCTAssertEqual(testUrlObj.indices, [79, 99])
-    }
-    
-    func testCanParseUserMention() {
-        let testJson = """
-            {
-                "name": "Tetsuya Nishikawa",
-                "id_str": "20495814",
-                "id": 20495814,
-                "indices": [
-                    70,
-                    77
-                ],
-                "screen_name": "にしかわ"
-            }
-        """.data(using: .utf8)!
-        let testUserMentionObj = try! decoder!.decode(UserMention.self, from: testJson)
-        
-        XCTAssertEqual(testUserMentionObj.name, "Tetsuya Nishikawa")
-        XCTAssertEqual(testUserMentionObj.id, 20495814)
-        XCTAssertEqual(testUserMentionObj.screenName, "にしかわ")
-    }
-    
 }
