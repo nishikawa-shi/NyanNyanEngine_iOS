@@ -8,7 +8,6 @@
 
 import Foundation
 import RxSwift
-import RxRelay
 
 protocol HomeTimelineViewModelInput: AnyObject {
     //TODO: 後々、日付型っぽいやつにする
@@ -38,39 +37,27 @@ final class HomeTimelineViewModel: HomeTimelineViewModelInput, HomeTimelineViewM
         self.tweetsRepository = tweetsRepository
         self.authRepository = authRepository
         
-        let _currentUser = BehaviorRelay<String>(value: "にゃんにゃんエンジン")
-        self.currentUser = _currentUser.asObservable()
-        
-        let _statuses = BehaviorRelay<[Status]?>(value: nil)
-        self.statuses = _statuses.asObservable()
+        self.currentUser = authRepository.currentUser
+        self.statuses = tweetsRepository.statuses
         
         self.buttonRefreshExecutedAt = AnyObserver<String>() { [unowned self] updatedAt in
-            self.tweetsRepository
-                .getCurrentUser()
-                .bind(to: _currentUser)
-                .disposed(by: self.disposeBag)
+            self.authRepository
+                .loginExecutedAt?
+                .onNext(updatedAt.element ?? "")
             
             self.tweetsRepository
-                .getHomeTimeLine(uiRefreshControl: nil)
-                .bind(to: _statuses)
-                .disposed(by: self.disposeBag)
+                .buttonRefreshExecutedAt?
+                .onNext(updatedAt.element ?? "")
         }
-
+        
         self.pullToRefreshExecutedAt = AnyObserver<UIRefreshControl>() { [unowned self] uiRefreshControl in
+            self.authRepository
+                .loginExecutedAt?
+                .onNext("")
+            
             self.tweetsRepository
-                .getCurrentUser()
-                .bind(to: _currentUser)
-                .disposed(by: self.disposeBag)
-
-            self.tweetsRepository
-                .getHomeTimeLine(uiRefreshControl: uiRefreshControl.element)
-                .map {
-                    sleep(1)
-                    uiRefreshControl.element?.endRefreshing()
-                    return $0 ?? []
-                }
-                .bind(to: _statuses)
-                .disposed(by: self.disposeBag)
+                .pullToRefreshExecutedAt?
+                .onNext(uiRefreshControl.element)
         }
         
         self.authExecutedAt = AnyObserver<String>() { [unowned self] authedAt in

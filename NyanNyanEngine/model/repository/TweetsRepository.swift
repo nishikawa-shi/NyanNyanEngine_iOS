@@ -8,23 +8,51 @@
 
 import Foundation
 import RxSwift
+import RxRelay
 
 protocol BaseTweetsRepository: AnyObject {
-    func isLoggedIn() -> Bool
     func getHomeTimeLine(uiRefreshControl: UIRefreshControl?) -> Observable<[Status]?>
-    func getCurrentUser() -> Observable<String>
+    
+    var statuses: Observable<[Status]?> { get }
+    var buttonRefreshExecutedAt: AnyObserver<String>? { get }
+    var pullToRefreshExecutedAt: AnyObserver<UIRefreshControl?>? { get }
 }
 
 class TweetsRepository: BaseTweetsRepository {
     static let shared = TweetsRepository()
     
+    private let disposeBag = DisposeBag()
     private let apiClient: BaseApiClient
     private let userDefaultsConnector: BaseUserDefaultsConnector
+    
+    let statuses: Observable<[Status]?>
+    var buttonRefreshExecutedAt: AnyObserver<String>? = nil
+    var pullToRefreshExecutedAt: AnyObserver<UIRefreshControl?>? = nil
     
     private init(apiClient: BaseApiClient = ApiClient.shared,
                  userDefaultsConnector: BaseUserDefaultsConnector = UserDefaultsConnector.shared) {
         self.apiClient = apiClient
         self.userDefaultsConnector = userDefaultsConnector
+        
+        let _statuses = BehaviorRelay<[Status]?>(value: nil)
+        self.statuses = _statuses.asObservable()
+        
+        self.buttonRefreshExecutedAt = AnyObserver<String> { [unowned self] updatedAt in
+            self.getHomeTimeLine()
+                .bind(to: _statuses)
+                .disposed(by: self.disposeBag)
+        }
+        
+        self.pullToRefreshExecutedAt = AnyObserver<UIRefreshControl?> { [unowned self] uiRefreshControl in
+            self.getHomeTimeLine()
+                .map {
+                    sleep(1)
+                    uiRefreshControl.element??.endRefreshing()
+                    return $0 ?? []
+                }
+                .bind(to: _statuses)
+                .disposed(by: self.disposeBag)
+        }
     }
     
     func getHomeTimeLine(uiRefreshControl: UIRefreshControl? = nil) -> Observable<[Status]?> {
@@ -43,18 +71,6 @@ class TweetsRepository: BaseTweetsRepository {
         return self.apiClient
             .postResponse(urlRequest: urlRequest)
             .map { [unowned self] in self.toStatuses(data: $0) }
-    }
-    
-    func getCurrentUser() -> Observable<String> {
-        let tekitou = userDefaultsConnector.getString(withKey: "screen_name") ?? "にゃんにゃんエンジン"
-        return Observable<String>.create { observer in
-            observer.onNext(tekitou)
-            return Disposables.create()
-        }
-    }
-    
-    func isLoggedIn() -> Bool {
-        return userDefaultsConnector.isRegistered(withKey: "oauth_token")
     }
     
     private func toStatuses(data: Data?) -> [Status]? {

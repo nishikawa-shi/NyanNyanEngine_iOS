@@ -8,22 +8,41 @@
 
 import Foundation
 import RxSwift
+import RxRelay
 
 protocol BaseAuthRepository: AnyObject {
     func getRequestToken() -> Observable<URL>
-    func downloadAccessToken(redirectedUrl: URL) -> Observable<Bool>
+    func downloadAccessToken(redirectedUrl: URL,
+                             modelUpdateLogic: @escaping(() -> Void) ) -> Observable<Bool>
+    
+    var currentUser: Observable<String> { get }
+    var loginExecutedAt: AnyObserver<String>? { get }
 }
 
 class AuthRepository: BaseAuthRepository {
     static let shared = AuthRepository()
     
+    private let disposeBag = DisposeBag()
     private let apiClient: BaseApiClient
     private let userDefaultsConnector: BaseUserDefaultsConnector
+    
+    let currentUser: Observable<String>
+    var loginExecutedAt: AnyObserver<String>? = nil
     
     private init(apiClient: BaseApiClient = ApiClient.shared,
                  userDefaultsConnector: BaseUserDefaultsConnector = UserDefaultsConnector.shared) {
         self.apiClient = apiClient
         self.userDefaultsConnector = userDefaultsConnector
+        
+        let _currentUser = BehaviorRelay<String>(value: "にゃんにゃんエンジン")
+        self.currentUser = _currentUser.asObservable()
+        
+        self.loginExecutedAt = AnyObserver<String> { [unowned self] executedAt in
+            self.getCurrentUser()
+                .bind(to: _currentUser)
+                .disposed(by: self.disposeBag)
+            
+        }
     }
     
     func getRequestToken() -> Observable<URL> {
@@ -38,13 +57,23 @@ class AuthRepository: BaseAuthRepository {
             .flatMap { $0.flatMap {Observable<URL>.just($0)} ?? Observable<URL>.empty() }
     }
     
-    func downloadAccessToken(redirectedUrl: URL) -> Observable<Bool> {
+    func downloadAccessToken(redirectedUrl: URL,
+                             modelUpdateLogic: @escaping (() -> Void)) -> Observable<Bool> {
         guard let urlRequest = ApiRequestFactory().createAccessTokenRequest(redirectedUrl: redirectedUrl) else { return Observable<Bool>.empty() }
         return self.apiClient
             .postResponse(urlRequest: urlRequest)
             .map { [unowned self] in self.parseTokens(accessTokenApiResponse: $0) }
             .map { [unowned self] in self.saveTokens(accessTokenApiResponseQuery: $0 ?? [])}
+            .map (modelUpdateLogic)
             .map { true }
+    }
+    
+    private func getCurrentUser() -> Observable<String> {
+        let currentUser = userDefaultsConnector.getString(withKey: "screen_name") ?? "にゃんにゃんエンジン"
+        return Observable<String>.create { observer in
+            observer.onNext(currentUser)
+            return Disposables.create()
+        }
     }
     
     private func toAuthTokenValue(data: Data?) -> URL? {
