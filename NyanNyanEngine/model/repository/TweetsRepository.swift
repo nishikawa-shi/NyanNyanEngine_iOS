@@ -11,7 +11,7 @@ import RxSwift
 
 protocol BaseTweetsRepository: AnyObject {
     func isLoggedIn() -> Bool
-    func getHomeTimeLine() -> Observable<[Status]?>
+    func getHomeTimeLine(uiRefreshControl: UIRefreshControl?) -> Observable<[Status]?>
 }
 
 class TweetsRepository: BaseTweetsRepository {
@@ -26,7 +26,7 @@ class TweetsRepository: BaseTweetsRepository {
         self.userDefaultsConnector = userDefaultsConnector
     }
     
-    func getHomeTimeLine() -> Observable<[Status]?> {
+    func getHomeTimeLine(uiRefreshControl: UIRefreshControl? = nil) -> Observable<[Status]?> {
         guard let apiKey = PlistConnector.shared.getString(withKey: "apiKey"),
             let apiSecret = PlistConnector.shared.getString(withKey: "apiSecret"),
             let accessToken = UserDefaultsConnector.shared.getString(withKey: "oauth_token"),
@@ -35,7 +35,9 @@ class TweetsRepository: BaseTweetsRepository {
                                                apiSecret: apiSecret,
                                                oauthNonce: "0000",
                                                accessTokenSecret: accessTokenSecret,
-                                               accessToken: accessToken).createHomeTimelineRequest() else { return Observable<[Status]?>.empty() }
+                                               accessToken: accessToken).createHomeTimelineRequest() else {
+                                                uiRefreshControl?.endRefreshing()
+                                                return Observable<[Status]?>.empty() }
         
         return self.apiClient
             .postResponse(urlRequest: urlRequest)

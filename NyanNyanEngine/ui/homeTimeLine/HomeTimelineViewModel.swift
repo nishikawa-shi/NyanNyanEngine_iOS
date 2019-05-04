@@ -41,7 +41,7 @@ final class HomeTimelineViewModel: HomeTimelineViewModelInput, HomeTimelineViewM
         
         self.refreshExecutedAt = AnyObserver<String>() { [unowned self] updatedAt in
             self.tweetsRepository
-                .getHomeTimeLine()
+                .getHomeTimeLine(uiRefreshControl: nil)
                 .bind(to: _statuses)
                 .disposed(by: self.disposeBag)
             print(updatedAt.element)
@@ -49,7 +49,7 @@ final class HomeTimelineViewModel: HomeTimelineViewModelInput, HomeTimelineViewM
 
         self.pullToRefreshExecutedAt = AnyObserver<UIRefreshControl>() { [unowned self] uiRefreshControl in
             self.tweetsRepository
-                .getHomeTimeLine()
+                .getHomeTimeLine(uiRefreshControl: uiRefreshControl.element)
                 .map {
                     uiRefreshControl.element?.endRefreshing()
                     return $0 ?? []
