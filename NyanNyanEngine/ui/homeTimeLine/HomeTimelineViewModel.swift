@@ -13,7 +13,7 @@ import RxRelay
 protocol HomeTimelineViewModelInput: AnyObject {
     //TODO: 後々、日付型っぽいやつにする
     var authExecutedAt: AnyObserver<String>? { get }
-    var refreshExecutedAt: AnyObserver<String>? { get }
+    var buttonRefreshExecutedAt: AnyObserver<String>? { get }
     var pullToRefreshExecutedAt: AnyObserver<UIRefreshControl>? { get }
 }
 
@@ -27,7 +27,7 @@ final class HomeTimelineViewModel: HomeTimelineViewModelInput, HomeTimelineViewM
     private let disposeBag = DisposeBag()
     
     var authExecutedAt: AnyObserver<String>? = nil
-    var refreshExecutedAt: AnyObserver<String>? = nil
+    var buttonRefreshExecutedAt: AnyObserver<String>? = nil
     var pullToRefreshExecutedAt: AnyObserver<UIRefreshControl>? = nil
     let statuses: Observable<[Status]?>
     
@@ -39,7 +39,7 @@ final class HomeTimelineViewModel: HomeTimelineViewModelInput, HomeTimelineViewM
         let _statuses = BehaviorRelay<[Status]?>(value: nil)
         self.statuses = _statuses.asObservable()
         
-        self.refreshExecutedAt = AnyObserver<String>() { [unowned self] updatedAt in
+        self.buttonRefreshExecutedAt = AnyObserver<String>() { [unowned self] updatedAt in
             self.tweetsRepository
                 .getHomeTimeLine(uiRefreshControl: nil)
                 .bind(to: _statuses)

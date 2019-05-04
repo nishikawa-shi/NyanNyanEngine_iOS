@@ -45,7 +45,7 @@ class HomeTimelineViewController: UIViewController {
         refreshButton.rx.tap
             .throttle(DispatchTimeInterval.seconds(3), latest: false, scheduler: ConcurrentMainScheduler.instance)
             .map { "9999/12/31 23:59:59" }
-            .bind(to: input.refreshExecutedAt!)
+            .bind(to: input.buttonRefreshExecutedAt!)
             .disposed(by: disposeBag)
         
         output.statuses
@@ -56,7 +56,7 @@ class HomeTimelineViewController: UIViewController {
         tweetList.refreshControl = UIRefreshControl()
         tweetList.refreshControl?.addTarget(self, action: #selector(self.refresh(sender:)), for: .valueChanged)
         
-        input.refreshExecutedAt?.onNext("2019/04/30 12:12:12")
+        input.buttonRefreshExecutedAt?.onNext("2019/04/30 12:12:12")
     }
     
     @objc func refresh(sender: UIRefreshControl) {
