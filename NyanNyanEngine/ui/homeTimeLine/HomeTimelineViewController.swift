@@ -37,11 +37,13 @@ class HomeTimelineViewController: UIViewController {
         super.viewDidLoad()
         
         authButton.rx.tap
+            .throttle(DispatchTimeInterval.seconds(3), latest: false, scheduler: ConcurrentMainScheduler.instance)
             .map { "0000/01/01 00:00:00" }
             .bind(to: input.authExecutedAt!)
             .disposed(by: disposeBag)
         
         refreshButton.rx.tap
+            .throttle(DispatchTimeInterval.seconds(3), latest: false, scheduler: ConcurrentMainScheduler.instance)
             .map { "9999/12/31 23:59:59" }
             .bind(to: input.refreshExecutedAt!)
             .disposed(by: disposeBag)
