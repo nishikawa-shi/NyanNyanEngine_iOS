@@ -41,8 +41,7 @@ final class HomeTimelineViewModel: HomeTimelineViewModelInput, HomeTimelineViewM
         let _currentUser = BehaviorRelay<String>(value: "にゃんにゃんエンジン")
         self.currentUser = _currentUser.asObservable()
         
-        let _statuses = BehaviorRelay<[Status]?>(value: nil)
-        self.statuses = _statuses.asObservable()
+        self.statuses = tweetsRepository.statuses
         
         self.buttonRefreshExecutedAt = AnyObserver<String>() { [unowned self] updatedAt in
             self.tweetsRepository
@@ -51,9 +50,8 @@ final class HomeTimelineViewModel: HomeTimelineViewModelInput, HomeTimelineViewM
                 .disposed(by: self.disposeBag)
             
             self.tweetsRepository
-                .getHomeTimeLine(uiRefreshControl: nil)
-                .bind(to: _statuses)
-                .disposed(by: self.disposeBag)
+                .buttonRefreshExecutedAt?
+                .onNext(updatedAt.element ?? "")
         }
 
         self.pullToRefreshExecutedAt = AnyObserver<UIRefreshControl>() { [unowned self] uiRefreshControl in
@@ -61,16 +59,10 @@ final class HomeTimelineViewModel: HomeTimelineViewModelInput, HomeTimelineViewM
                 .getCurrentUser()
                 .bind(to: _currentUser)
                 .disposed(by: self.disposeBag)
-
+            
             self.tweetsRepository
-                .getHomeTimeLine(uiRefreshControl: uiRefreshControl.element)
-                .map {
-                    sleep(1)
-                    uiRefreshControl.element?.endRefreshing()
-                    return $0 ?? []
-                }
-                .bind(to: _statuses)
-                .disposed(by: self.disposeBag)
+                .pullToRefreshExecutedAt?
+                .onNext(uiRefreshControl.element)
         }
         
         self.authExecutedAt = AnyObserver<String>() { [unowned self] authedAt in
