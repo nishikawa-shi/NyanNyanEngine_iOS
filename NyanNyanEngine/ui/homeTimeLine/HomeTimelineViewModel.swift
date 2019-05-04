@@ -51,6 +51,7 @@ final class HomeTimelineViewModel: HomeTimelineViewModelInput, HomeTimelineViewM
             self.tweetsRepository
                 .getHomeTimeLine(uiRefreshControl: uiRefreshControl.element)
                 .map {
+                    sleep(1)
                     uiRefreshControl.element?.endRefreshing()
                     return $0 ?? []
                 }
