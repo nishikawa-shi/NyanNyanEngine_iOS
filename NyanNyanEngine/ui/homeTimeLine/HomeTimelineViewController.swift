@@ -53,6 +53,10 @@ class HomeTimelineViewController: UIViewController {
             .bind(to: tweetList.rx.items(dataSource: TweetSummaryDataSource()))
             .disposed(by: disposeBag)
         
+        output.currentUser
+            .subscribe()
+            .disposed(by: disposeBag)
+        
         tweetList.refreshControl = UIRefreshControl()
         tweetList.refreshControl?.addTarget(self, action: #selector(self.refresh(sender:)), for: .valueChanged)
         

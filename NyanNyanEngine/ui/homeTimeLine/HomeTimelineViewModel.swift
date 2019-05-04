@@ -19,6 +19,7 @@ protocol HomeTimelineViewModelInput: AnyObject {
 
 protocol HomeTimelineViewModelOutput: AnyObject {
     var statuses: Observable<[Status]?> { get }
+    var currentUser: Observable<String> { get }
 }
 
 final class HomeTimelineViewModel: HomeTimelineViewModelInput, HomeTimelineViewModelOutput {
@@ -29,6 +30,7 @@ final class HomeTimelineViewModel: HomeTimelineViewModelInput, HomeTimelineViewM
     var authExecutedAt: AnyObserver<String>? = nil
     var buttonRefreshExecutedAt: AnyObserver<String>? = nil
     var pullToRefreshExecutedAt: AnyObserver<UIRefreshControl>? = nil
+    let currentUser: Observable<String>
     let statuses: Observable<[Status]?>
     
     init(tweetsRepository: BaseTweetsRepository = TweetsRepository.shared,
@@ -36,18 +38,30 @@ final class HomeTimelineViewModel: HomeTimelineViewModelInput, HomeTimelineViewM
         self.tweetsRepository = tweetsRepository
         self.authRepository = authRepository
         
+        let _currentUser = BehaviorRelay<String>(value: "にゃんにゃんエンジン")
+        self.currentUser = _currentUser.asObservable()
+        
         let _statuses = BehaviorRelay<[Status]?>(value: nil)
         self.statuses = _statuses.asObservable()
         
         self.buttonRefreshExecutedAt = AnyObserver<String>() { [unowned self] updatedAt in
             self.tweetsRepository
+                .getCurrentUser()
+                .bind(to: _currentUser)
+                .disposed(by: self.disposeBag)
+            
+            self.tweetsRepository
                 .getHomeTimeLine(uiRefreshControl: nil)
                 .bind(to: _statuses)
                 .disposed(by: self.disposeBag)
-            print(updatedAt.element)
         }
 
         self.pullToRefreshExecutedAt = AnyObserver<UIRefreshControl>() { [unowned self] uiRefreshControl in
+            self.tweetsRepository
+                .getCurrentUser()
+                .bind(to: _currentUser)
+                .disposed(by: self.disposeBag)
+
             self.tweetsRepository
                 .getHomeTimeLine(uiRefreshControl: uiRefreshControl.element)
                 .map {
