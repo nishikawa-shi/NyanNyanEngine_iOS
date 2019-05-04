@@ -8,7 +8,6 @@
 
 import Foundation
 import RxSwift
-import RxRelay
 
 protocol HomeTimelineViewModelInput: AnyObject {
     //TODO: 後々、日付型っぽいやつにする
@@ -38,27 +37,23 @@ final class HomeTimelineViewModel: HomeTimelineViewModelInput, HomeTimelineViewM
         self.tweetsRepository = tweetsRepository
         self.authRepository = authRepository
         
-        let _currentUser = BehaviorRelay<String>(value: "にゃんにゃんエンジン")
-        self.currentUser = _currentUser.asObservable()
-        
+        self.currentUser = authRepository.currentUser
         self.statuses = tweetsRepository.statuses
         
         self.buttonRefreshExecutedAt = AnyObserver<String>() { [unowned self] updatedAt in
-            self.tweetsRepository
-                .getCurrentUser()
-                .bind(to: _currentUser)
-                .disposed(by: self.disposeBag)
+            self.authRepository
+                .loginExecutedAt?
+                .onNext(updatedAt.element ?? "")
             
             self.tweetsRepository
                 .buttonRefreshExecutedAt?
                 .onNext(updatedAt.element ?? "")
         }
-
+        
         self.pullToRefreshExecutedAt = AnyObserver<UIRefreshControl>() { [unowned self] uiRefreshControl in
-            self.tweetsRepository
-                .getCurrentUser()
-                .bind(to: _currentUser)
-                .disposed(by: self.disposeBag)
+            self.authRepository
+                .loginExecutedAt?
+                .onNext("")
             
             self.tweetsRepository
                 .pullToRefreshExecutedAt?

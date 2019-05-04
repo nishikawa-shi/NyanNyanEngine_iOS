@@ -34,6 +34,10 @@ final class AppDelegateModel: AppDelegateModelInput, AppDelegateModelOutput {
             guard let url = redirectedUrl.element else { return }
             self.authRepository
                 .downloadAccessToken(redirectedUrl: url) {
+                    self.authRepository
+                        .loginExecutedAt?
+                        .onNext("")
+                    
                     self.tweetsRepository
                         .buttonRefreshExecutedAt?
                         .onNext("")

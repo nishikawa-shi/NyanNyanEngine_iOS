@@ -8,23 +8,49 @@
 
 import Foundation
 import RxSwift
+import RxRelay
 
 protocol BaseAuthRepository: AnyObject {
     func getRequestToken() -> Observable<URL>
     func downloadAccessToken(redirectedUrl: URL,
                              modelUpdateLogic: @escaping(() -> Void) ) -> Observable<Bool>
+    
+    var currentUser: Observable<String> { get }
+    var loginExecutedAt: AnyObserver<String>? { get }
 }
 
 class AuthRepository: BaseAuthRepository {
     static let shared = AuthRepository()
     
+    private let disposeBag = DisposeBag()
     private let apiClient: BaseApiClient
     private let userDefaultsConnector: BaseUserDefaultsConnector
+    
+    let currentUser: Observable<String>
+    var loginExecutedAt: AnyObserver<String>? = nil
     
     private init(apiClient: BaseApiClient = ApiClient.shared,
                  userDefaultsConnector: BaseUserDefaultsConnector = UserDefaultsConnector.shared) {
         self.apiClient = apiClient
         self.userDefaultsConnector = userDefaultsConnector
+        
+        let _currentUser = BehaviorRelay<String>(value: "にゃんにゃんエンジン")
+        self.currentUser = _currentUser.asObservable()
+        
+        self.loginExecutedAt = AnyObserver<String> { [unowned self] executedAt in
+            self.getCurrentUser()
+                .bind(to: _currentUser)
+                .disposed(by: self.disposeBag)
+            
+        }
+    }
+    
+    func getCurrentUser() -> Observable<String> {
+        let currentUser = userDefaultsConnector.getString(withKey: "screen_name") ?? "にゃんにゃんエンジン"
+        return Observable<String>.create { observer in
+            observer.onNext(currentUser)
+            return Disposables.create()
+        }
     }
     
     func getRequestToken() -> Observable<URL> {
