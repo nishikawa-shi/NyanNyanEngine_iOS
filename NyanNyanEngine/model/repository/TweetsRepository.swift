@@ -39,7 +39,7 @@ class TweetsRepository: BaseTweetsRepository {
             self.getHomeTimeLine()
                 .map {
                     stopActivityIndicator.element?()
-                    return $0 ?? []
+                    return $0 ?? _statuses.value ?? []
                 }
                 .bind(to: _statuses)
                 .disposed(by: self.disposeBag)
@@ -50,7 +50,7 @@ class TweetsRepository: BaseTweetsRepository {
                 .map {
                     sleep(1)
                     uiRefreshControl.element??.endRefreshing()
-                    return $0 ?? []
+                    return $0 ?? _statuses.value ?? []
                 }
                 .bind(to: _statuses)
                 .disposed(by: self.disposeBag)
