@@ -95,10 +95,20 @@
                                     </tableViewCell>
                                 </prototypes>
                             </tableView>
+                            <activityIndicatorView hidden="YES" opaque="NO" alpha="0.5" tag="900" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" animating="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="rhv-87-lQP">
+                                <rect key="frame" x="159" y="427" width="96" height="96"/>
+                                <color key="backgroundColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="96" id="TYp-Hy-0lp"/>
+                                    <constraint firstAttribute="height" constant="96" id="VdJ-6c-IuQ"/>
+                                </constraints>
+                            </activityIndicatorView>
                         </subviews>
                         <color key="backgroundColor" red="0.99215686274509807" green="0.96470588235294119" blue="0.8901960784313725" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="lwQ-LT-5Jj" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="H2h-n9-A18"/>
+                            <constraint firstItem="rhv-87-lQP" firstAttribute="centerY" secondItem="6Tk-OE-BBY" secondAttribute="centerY" id="Kh7-98-mCb"/>
+                            <constraint firstItem="rhv-87-lQP" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" id="MWP-XE-wYU"/>
                             <constraint firstItem="lwQ-LT-5Jj" firstAttribute="bottom" secondItem="6Tk-OE-BBY" secondAttribute="bottom" id="R4M-jv-8A9"/>
                             <constraint firstItem="lwQ-LT-5Jj" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="rtz-Do-JXE"/>
                             <constraint firstItem="lwQ-LT-5Jj" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="zlg-oP-Ayk"/>
@@ -110,6 +120,7 @@
                         <barButtonItem key="rightBarButtonItem" systemItem="refresh" id="qPq-1x-X5L" userLabel="Refresh"/>
                     </navigationItem>
                     <connections>
+                        <outlet property="activityIndicator" destination="rhv-87-lQP" id="dku-AD-Wj9"/>
                         <outlet property="authButton" destination="p2V-y0-HXN" id="fHf-oh-usq"/>
                         <outlet property="navigationBar" destination="iLU-59-H1k" id="DZW-Vg-cvu"/>
                         <outlet property="refreshButton" destination="qPq-1x-X5L" id="M8u-ap-M8C"/>

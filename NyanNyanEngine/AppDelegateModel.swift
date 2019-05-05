@@ -20,17 +20,21 @@ protocol AppDelegateModelOutput: AnyObject {
 final class AppDelegateModel: AppDelegateModelInput, AppDelegateModelOutput {
     private let authRepository: BaseAuthRepository
     private let tweetsRepository: BaseTweetsRepository
+    private let loadingStatusRepository: BaseLoadingStatusRepository
 
     private let disposeBag = DisposeBag()
     
     var loginExecutedAt: AnyObserver<URL>? = nil
 
     init(authRepository: BaseAuthRepository = AuthRepository.shared,
-         tweetsRepository: BaseTweetsRepository = TweetsRepository.shared) {
+         tweetsRepository: BaseTweetsRepository = TweetsRepository.shared,
+         loadingStatusRepository: BaseLoadingStatusRepository = LoadingStatusRepository.shared) {
         self.authRepository = authRepository
         self.tweetsRepository = tweetsRepository
+        self.loadingStatusRepository = loadingStatusRepository
         
         self.loginExecutedAt = AnyObserver<URL>() { [unowned self] redirectedUrl in
+            self.loadingStatusRepository.loadingStatusChangedTo.onNext(true)
             guard let url = redirectedUrl.element else { return }
             self.authRepository
                 .downloadAccessToken(redirectedUrl: url) {
@@ -40,7 +44,7 @@ final class AppDelegateModel: AppDelegateModelInput, AppDelegateModelOutput {
                     
                     self.tweetsRepository
                         .buttonRefreshExecutedAt?
-                        .onNext("")
+                        .onNext() { self.loadingStatusRepository.loadingStatusChangedTo.onNext(false) }
                 }
                 .subscribe()
                 .disposed(by: self.disposeBag)

@@ -19,11 +19,13 @@ protocol HomeTimelineViewModelInput: AnyObject {
 protocol HomeTimelineViewModelOutput: AnyObject {
     var statuses: Observable<[Status]?> { get }
     var currentUser: Observable<String> { get }
+    var isLoading: Observable<Bool> { get }
 }
 
 final class HomeTimelineViewModel: HomeTimelineViewModelInput, HomeTimelineViewModelOutput {
     private let tweetsRepository: BaseTweetsRepository
     private let authRepository: BaseAuthRepository
+    private let loadingStatusRepository: BaseLoadingStatusRepository
     private let disposeBag = DisposeBag()
     
     var authExecutedAt: AnyObserver<String>? = nil
@@ -31,23 +33,31 @@ final class HomeTimelineViewModel: HomeTimelineViewModelInput, HomeTimelineViewM
     var pullToRefreshExecutedAt: AnyObserver<UIRefreshControl>? = nil
     let currentUser: Observable<String>
     let statuses: Observable<[Status]?>
+    let isLoading: Observable<Bool>
     
     init(tweetsRepository: BaseTweetsRepository = TweetsRepository.shared,
-         authRepository: BaseAuthRepository = AuthRepository.shared) {
+         authRepository: BaseAuthRepository = AuthRepository.shared,
+         loadingStatusRepository: BaseLoadingStatusRepository = LoadingStatusRepository.shared) {
         self.tweetsRepository = tweetsRepository
         self.authRepository = authRepository
+        self.loadingStatusRepository = loadingStatusRepository
         
         self.currentUser = authRepository.currentUser
         self.statuses = tweetsRepository.statuses
+        self.isLoading = loadingStatusRepository.isLoading
         
         self.buttonRefreshExecutedAt = AnyObserver<String>() { [unowned self] updatedAt in
+            self.loadingStatusRepository
+                .loadingStatusChangedTo
+                .onNext(true)
+            
             self.authRepository
                 .loginExecutedAt?
                 .onNext(updatedAt.element ?? "")
             
             self.tweetsRepository
                 .buttonRefreshExecutedAt?
-                .onNext(updatedAt.element ?? "")
+                .onNext() { self.loadingStatusRepository.loadingStatusChangedTo.onNext(false) }
         }
         
         self.pullToRefreshExecutedAt = AnyObserver<UIRefreshControl>() { [unowned self] uiRefreshControl in
@@ -58,6 +68,10 @@ final class HomeTimelineViewModel: HomeTimelineViewModelInput, HomeTimelineViewM
             self.tweetsRepository
                 .pullToRefreshExecutedAt?
                 .onNext(uiRefreshControl.element)
+            
+            self.loadingStatusRepository
+                .loadingStatusChangedTo
+                .onNext(false)
         }
         
         self.authExecutedAt = AnyObserver<String>() { [unowned self] authedAt in
