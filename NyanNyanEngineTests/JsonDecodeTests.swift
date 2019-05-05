@@ -110,6 +110,7 @@ class JsonDecodeTests: XCTestCase {
         XCTAssertEqual(testStatusObj.text, "28日は、ちょーいい日で、めっちゃ笑って、水飲んで寝た")
         XCTAssertEqual(testStatusObj.user.name, "ハイボールマン 3号")
         XCTAssertEqual(testStatusObj.user.screenName, "oauth_dancer")
+        XCTAssertEqual(testStatusObj.user.profileImageUrlHttps, "https://si0.twimg.com/profile_images/730275945/oauth-dancer_normal.jpg")
     }
     
     func testCanParseStatus() {
@@ -201,6 +202,7 @@ class JsonDecodeTests: XCTestCase {
         
         XCTAssertEqual(testStatusObj.user.name, "ハイボールマン 3号")
         XCTAssertEqual(testStatusObj.user.screenName, "oauth_dancer")
+        XCTAssertEqual(testStatusObj.user.profileImageUrlHttps, "https://si0.twimg.com/profile_images/730275945/oauth-dancer_normal.jpg")
         XCTAssertEqual(testStatusObj.text, "28日は、ちょーいい日で、めっちゃ笑って、水飲んで寝た")
     }
     
@@ -268,5 +270,6 @@ class JsonDecodeTests: XCTestCase {
         
         XCTAssertEqual(testUserObj.name, "ハイボールマン 3号")
         XCTAssertEqual(testUserObj.screenName, "oauth_dancer")
+        XCTAssertEqual(testUserObj.profileImageUrlHttps, "https://si0.twimg.com/profile_images/730275945/oauth-dancer_normal.jpg")
     }
 }

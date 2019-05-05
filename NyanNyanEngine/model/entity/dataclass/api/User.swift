@@ -11,4 +11,5 @@ import Foundation
 struct User: Codable {
     let name: String
     let screenName: String
+    var profileImageUrlHttps: String? = nil
 }
