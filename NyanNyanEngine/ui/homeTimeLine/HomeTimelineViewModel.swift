@@ -53,9 +53,7 @@ final class HomeTimelineViewModel: HomeTimelineViewModelInput, HomeTimelineViewM
             
             self.tweetsRepository
                 .buttonRefreshExecutedAt?
-                .onNext() {
-                    print("tekitou")
-            }
+                .onNext() { self.loadingStatusRepository.loadingStatusChangedTo.onNext(false) }
             
             self.loadingStatusRepository
                 .loadingStatusChangedTo

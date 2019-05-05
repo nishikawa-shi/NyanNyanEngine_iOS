@@ -44,9 +44,7 @@ final class AppDelegateModel: AppDelegateModelInput, AppDelegateModelOutput {
                     
                     self.tweetsRepository
                         .buttonRefreshExecutedAt?
-                        .onNext() {
-                            print("ro-dhingu tomema-su")
-                    }
+                        .onNext() { self.loadingStatusRepository.loadingStatusChangedTo.onNext(false) }
                 }
                 .subscribe()
                 .disposed(by: self.disposeBag)
