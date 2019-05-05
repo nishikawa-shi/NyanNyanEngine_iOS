@@ -9,6 +9,7 @@
 import UIKit
 
 class TweetSummaryCell: UITableViewCell {
+    @IBOutlet weak var userImage: UIImageView!
     @IBOutlet weak var userName: UILabel!
     @IBOutlet weak var userId: UILabel!
     @IBOutlet weak var publishedAt: UILabel!
