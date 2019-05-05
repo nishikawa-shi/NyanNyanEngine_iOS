@@ -24,11 +24,14 @@ class TweetSummaryDataSource: NSObject, UITableViewDataSource {
             return UITableViewCell()
         }
         
-        let tekitouUrlStr = "https://pbs.twimg.com/profile_images/1003237257631821824/EN5tK3hB_normal.jpg"
-        guard let url = URL(string: tekitouUrlStr) else { return UITableViewCell() }
-        Nuke.loadImage(with: url, into: cell.userImage)
-        
         let element = _itemModels[indexPath.row]
+        
+        element.user.profileImageUrlHttps
+            .flatMap({ URL(string: $0) })
+            .map({ Nuke.loadImage(with: $0, into: cell.userImage)
+                return
+            })
+        
         cell.userName?.text = element.user.name
         cell.userId?.text = element.user.screenName
         cell.tweetBody?.text = element.text
