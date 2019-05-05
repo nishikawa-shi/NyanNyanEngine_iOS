@@ -10,6 +10,7 @@ target 'NyanNyanEngine' do
   pod 'RxSwift',     '~> 5'
   pod 'RxCocoa',     '~> 5'
   pod 'CryptoSwift', '~> 1'
+  pod 'Nuke', '~> 7.0'
 
   target 'NyanNyanEngineTests' do
     inherit! :search_paths

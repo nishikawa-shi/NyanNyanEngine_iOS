@@ -1,6 +1,7 @@
 PODS:
   - Alamofire (4.8.2)
   - CryptoSwift (1.0.0)
+  - Nuke (7.6.2)
   - RxCocoa (5.0.0):
     - RxRelay (~> 5)
     - RxSwift (~> 5)
@@ -11,6 +12,7 @@ PODS:
 DEPENDENCIES:
   - Alamofire (~> 4.8.1)
   - CryptoSwift (~> 1)
+  - Nuke (~> 7.0)
   - RxCocoa (~> 5)
   - RxSwift (~> 5)
 
@@ -18,6 +20,7 @@ SPEC REPOS:
   https://github.com/cocoapods/specs.git:
     - Alamofire
     - CryptoSwift
+    - Nuke
     - RxCocoa
     - RxRelay
     - RxSwift
@@ -25,10 +28,11 @@ SPEC REPOS:
 SPEC CHECKSUMS:
   Alamofire: ae5c501addb7afdbb13687d7f2f722c78734c2d3
   CryptoSwift: d81eeaa59dc5a8d03720fe919a6fd07b51f7439f
+  Nuke: 392eff7cb037adbec6699febe9237849ac5dcc47
   RxCocoa: fcf32050ac00d801f34a7f71d5e8e7f23026dcd8
   RxRelay: 4f7409406a51a55cd88483f21ed898c234d60f18
   RxSwift: 8b0671caa829a763bbce7271095859121cbd895f
 
-PODFILE CHECKSUM: 31e25db94a5a6051bc69dba71b54d6fc71dc4437
+PODFILE CHECKSUM: 49259d0e146857a3edcc49a9871fc566ac0a53dd
 
 COCOAPODS: 1.5.3
