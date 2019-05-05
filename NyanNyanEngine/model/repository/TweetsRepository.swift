@@ -68,7 +68,7 @@ class TweetsRepository: BaseTweetsRepository {
                                                accessTokenSecret: accessTokenSecret,
                                                accessToken: accessToken).createHomeTimelineRequest() else {
                                                 uiRefreshControl?.endRefreshing()
-                                                return Observable<[Status]?>.empty() }
+                                                return Observable<[Status]?>.just(nil)}
         
         return self.apiClient
             .postResponse(urlRequest: urlRequest)

@@ -47,6 +47,10 @@ final class HomeTimelineViewModel: HomeTimelineViewModelInput, HomeTimelineViewM
         self.isLoading = loadingStatusRepository.isLoading
         
         self.buttonRefreshExecutedAt = AnyObserver<String>() { [unowned self] updatedAt in
+            self.loadingStatusRepository
+                .loadingStatusChangedTo
+                .onNext(true)
+            
             self.authRepository
                 .loginExecutedAt?
                 .onNext(updatedAt.element ?? "")
@@ -54,10 +58,6 @@ final class HomeTimelineViewModel: HomeTimelineViewModelInput, HomeTimelineViewM
             self.tweetsRepository
                 .buttonRefreshExecutedAt?
                 .onNext() { self.loadingStatusRepository.loadingStatusChangedTo.onNext(false) }
-            
-            self.loadingStatusRepository
-                .loadingStatusChangedTo
-                .onNext(true)
         }
         
         self.pullToRefreshExecutedAt = AnyObserver<UIRefreshControl>() { [unowned self] uiRefreshControl in
