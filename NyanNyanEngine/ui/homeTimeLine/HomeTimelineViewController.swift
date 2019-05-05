@@ -45,6 +45,8 @@ class HomeTimelineViewController: UIViewController {
             .disposed(by: disposeBag)
         
         refreshButton.rx.tap
+            .map { [unowned self] in
+                self.tweetList.scrollToRow(at: IndexPath(row: 0, section: 0), at: .top, animated: true) }
             .throttle(DispatchTimeInterval.seconds(3), latest: false, scheduler: ConcurrentMainScheduler.instance)
             .map { "9999/12/31 23:59:59" }
             .bind(to: input.buttonRefreshExecutedAt!)
