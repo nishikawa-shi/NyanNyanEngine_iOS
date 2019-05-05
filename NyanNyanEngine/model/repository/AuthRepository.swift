@@ -16,6 +16,8 @@ protocol BaseAuthRepository: AnyObject {
                              modelUpdateLogic: @escaping(() -> Void) ) -> Observable<Bool>
     
     var currentUser: Observable<String> { get }
+    var isLoggedIn: Observable<Bool>? { get }
+    
     var loginExecutedAt: AnyObserver<String>? { get }
 }
 
@@ -27,6 +29,9 @@ class AuthRepository: BaseAuthRepository {
     private let userDefaultsConnector: BaseUserDefaultsConnector
     
     let currentUser: Observable<String>
+    var isLoggedIn: Observable<Bool>? = nil
+    private let _isLoggedIn: BehaviorRelay<Bool>
+    
     var loginExecutedAt: AnyObserver<String>? = nil
     
     private init(apiClient: BaseApiClient = ApiClient.shared,
@@ -36,6 +41,11 @@ class AuthRepository: BaseAuthRepository {
         
         let _currentUser = BehaviorRelay<String>(value: "にゃんにゃんエンジン")
         self.currentUser = _currentUser.asObservable()
+        
+        //本当はself.getLoggedInStatusを呼びたいのだが、selfを使うものが、loginExecutedAtとここと、2箇所あ
+        //またこのためだけに全プロパティをvarにするのもキモいので、getLoggedInStatusnの中身を直書きしている。
+        self._isLoggedIn = BehaviorRelay<Bool>(value: (userDefaultsConnector.getString(withKey: "screen_name") != nil))
+        self.isLoggedIn = _isLoggedIn.asObservable()
         
         self.loginExecutedAt = AnyObserver<String> { [unowned self] executedAt in
             self.getCurrentUser()
@@ -64,8 +74,13 @@ class AuthRepository: BaseAuthRepository {
             .postResponse(urlRequest: urlRequest)
             .map { [unowned self] in self.parseTokens(accessTokenApiResponse: $0) }
             .map { [unowned self] in self.saveTokens(accessTokenApiResponseQuery: $0 ?? [])}
+            .map { self._isLoggedIn.accept(self.getLoggedInStatus()) }
             .map (modelUpdateLogic)
             .map { true }
+    }
+    
+    private func getLoggedInStatus() -> Bool {
+        return self.userDefaultsConnector.getString(withKey: "screen_name") != nil
     }
     
     private func getCurrentUser() -> Observable<String> {

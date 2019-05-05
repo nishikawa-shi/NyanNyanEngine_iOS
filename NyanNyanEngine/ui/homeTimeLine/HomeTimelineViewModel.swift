@@ -20,6 +20,7 @@ protocol HomeTimelineViewModelOutput: AnyObject {
     var statuses: Observable<[Status]?> { get }
     var currentUser: Observable<String> { get }
     var isLoading: Observable<Bool> { get }
+    var isLoggedIn: Observable<Bool>? { get }
 }
 
 final class HomeTimelineViewModel: HomeTimelineViewModelInput, HomeTimelineViewModelOutput {
@@ -34,6 +35,7 @@ final class HomeTimelineViewModel: HomeTimelineViewModelInput, HomeTimelineViewM
     let currentUser: Observable<String>
     let statuses: Observable<[Status]?>
     let isLoading: Observable<Bool>
+    let isLoggedIn: Observable<Bool>?
     
     init(tweetsRepository: BaseTweetsRepository = TweetsRepository.shared,
          authRepository: BaseAuthRepository = AuthRepository.shared,
@@ -45,6 +47,7 @@ final class HomeTimelineViewModel: HomeTimelineViewModelInput, HomeTimelineViewM
         self.currentUser = authRepository.currentUser
         self.statuses = tweetsRepository.statuses
         self.isLoading = loadingStatusRepository.isLoading
+        self.isLoggedIn = authRepository.isLoggedIn
         
         self.buttonRefreshExecutedAt = AnyObserver<String>() { [unowned self] updatedAt in
             self.loadingStatusRepository

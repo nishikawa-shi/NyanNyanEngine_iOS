@@ -68,6 +68,12 @@ class HomeTimelineViewController: UIViewController {
                 }
         }.disposed(by: disposeBag)
         
+        output.isLoggedIn?
+            .map { !$0 }
+            .bind(to: authButton.rx.isEnabled)
+            .disposed(by: disposeBag)
+
+        
         tweetList.refreshControl = UIRefreshControl()
         tweetList.refreshControl?.addTarget(self, action: #selector(self.refresh(sender:)), for: .valueChanged)
         
