@@ -12,7 +12,7 @@ import RxRelay
 
 protocol BaseTweetsRepository: AnyObject {
     var statuses: Observable<[Status]?> { get }
-    var buttonRefreshExecutedAt: AnyObserver<String>? { get }
+    var buttonRefreshExecutedAt: AnyObserver<(() -> Void)>? { get }
     var pullToRefreshExecutedAt: AnyObserver<UIRefreshControl?>? { get }
 }
 
@@ -24,7 +24,7 @@ class TweetsRepository: BaseTweetsRepository {
     private let userDefaultsConnector: BaseUserDefaultsConnector
     
     let statuses: Observable<[Status]?>
-    var buttonRefreshExecutedAt: AnyObserver<String>? = nil
+    var buttonRefreshExecutedAt: AnyObserver<(() -> Void)>? = nil
     var pullToRefreshExecutedAt: AnyObserver<UIRefreshControl?>? = nil
     
     private init(apiClient: BaseApiClient = ApiClient.shared,
@@ -35,8 +35,12 @@ class TweetsRepository: BaseTweetsRepository {
         let _statuses = BehaviorRelay<[Status]?>(value: nil)
         self.statuses = _statuses.asObservable()
         
-        self.buttonRefreshExecutedAt = AnyObserver<String> { [unowned self] updatedAt in
+        self.buttonRefreshExecutedAt = AnyObserver<(() -> Void)> { [unowned self] stopActivityIndicator in
             self.getHomeTimeLine()
+                .map {
+                    stopActivityIndicator.element?()
+                    return $0 ?? []
+                }
                 .bind(to: _statuses)
                 .disposed(by: self.disposeBag)
         }
