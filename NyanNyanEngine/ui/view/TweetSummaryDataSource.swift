@@ -9,6 +9,7 @@
 import UIKit
 import RxCocoa
 import RxSwift
+import Nuke
 
 class TweetSummaryDataSource: NSObject, UITableViewDataSource {
     typealias Element = [Status]
@@ -22,6 +23,11 @@ class TweetSummaryDataSource: NSObject, UITableViewDataSource {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "TweetSummaryCell", for: indexPath) as? TweetSummaryCell else {
             return UITableViewCell()
         }
+        
+        let tekitouUrlStr = "https://pbs.twimg.com/profile_images/1003237257631821824/EN5tK3hB_normal.jpg"
+        guard let url = URL(string: tekitouUrlStr) else { return UITableViewCell() }
+        Nuke.loadImage(with: url, into: cell.userImage)
+        
         let element = _itemModels[indexPath.row]
         cell.userName?.text = element.user.name
         cell.userId?.text = element.user.screenName
