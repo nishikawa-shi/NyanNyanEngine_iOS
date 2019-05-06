@@ -52,8 +52,8 @@ class HomeTimelineViewController: UIViewController {
             .bind(to: input.buttonRefreshExecutedAt!)
             .disposed(by: disposeBag)
         
-        output.statuses
-            .flatMap{ $0.flatMap { Observable<[Status]>.just($0) } ?? Observable<[Status]>.empty() }
+        output.nyanNyanStatuses
+            .flatMap{ $0.flatMap { Observable<[NyanNyan]>.just($0) } ?? Observable<[NyanNyan]>.empty() }
             .bind(to: tweetList.rx.items(dataSource: TweetSummaryDataSource()))
             .disposed(by: disposeBag)
         
