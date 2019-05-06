@@ -38,13 +38,13 @@ struct DefaultNekosan {
                  nyanedAt: "28分前",
                  nekogo: "🐟"),
         
-        NyanNyan(profileUrl: nil,
+        NyanNyan(profileUrl: "https://nyannyanengine.firebaseapp.com/assets/nekoichi.png",
                  userName: "猫一＠起業",
                  userId: "neko_top_biz",
                  nyanedAt: "3時間前",
                  nekogo: "にゃーんにゃーにゃん"),
         
-        NyanNyan(profileUrl: "https://nyannyanengine.firebaseapp.com/assets/nekoichi.png",
+        NyanNyan(profileUrl: "https://nyannyanengine.firebaseapp.com/assets/nabe_nyanko.png",
                  userName: "鍋にゃんこ",
                  userId: "hoku_hoku_neko",
                  nyanedAt: "23時間前",
