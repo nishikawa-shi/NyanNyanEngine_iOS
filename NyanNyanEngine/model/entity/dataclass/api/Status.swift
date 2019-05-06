@@ -10,5 +10,6 @@ import Foundation
 
 struct Status: Codable {
     let text: String
+    let createdAt: String
     let user: User
 }
