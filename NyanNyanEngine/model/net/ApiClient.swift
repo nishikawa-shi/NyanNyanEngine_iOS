@@ -33,7 +33,7 @@ class ApiClient: BaseApiClient {
         guard let urlRequest = self.createGetUrlRequest(url: url) else { return Observable<DataResponse<String>>.empty() }
         
         return Observable<DataResponse<String>>.create { observer in
-            Alamofire
+            AF
                 .request(urlRequest)
                 .responseString(encoding: .utf8) { observer.onNext($0) }
             return Disposables.create()
@@ -42,7 +42,7 @@ class ApiClient: BaseApiClient {
     
     private func postRequest(urlRequest: URLRequest) -> Observable<DataResponse<String>> {
         return Observable<DataResponse<String>>.create { observer in
-            Alamofire
+            AF
                 .request(urlRequest)
                 .responseString(encoding: .utf8) { observer.onNext($0) }
             return Disposables.create()
