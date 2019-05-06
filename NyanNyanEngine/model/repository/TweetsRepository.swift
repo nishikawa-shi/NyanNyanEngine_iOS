@@ -11,7 +11,7 @@ import RxSwift
 import RxRelay
 
 protocol BaseTweetsRepository: AnyObject {
-    var statuses: Observable<[Status]?> { get }
+    var nyanNyanStatuses: Observable<[NyanNyan]?> { get }
     var buttonRefreshExecutedAt: AnyObserver<(() -> Void)>? { get }
     var pullToRefreshExecutedAt: AnyObserver<UIRefreshControl?>? { get }
 }
@@ -23,7 +23,7 @@ class TweetsRepository: BaseTweetsRepository {
     private let apiClient: BaseApiClient
     private let userDefaultsConnector: BaseUserDefaultsConnector
     
-    let statuses: Observable<[Status]?>
+    let nyanNyanStatuses: Observable<[NyanNyan]?>
     var buttonRefreshExecutedAt: AnyObserver<(() -> Void)>? = nil
     var pullToRefreshExecutedAt: AnyObserver<UIRefreshControl?>? = nil
     
@@ -32,8 +32,8 @@ class TweetsRepository: BaseTweetsRepository {
         self.apiClient = apiClient
         self.userDefaultsConnector = userDefaultsConnector
         
-        let _statuses = BehaviorRelay<[Status]?>(value: nil)
-        self.statuses = _statuses.asObservable()
+        let _statuses = BehaviorRelay<[NyanNyan]?>(value: nil)
+        self.nyanNyanStatuses = _statuses.asObservable()
         
         self.buttonRefreshExecutedAt = AnyObserver<(() -> Void)> { [unowned self] stopActivityIndicator in
             self.getHomeTimeLine()
@@ -57,7 +57,7 @@ class TweetsRepository: BaseTweetsRepository {
         }
     }
     
-    private func getHomeTimeLine(uiRefreshControl: UIRefreshControl? = nil) -> Observable<[Status]?> {
+    private func getHomeTimeLine(uiRefreshControl: UIRefreshControl? = nil) -> Observable<[NyanNyan]?> {
         guard let apiKey = PlistConnector.shared.getString(withKey: "apiKey"),
             let apiSecret = PlistConnector.shared.getString(withKey: "apiSecret"),
             let accessToken = UserDefaultsConnector.shared.getString(withKey: "oauth_token"),
@@ -68,11 +68,12 @@ class TweetsRepository: BaseTweetsRepository {
                                                accessTokenSecret: accessTokenSecret,
                                                accessToken: accessToken).createHomeTimelineRequest() else {
                                                 uiRefreshControl?.endRefreshing()
-                                                return Observable<[Status]?>.just(DefaultNekosan().statuses)}
+                                                return Observable<[NyanNyan]?>.just(DefaultNekosan().nyanNyanStatuses)}
         
         return self.apiClient
             .postResponse(urlRequest: urlRequest)
             .map { [unowned self] in self.toStatuses(data: $0) }
+            .map { [unowned self] in self.toNyanNyan(rawTweets: $0) }
     }
     
     private func toStatuses(data: Data?) -> [Status]? {
@@ -80,5 +81,14 @@ class TweetsRepository: BaseTweetsRepository {
         decoder.keyDecodingStrategy = .convertFromSnakeCase
         guard let d = data else { return nil }
         return try? decoder.decode([Status].self, from: d)
+    }
+    
+    private func toNyanNyan(rawTweets: [Status]?) -> [NyanNyan] {
+        return rawTweets?.map {
+            NyanNyan(profileUrl: $0.user.profileImageUrlHttps,
+                     userName: $0.user.name,
+                     userId: ("@" + $0.user.screenName),
+                     nekogo: Nekosan().createNekogo(sourceStr: $0.text))
+        } ?? []
     }
 }

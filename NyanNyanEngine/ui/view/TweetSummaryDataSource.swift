@@ -12,9 +12,9 @@ import RxSwift
 import Nuke
 
 class TweetSummaryDataSource: NSObject, UITableViewDataSource {
-    typealias Element = [Status]
+    typealias Element = [NyanNyan]
     
-    var _itemModels: [Status] = []
+    var _itemModels: [NyanNyan] = []
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return _itemModels.count
     }
@@ -26,15 +26,15 @@ class TweetSummaryDataSource: NSObject, UITableViewDataSource {
         
         let element = _itemModels[indexPath.row]
         
-        element.user.profileImageUrlHttps
+        element.profileUrl
             .flatMap({ URL(string: $0) })
             .map({ Nuke.loadImage(with: $0, into: cell.userImage)
                 return
             })
         
-        cell.userName?.text = element.user.name
-        cell.userId?.text = element.user.screenName
-        cell.tweetBody?.text = element.text
+        cell.userName?.text = element.userName
+        cell.userId?.text = element.userId
+        cell.tweetBody?.text = element.nekogo
         return cell
     }
 }

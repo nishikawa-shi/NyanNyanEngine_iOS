@@ -17,7 +17,7 @@ protocol HomeTimelineViewModelInput: AnyObject {
 }
 
 protocol HomeTimelineViewModelOutput: AnyObject {
-    var statuses: Observable<[Status]?> { get }
+    var nyanNyanStatuses: Observable<[NyanNyan]?> { get }
     var currentUser: Observable<String> { get }
     var isLoading: Observable<Bool> { get }
     var isLoggedIn: Observable<Bool>? { get }
@@ -33,7 +33,7 @@ final class HomeTimelineViewModel: HomeTimelineViewModelInput, HomeTimelineViewM
     var buttonRefreshExecutedAt: AnyObserver<String>? = nil
     var pullToRefreshExecutedAt: AnyObserver<UIRefreshControl>? = nil
     let currentUser: Observable<String>
-    let statuses: Observable<[Status]?>
+    let nyanNyanStatuses: Observable<[NyanNyan]?>
     let isLoading: Observable<Bool>
     let isLoggedIn: Observable<Bool>?
     
@@ -45,7 +45,7 @@ final class HomeTimelineViewModel: HomeTimelineViewModelInput, HomeTimelineViewM
         self.loadingStatusRepository = loadingStatusRepository
         
         self.currentUser = authRepository.currentUser
-        self.statuses = tweetsRepository.statuses
+        self.nyanNyanStatuses = tweetsRepository.nyanNyanStatuses
         self.isLoading = loadingStatusRepository.isLoading
         self.isLoggedIn = authRepository.isLoggedIn
         
