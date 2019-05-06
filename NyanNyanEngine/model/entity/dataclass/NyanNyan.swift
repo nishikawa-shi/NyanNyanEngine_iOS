@@ -12,5 +12,6 @@ struct NyanNyan {
     let profileUrl: String?
     let userName: String
     let userId: String
+    let nyanedAt: String
     let nekogo: String
 }

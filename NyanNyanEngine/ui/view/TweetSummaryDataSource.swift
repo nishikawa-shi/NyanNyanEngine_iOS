@@ -34,6 +34,7 @@ class TweetSummaryDataSource: NSObject, UITableViewDataSource {
         
         cell.userName?.text = element.userName
         cell.userId?.text = element.userId
+        cell.publishedAt?.text = element.nyanedAt
         cell.tweetBody?.text = element.nekogo
         return cell
     }
