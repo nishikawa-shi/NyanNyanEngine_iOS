@@ -73,6 +73,10 @@ class TweetsRepository: BaseTweetsRepository {
         return self.apiClient
             .postResponse(urlRequest: urlRequest)
             .map { [unowned self] in self.toStatuses(data: $0) }
+            .map { [unowned self] res in
+                print(self.toNyanyan(rawTweets: res))
+                return res
+        }
     }
     
     private func toStatuses(data: Data?) -> [Status]? {
@@ -80,5 +84,14 @@ class TweetsRepository: BaseTweetsRepository {
         decoder.keyDecodingStrategy = .convertFromSnakeCase
         guard let d = data else { return nil }
         return try? decoder.decode([Status].self, from: d)
+    }
+    
+    private func toNyanyan(rawTweets: [Status]?) -> [NyanNyan] {
+        return rawTweets?.map {
+            NyanNyan(profileUrl: $0.user.profileImageUrlHttps,
+                     userName: $0.user.name,
+                     userId: $0.user.screenName,
+                     nekogo: Nekosan().createNekogo(sourceStr: $0.text))
+        } ?? []
     }
 }
