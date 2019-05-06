@@ -108,6 +108,7 @@ class JsonDecodeTests: XCTestCase {
         let testStatusObj = try! decoder!.decode([Status].self, from: testJson).first!
         
         XCTAssertEqual(testStatusObj.text, "28日は、ちょーいい日で、めっちゃ笑って、水飲んで寝た")
+        XCTAssertEqual(testStatusObj.createdAt, "Sun Apr 28 21:00:00 +0000 2019")
         XCTAssertEqual(testStatusObj.user.name, "ハイボールマン 3号")
         XCTAssertEqual(testStatusObj.user.screenName, "oauth_dancer")
         XCTAssertEqual(testStatusObj.user.profileImageUrlHttps, "https://si0.twimg.com/profile_images/730275945/oauth-dancer_normal.jpg")
@@ -204,6 +205,7 @@ class JsonDecodeTests: XCTestCase {
         XCTAssertEqual(testStatusObj.user.screenName, "oauth_dancer")
         XCTAssertEqual(testStatusObj.user.profileImageUrlHttps, "https://si0.twimg.com/profile_images/730275945/oauth-dancer_normal.jpg")
         XCTAssertEqual(testStatusObj.text, "28日は、ちょーいい日で、めっちゃ笑って、水飲んで寝た")
+        XCTAssertEqual(testStatusObj.createdAt, "Sun Apr 28 21:00:00 +0000 2019")
     }
     
     func testCanParseUser() {
