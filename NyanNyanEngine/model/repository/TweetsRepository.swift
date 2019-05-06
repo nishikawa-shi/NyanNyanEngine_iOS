@@ -87,7 +87,7 @@ class TweetsRepository: BaseTweetsRepository {
         return rawTweets?.map {
             NyanNyan(profileUrl: $0.user.profileImageUrlHttps,
                      userName: $0.user.name,
-                     userId: $0.user.screenName,
+                     userId: ("@" + $0.user.screenName),
                      nekogo: Nekosan().createNekogo(sourceStr: $0.text))
         } ?? []
     }
