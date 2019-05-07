@@ -21,30 +21,30 @@ class ApiClient: BaseApiClient {
     
     func getResponse(url: String) -> Observable<Data?> {
         return self.getRequest(url: url)
-            .map { $0.value?.data(using: .utf8) }
     }
     
     func postResponse(urlRequest: URLRequest) -> Observable<Data?> {
         return self.postRequest(urlRequest: urlRequest)
-            .map { $0.value?.data(using: .utf8) }
     }
     
-    private func getRequest(url: String) -> Observable<DataResponse<String>> {
-        guard let urlRequest = self.createGetUrlRequest(url: url) else { return Observable<DataResponse<String>>.empty() }
-        
-        return Observable<DataResponse<String>>.create { observer in
-            AF
-                .request(urlRequest)
-                .responseString(encoding: .utf8) { observer.onNext($0) }
+    private func getRequest(url: String) -> Observable<Data?> {
+        return Observable<Data?>.create { observer in
+            guard let urlRequest = self.createGetUrlRequest(url: url) else { return Disposables.create() }
+            
+            URLSession(configuration: .default)
+                .dataTask(with: urlRequest) { data, _, _ in
+                    DispatchQueue.main.sync { observer.onNext(data) }
+                }.resume()
             return Disposables.create()
         }
     }
     
-    private func postRequest(urlRequest: URLRequest) -> Observable<DataResponse<String>> {
-        return Observable<DataResponse<String>>.create { observer in
-            AF
-                .request(urlRequest)
-                .responseString(encoding: .utf8) { observer.onNext($0) }
+    private func postRequest(urlRequest: URLRequest) -> Observable<Data?> {
+        return Observable<Data?>.create { observer in
+            URLSession(configuration: .default)
+                .dataTask(with: urlRequest) { data, _, _ in
+                    DispatchQueue.main.sync { observer.onNext(data) }
+                }.resume()
             return Disposables.create()
         }
     }
