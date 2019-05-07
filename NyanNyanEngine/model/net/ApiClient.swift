@@ -8,7 +8,6 @@
 
 import Foundation
 import RxSwift
-import Alamofire
 
 protocol BaseApiClient: AnyObject {
     func getResponse(url: String) -> Observable<Data?>

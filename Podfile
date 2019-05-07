@@ -6,7 +6,6 @@ target 'NyanNyanEngine' do
   use_frameworks!
 
   # Pods for NyanNyanEngine
-  pod 'Alamofire',   '~> 5.0.0-beta.5'
   pod 'RxSwift',     '~> 5'
   pod 'RxCocoa',     '~> 5'
   pod 'CryptoSwift', '~> 1'
