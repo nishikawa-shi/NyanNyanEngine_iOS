@@ -62,7 +62,7 @@ class AuthRepository: BaseAuthRepository {
                                                apiSecret: apiSecret,
                                                oauthNonce: "0000").createRequestTokenRequest() else { return Observable<URL>.empty() }
         return self.apiClient
-            .postResponse(urlRequest: urlRequest)
+            .executeHttpRequest(urlRequest: urlRequest)
             .map { [unowned self] in self.toAuthTokenValue(data: $0) }
             .flatMap { $0.flatMap {Observable<URL>.just($0)} ?? Observable<URL>.empty() }
     }
@@ -71,7 +71,7 @@ class AuthRepository: BaseAuthRepository {
                              modelUpdateLogic: @escaping (() -> Void)) -> Observable<Bool> {
         guard let urlRequest = ApiRequestFactory().createAccessTokenRequest(redirectedUrl: redirectedUrl) else { return Observable<Bool>.empty() }
         return self.apiClient
-            .postResponse(urlRequest: urlRequest)
+            .executeHttpRequest(urlRequest: urlRequest)
             .map { [unowned self] in self.parseTokens(accessTokenApiResponse: $0) }
             .map { [unowned self] in self.saveTokens(accessTokenApiResponseQuery: $0 ?? [])}
             .map { self._isLoggedIn.accept(self.getLoggedInStatus()) }

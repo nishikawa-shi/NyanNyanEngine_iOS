@@ -71,7 +71,7 @@ class TweetsRepository: BaseTweetsRepository {
                                                 return Observable<[NyanNyan]?>.just(DefaultNekosan().nyanNyanStatuses)}
         
         return self.apiClient
-            .postResponse(urlRequest: urlRequest)
+            .executeHttpRequest(urlRequest: urlRequest)
             .map { [unowned self] in self.toStatuses(data: $0) }
             .map { [unowned self] in self.toNyanNyan(rawTweets: $0) }
     }
