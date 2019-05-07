@@ -23,7 +23,13 @@ class ApiClient: BaseApiClient {
     }
     
     func postResponse(urlRequest: URLRequest) -> Observable<Data?> {
-        return self.postRequest(urlRequest: urlRequest)
+        return Observable<Data?>.create { observer in
+            URLSession(configuration: .default)
+                .dataTask(with: urlRequest) { data, _, _ in
+                    DispatchQueue.main.sync { observer.onNext(data) }
+                }.resume()
+            return Disposables.create()
+        }
     }
     
     private func getRequest(url: String) -> Observable<Data?> {
@@ -38,23 +44,13 @@ class ApiClient: BaseApiClient {
         }
     }
     
-    private func postRequest(urlRequest: URLRequest) -> Observable<Data?> {
-        return Observable<Data?>.create { observer in
-            URLSession(configuration: .default)
-                .dataTask(with: urlRequest) { data, _, _ in
-                    DispatchQueue.main.sync { observer.onNext(data) }
-                }.resume()
-            return Disposables.create()
-        }
-    }
-    
     private func createGetUrlRequest(url: String) -> URLRequest? {
         guard let urlObj = URL(string: url) else { return nil }
         
         var urlRequest = URLRequest(url: urlObj,
                                     cachePolicy: .reloadIgnoringLocalCacheData,
                                     timeoutInterval: 5)
-        urlRequest.httpMethod = HTTPMethod.get.rawValue
+        urlRequest.httpMethod = "GET"
         
         return urlRequest
     }
