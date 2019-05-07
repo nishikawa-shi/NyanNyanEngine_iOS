@@ -10,14 +10,14 @@ import Foundation
 import RxSwift
 
 protocol BaseApiClient: AnyObject {
-    func postResponse(urlRequest: URLRequest) -> Observable<Data?>
+    func executeHttpRequest(urlRequest: URLRequest) -> Observable<Data?>
 }
 
 class ApiClient: BaseApiClient {
     static let shared = ApiClient()
     private init() { }
     
-    func postResponse(urlRequest: URLRequest) -> Observable<Data?> {
+    func executeHttpRequest(urlRequest: URLRequest) -> Observable<Data?> {
         return Observable<Data?>.create { observer in
             URLSession(configuration: .default)
                 .dataTask(with: urlRequest) { data, _, _ in
