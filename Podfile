@@ -19,6 +19,11 @@ target 'NyanNyanEngine' do
 
   target 'NyanNyanEngineUITests' do
     inherit! :search_paths
+    pod 'Firebase/Core'
+    pod 'RxSwift',     '~> 5'
+    pod 'RxCocoa',     '~> 5'
+    pod 'CryptoSwift', '~> 1'
+    pod 'Nuke', '~> 7.0'
     # Pods for testing
   end
 
