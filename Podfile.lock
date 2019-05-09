@@ -1,5 +1,8 @@
 PODS:
+  - Crashlytics (3.12.0):
+    - Fabric (~> 1.9.0)
   - CryptoSwift (1.0.0)
+  - Fabric (1.9.0)
   - Firebase/Core (5.20.2):
     - Firebase/CoreOnly
     - FirebaseAnalytics (= 5.8.1)
@@ -59,7 +62,9 @@ PODS:
   - RxSwift (5.0.0)
 
 DEPENDENCIES:
+  - Crashlytics (~> 3.12.0)
   - CryptoSwift (~> 1)
+  - Fabric (~> 1.9.0)
   - Firebase/Core
   - Nuke (~> 7.0)
   - RxCocoa (~> 5)
@@ -67,7 +72,9 @@ DEPENDENCIES:
 
 SPEC REPOS:
   https://github.com/cocoapods/specs.git:
+    - Crashlytics
     - CryptoSwift
+    - Fabric
     - Firebase
     - FirebaseAnalytics
     - FirebaseCore
@@ -81,7 +88,9 @@ SPEC REPOS:
     - RxSwift
 
 SPEC CHECKSUMS:
+  Crashlytics: 07fb167b1694128c1c9a5a5cc319b0e9c3ca0933
   CryptoSwift: d81eeaa59dc5a8d03720fe919a6fd07b51f7439f
+  Fabric: f988e33c97f08930a413e08123064d2e5f68d655
   Firebase: 0c8cf33f266410c61ab3e2265cfa412200351d9c
   FirebaseAnalytics: ece1aa57a4f43c64d53a648b5a5e05151aae947b
   FirebaseCore: f1a9a8be1aee4bf71a2fc0f4096df6788bdfda61
@@ -94,6 +103,6 @@ SPEC CHECKSUMS:
   RxRelay: 4f7409406a51a55cd88483f21ed898c234d60f18
   RxSwift: 8b0671caa829a763bbce7271095859121cbd895f
 
-PODFILE CHECKSUM: e52d714db68b641d6dbe8ee335861ec583097eb8
+PODFILE CHECKSUM: bc44ccbc02ea6f44e4aa2608830d09528ca9f9f1
 
 COCOAPODS: 1.5.3

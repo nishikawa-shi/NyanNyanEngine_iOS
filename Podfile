@@ -7,6 +7,8 @@ target 'NyanNyanEngine' do
 
   # Pods for NyanNyanEngine
   pod 'Firebase/Core'
+  pod 'Fabric', '~> 1.9.0'
+  pod 'Crashlytics', '~> 3.12.0'
   pod 'RxSwift',     '~> 5'
   pod 'RxCocoa',     '~> 5'
   pod 'CryptoSwift', '~> 1'
