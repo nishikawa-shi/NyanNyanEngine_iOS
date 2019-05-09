@@ -17,6 +17,7 @@
 		6723B28A2276926B0004FB3D /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6723B2892276926B0004FB3D /* User.swift */; };
 		6723B28C2276970A0004FB3D /* Status.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6723B28B2276970A0004FB3D /* Status.swift */; };
 		6723B2922277DFD60004FB3D /* HomeTimelineViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6723B2912277DFD60004FB3D /* HomeTimelineViewModel.swift */; };
+		672C882A2283A54B00312408 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 672C88292283A54A00312408 /* GoogleService-Info.plist */; };
 		672FA83E227BE17E00BAB1A7 /* AppDelegateModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 672FA83D227BE17E00BAB1A7 /* AppDelegateModel.swift */; };
 		6734D7F32279803200A19044 /* TweetSummaryCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6734D7F22279803200A19044 /* TweetSummaryCell.swift */; };
 		6734D7F5227982BE00A19044 /* TweetSummaryDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6734D7F4227982BE00A19044 /* TweetSummaryDataSource.swift */; };
@@ -71,6 +72,7 @@
 		6723B2892276926B0004FB3D /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		6723B28B2276970A0004FB3D /* Status.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Status.swift; sourceTree = "<group>"; };
 		6723B2912277DFD60004FB3D /* HomeTimelineViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeTimelineViewModel.swift; sourceTree = "<group>"; };
+		672C88292283A54A00312408 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		672FA83C227BC2C100BAB1A7 /* NyanNyanEngine.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = NyanNyanEngine.entitlements; sourceTree = "<group>"; };
 		672FA83D227BE17E00BAB1A7 /* AppDelegateModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegateModel.swift; sourceTree = "<group>"; };
 		6734D7F22279803200A19044 /* TweetSummaryCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TweetSummaryCell.swift; sourceTree = "<group>"; };
@@ -235,6 +237,7 @@
 				6766616E227527FF004C886C /* Assets.xcassets */,
 				67666170227527FF004C886C /* LaunchScreen.storyboard */,
 				67666173227527FF004C886C /* Info.plist */,
+				672C88292283A54A00312408 /* GoogleService-Info.plist */,
 				6766616B227527FF004C886C /* NyanNyanEngine.xcdatamodeld */,
 				679A5E66227B3E960043D0E1 /* ApiKeys.plist */,
 				672FA83D227BE17E00BAB1A7 /* AppDelegateModel.swift */,
@@ -330,6 +333,7 @@
 				6766615E227527FF004C886C /* Frameworks */,
 				6766615F227527FF004C886C /* Resources */,
 				06F1B0ACE6F9609F30147366 /* [CP] Embed Pods Frameworks */,
+				670B893B228474470020192E /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -367,6 +371,7 @@
 				6766617F227527FF004C886C /* Sources */,
 				67666180227527FF004C886C /* Frameworks */,
 				67666181227527FF004C886C /* Resources */,
+				E4F664FD1B84AFF40249DDA4 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -433,6 +438,7 @@
 			files = (
 				67666172227527FF004C886C /* LaunchScreen.storyboard in Resources */,
 				679A5E67227B3E960043D0E1 /* ApiKeys.plist in Resources */,
+				672C882A2283A54B00312408 /* GoogleService-Info.plist in Resources */,
 				6766616F227527FF004C886C /* Assets.xcassets in Resources */,
 				6766616A227527FF004C886C /* Main.storyboard in Resources */,
 			);
@@ -463,18 +469,22 @@
 			inputPaths = (
 				"${SRCROOT}/Pods/Target Support Files/Pods-NyanNyanEngine/Pods-NyanNyanEngine-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/CryptoSwift/CryptoSwift.framework",
+				"${BUILT_PRODUCTS_DIR}/GoogleUtilities/GoogleUtilities.framework",
 				"${BUILT_PRODUCTS_DIR}/Nuke/Nuke.framework",
 				"${BUILT_PRODUCTS_DIR}/RxCocoa/RxCocoa.framework",
 				"${BUILT_PRODUCTS_DIR}/RxRelay/RxRelay.framework",
 				"${BUILT_PRODUCTS_DIR}/RxSwift/RxSwift.framework",
+				"${BUILT_PRODUCTS_DIR}/nanopb/nanopb.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/CryptoSwift.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleUtilities.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Nuke.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxCocoa.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxRelay.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxSwift.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/nanopb.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -517,6 +527,24 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
+		670B893B228474470020192E /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"$(BUILT_PRODUCTS_DIR)/$(INFOPLIST_PATH)",
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\n\"${PODS_ROOT}/Fabric/run\"\n";
+		};
 		75244A1D80BF3B1A1BFC0A02 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -533,6 +561,36 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		E4F664FD1B84AFF40249DDA4 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-NyanNyanEngineUITests/Pods-NyanNyanEngineUITests-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/CryptoSwift/CryptoSwift.framework",
+				"${BUILT_PRODUCTS_DIR}/GoogleUtilities/GoogleUtilities.framework",
+				"${BUILT_PRODUCTS_DIR}/Nuke/Nuke.framework",
+				"${BUILT_PRODUCTS_DIR}/RxCocoa/RxCocoa.framework",
+				"${BUILT_PRODUCTS_DIR}/RxRelay/RxRelay.framework",
+				"${BUILT_PRODUCTS_DIR}/RxSwift/RxSwift.framework",
+				"${BUILT_PRODUCTS_DIR}/nanopb/nanopb.framework",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/CryptoSwift.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleUtilities.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Nuke.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxCocoa.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxRelay.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxSwift.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/nanopb.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-NyanNyanEngineUITests/Pods-NyanNyanEngineUITests-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */

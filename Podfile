@@ -6,6 +6,9 @@ target 'NyanNyanEngine' do
   use_frameworks!
 
   # Pods for NyanNyanEngine
+  pod 'Firebase/Core'
+  pod 'Fabric', '~> 1.9.0'
+  pod 'Crashlytics', '~> 3.12.0'
   pod 'RxSwift',     '~> 5'
   pod 'RxCocoa',     '~> 5'
   pod 'CryptoSwift', '~> 1'
@@ -18,6 +21,11 @@ target 'NyanNyanEngine' do
 
   target 'NyanNyanEngineUITests' do
     inherit! :search_paths
+    pod 'Firebase/Core'
+    pod 'RxSwift',     '~> 5'
+    pod 'RxCocoa',     '~> 5'
+    pod 'CryptoSwift', '~> 1'
+    pod 'Nuke', '~> 7.0'
     # Pods for testing
   end
 

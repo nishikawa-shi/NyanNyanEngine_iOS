@@ -83,6 +83,7 @@ iOSInjectionProject/
 # Firebase
 
 .firebase/
+NyanNyanEngine/GoogleService-Info.plist
 
 # API keys
 
