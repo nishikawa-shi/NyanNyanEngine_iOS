@@ -39,7 +39,16 @@ class TweetsRepository: BaseTweetsRepository {
             self.getHomeTimeLine()
                 .map {
                     stopActivityIndicator.element?()
-                    return $0 ?? _statuses.value ?? []
+                    
+                    guard let statusValueResponse = $0 else {
+                        return _statuses.value ?? []
+                    }
+                    
+                    if(statusValueResponse.isEmpty) {
+                        return _statuses.value ?? []
+                    }
+                    
+                    return statusValueResponse
                 }
                 .bind(to: _statuses)
                 .disposed(by: self.disposeBag)
@@ -50,7 +59,16 @@ class TweetsRepository: BaseTweetsRepository {
                 .map {
                     sleep(1)
                     uiRefreshControl.element??.endRefreshing()
-                    return $0 ?? _statuses.value ?? []
+                    
+                    guard let statusValueResponse = $0 else {
+                        return _statuses.value ?? []
+                    }
+                    
+                    if(statusValueResponse.isEmpty) {
+                        return _statuses.value ?? []
+                    }
+                    
+                    return statusValueResponse
                 }
                 .bind(to: _statuses)
                 .disposed(by: self.disposeBag)
