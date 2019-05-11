@@ -45,8 +45,7 @@ class HomeTimelineViewController: UIViewController {
             .disposed(by: disposeBag)
         
         refreshButton.rx.tap
-            .map { [unowned self] in
-                self.tweetList.scrollToRow(at: IndexPath(row: 0, section: 0), at: .top, animated: true) }
+            .map { [unowned self] in self.scrollTweetListToTop() }
             .throttle(DispatchTimeInterval.seconds(3), latest: false, scheduler: ConcurrentMainScheduler.instance)
             .map { "9999/12/31 23:59:59" }
             .bind(to: input.buttonRefreshExecutedAt!)
@@ -84,6 +83,13 @@ class HomeTimelineViewController: UIViewController {
     
     @objc func refresh(sender: UIRefreshControl) {
         input.pullToRefreshExecutedAt?.onNext(sender)
+    }
+    
+    private func scrollTweetListToTop() {
+        if (self.tweetList.numberOfRows(inSection: 0) <= 0) {
+            return
+        }
+        self.tweetList.scrollToRow(at: IndexPath(row: 0, section: 0), at: .top, animated: true)
     }
 }
 
