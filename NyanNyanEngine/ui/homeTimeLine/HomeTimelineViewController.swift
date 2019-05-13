@@ -9,6 +9,7 @@
 import UIKit
 import RxSwift
 import RxCocoa
+import SafariServices
 
 class HomeTimelineViewController: UIViewController {
     private let input: HomeTimelineViewModelInput
@@ -73,7 +74,15 @@ class HomeTimelineViewController: UIViewController {
             .map { !$0 }
             .bind(to: authButton.rx.isEnabled)
             .disposed(by: disposeBag)
-
+        
+        output.authPageUrl?
+            .subscribe { url in
+                guard let urlElement = url.element,
+                    let pageUrl = urlElement else { return }
+                self.present(SFSafariViewController(url: pageUrl),
+                             animated: true,
+                             completion: nil)
+            }.disposed(by: disposeBag)
         
         tweetList.refreshControl = UIRefreshControl()
         tweetList.refreshControl?.addTarget(self, action: #selector(self.refresh(sender:)), for: .valueChanged)
