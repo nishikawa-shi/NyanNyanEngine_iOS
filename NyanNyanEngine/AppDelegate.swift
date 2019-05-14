@@ -17,6 +17,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
 
     func application(_ application: UIApplication, continue userActivity: NSUserActivity, restorationHandler: @escaping ([UIUserActivityRestoring]?) -> Void) -> Bool {
+        //webviewからの遷移だったら、遷移元のwebviewを消す
+        if(userActivity.activityType == "NSUserActivityTypeBrowsingWeb"){
+            window?.rootViewController?.dismiss(animated: true, completion: nil)
+        }
         guard let redirectedUrl = userActivity.webpageURL else { return true }
         self.appDelegateModel.loginExecutedAt?.onNext(redirectedUrl)
         return true

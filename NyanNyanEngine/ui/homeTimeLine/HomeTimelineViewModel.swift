@@ -21,6 +21,7 @@ protocol HomeTimelineViewModelOutput: AnyObject {
     var currentUser: Observable<String> { get }
     var isLoading: Observable<Bool> { get }
     var isLoggedIn: Observable<Bool>? { get }
+    var authPageUrl: Observable<URL?>? { get }
 }
 
 final class HomeTimelineViewModel: HomeTimelineViewModelInput, HomeTimelineViewModelOutput {
@@ -36,6 +37,7 @@ final class HomeTimelineViewModel: HomeTimelineViewModelInput, HomeTimelineViewM
     let nyanNyanStatuses: Observable<[NyanNyan]?>
     let isLoading: Observable<Bool>
     let isLoggedIn: Observable<Bool>?
+    let authPageUrl: Observable<URL?>?
     
     init(tweetsRepository: BaseTweetsRepository = TweetsRepository.shared,
          authRepository: BaseAuthRepository = AuthRepository.shared,
@@ -48,6 +50,7 @@ final class HomeTimelineViewModel: HomeTimelineViewModelInput, HomeTimelineViewM
         self.nyanNyanStatuses = tweetsRepository.nyanNyanStatuses
         self.isLoading = loadingStatusRepository.isLoading
         self.isLoggedIn = authRepository.isLoggedIn
+        self.authPageUrl = authRepository.authPageUrl
         
         self.buttonRefreshExecutedAt = AnyObserver<String>() { [unowned self] updatedAt in
             self.loadingStatusRepository
@@ -78,13 +81,7 @@ final class HomeTimelineViewModel: HomeTimelineViewModelInput, HomeTimelineViewM
         }
         
         self.authExecutedAt = AnyObserver<String>() { [unowned self] authedAt in
-            self.authRepository
-                .getRequestToken()
-                .subscribe{
-                    guard let url = $0.element else { return }
-                    UIApplication.shared.open(url, options: [:], completionHandler: nil) }
-                .disposed(by: self.disposeBag)
-            print(authedAt.element)
+            self.authRepository.getRequestToken()
         }
     }
 }

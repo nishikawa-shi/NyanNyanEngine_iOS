@@ -11,12 +11,13 @@ import RxSwift
 import RxRelay
 
 protocol BaseAuthRepository: AnyObject {
-    func getRequestToken() -> Observable<URL>
     func downloadAccessToken(redirectedUrl: URL,
                              modelUpdateLogic: @escaping(() -> Void) ) -> Observable<Bool>
+    func getRequestToken()
     
     var currentUser: Observable<String> { get }
     var isLoggedIn: Observable<Bool>? { get }
+    var authPageUrl: Observable<URL?>? { get }
     
     var loginExecutedAt: AnyObserver<String>? { get }
 }
@@ -31,6 +32,8 @@ class AuthRepository: BaseAuthRepository {
     let currentUser: Observable<String>
     var isLoggedIn: Observable<Bool>? = nil
     private let _isLoggedIn: BehaviorRelay<Bool>
+    var authPageUrl: Observable<URL?>? = nil
+    private let _authPageUrl: BehaviorRelay<URL?>
     
     var loginExecutedAt: AnyObserver<String>? = nil
     
@@ -47,6 +50,9 @@ class AuthRepository: BaseAuthRepository {
         self._isLoggedIn = BehaviorRelay<Bool>(value: (userDefaultsConnector.getString(withKey: "screen_name") != nil))
         self.isLoggedIn = _isLoggedIn.asObservable()
         
+        self._authPageUrl = BehaviorRelay<URL?>(value: nil)
+        self.authPageUrl = _authPageUrl.asObservable()
+        
         self.loginExecutedAt = AnyObserver<String> { [unowned self] executedAt in
             self.getCurrentUser()
                 .bind(to: _currentUser)
@@ -55,16 +61,18 @@ class AuthRepository: BaseAuthRepository {
         }
     }
     
-    func getRequestToken() -> Observable<URL> {
+    func getRequestToken() {
         guard let apiKey = PlistConnector.shared.getString(withKey: "apiKey"),
             let apiSecret = PlistConnector.shared.getString(withKey: "apiSecret"),
             let urlRequest = ApiRequestFactory(apiKey: apiKey,
                                                apiSecret: apiSecret,
-                                               oauthNonce: "0000").createRequestTokenRequest() else { return Observable<URL>.empty() }
-        return self.apiClient
+                                               oauthNonce: "0000").createRequestTokenRequest() else { return }
+        self.apiClient
             .executeHttpRequest(urlRequest: urlRequest)
             .map { [unowned self] in self.toAuthTokenValue(data: $0) }
             .flatMap { $0.flatMap {Observable<URL>.just($0)} ?? Observable<URL>.empty() }
+            .subscribe { [unowned self] in self._authPageUrl.accept($0.element) }
+            .disposed(by: self.disposeBag)
     }
     
     func downloadAccessToken(redirectedUrl: URL,
