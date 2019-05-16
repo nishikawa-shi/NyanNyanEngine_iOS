@@ -37,6 +37,7 @@
 		67D86EE0227FC5DB00965816 /* NyanNyan.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67D86EDF227FC5DB00965816 /* NyanNyan.swift */; };
 		67D86EE2227FDE9B00965816 /* TwitterDateFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67D86EE1227FDE9B00965816 /* TwitterDateFormatter.swift */; };
 		67D86EE4227FE20E00965816 /* DateFormatterTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67D86EE3227FE20E00965816 /* DateFormatterTest.swift */; };
+		67E3C4D4228E2F6900B93E1D /* PostNekogoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67E3C4D3228E2F6900B93E1D /* PostNekogoViewController.swift */; };
 		67F88C0A227C2484004DF44A /* UserDefaultsConnector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67F88C09227C2484004DF44A /* UserDefaultsConnector.swift */; };
 		A3EF89A62D1B991E9600FCFA /* Pods_NyanNyanEngine.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9151EC8B3866FB493C75F6A9 /* Pods_NyanNyanEngine.framework */; };
 /* End PBXBuildFile section */
@@ -99,6 +100,7 @@
 		67D86EDF227FC5DB00965816 /* NyanNyan.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NyanNyan.swift; sourceTree = "<group>"; };
 		67D86EE1227FDE9B00965816 /* TwitterDateFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TwitterDateFormatter.swift; sourceTree = "<group>"; };
 		67D86EE3227FE20E00965816 /* DateFormatterTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateFormatterTest.swift; sourceTree = "<group>"; };
+		67E3C4D3228E2F6900B93E1D /* PostNekogoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostNekogoViewController.swift; sourceTree = "<group>"; };
 		67F88C09227C2484004DF44A /* UserDefaultsConnector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaultsConnector.swift; sourceTree = "<group>"; };
 		6D8A98757771D333C6941F1B /* Pods-NyanNyanEngineTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NyanNyanEngineTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-NyanNyanEngineTests/Pods-NyanNyanEngineTests.release.xcconfig"; sourceTree = "<group>"; };
 		6F7E9C80946FAE4B36BBC437 /* Pods-NyanNyanEngine.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NyanNyanEngine.release.xcconfig"; path = "Pods/Target Support Files/Pods-NyanNyanEngine/Pods-NyanNyanEngine.release.xcconfig"; sourceTree = "<group>"; };
@@ -287,6 +289,7 @@
 		6767B0D422791CF9008913EA /* ui */ = {
 			isa = PBXGroup;
 			children = (
+				67E3C4D2228E2F3200B93E1D /* postNekogo */,
 				6734D7F12279800C00A19044 /* view */,
 				6767B0D522791D1C008913EA /* homeTimeLine */,
 			);
@@ -309,6 +312,14 @@
 				67F88C09227C2484004DF44A /* UserDefaultsConnector.swift */,
 			);
 			path = dao;
+			sourceTree = "<group>";
+		};
+		67E3C4D2228E2F3200B93E1D /* postNekogo */ = {
+			isa = PBXGroup;
+			children = (
+				67E3C4D3228E2F6900B93E1D /* PostNekogoViewController.swift */,
+			);
+			path = postNekogo;
 			sourceTree = "<group>";
 		};
 		B923F2CE3885F3C1104B1558 /* Frameworks */ = {
@@ -608,6 +619,7 @@
 				670E397C227E7179002318AE /* DefaultNekosan.swift in Sources */,
 				6734D7F32279803200A19044 /* TweetSummaryCell.swift in Sources */,
 				6734D7F5227982BE00A19044 /* TweetSummaryDataSource.swift in Sources */,
+				67E3C4D4228E2F6900B93E1D /* PostNekogoViewController.swift in Sources */,
 				67F88C0A227C2484004DF44A /* UserDefaultsConnector.swift in Sources */,
 				679A5E65227B3B590043D0E1 /* PlistConnector.swift in Sources */,
 				6723B2922277DFD60004FB3D /* HomeTimelineViewModel.swift in Sources */,
