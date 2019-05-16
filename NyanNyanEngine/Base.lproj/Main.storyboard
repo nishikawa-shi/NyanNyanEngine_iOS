@@ -104,10 +104,22 @@
                                 </constraints>
                             </activityIndicatorView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="XSn-hL-U1p">
-                                <rect key="frame" x="318" y="734" width="64" height="64"/>
+                                <rect key="frame" x="318" y="766" width="64" height="64"/>
                                 <fontDescription key="fontDescription" name=".AppleSystemUIFont" family=".AppleSystemUIFont" pointSize="18"/>
-                                <size key="titleShadowOffset" width="10" height="10"/>
+                                <size key="titleShadowOffset" width="96" height="96"/>
                                 <state key="normal" image="PostButton"/>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="boolean" keyPath="layer.masksToBounds" value="NO"/>
+                                    <userDefinedRuntimeAttribute type="color" keyPath="layer.shadowIBColor">
+                                        <color key="value" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.shadowOpacity">
+                                        <real key="value" value="0.5"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="size" keyPath="layer.shadowOffset">
+                                        <size key="value" width="4" height="4"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
                             </button>
                         </subviews>
                         <color key="backgroundColor" red="0.99215686274509807" green="0.96470588235294119" blue="0.8901960784313725" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -117,7 +129,7 @@
                             <constraint firstItem="rhv-87-lQP" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" id="MWP-XE-wYU"/>
                             <constraint firstItem="lwQ-LT-5Jj" firstAttribute="bottom" secondItem="6Tk-OE-BBY" secondAttribute="bottom" id="R4M-jv-8A9"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="XSn-hL-U1p" secondAttribute="trailing" constant="32" id="Xa6-gt-Rff"/>
-                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="XSn-hL-U1p" secondAttribute="bottom" constant="64" id="lHT-N9-4hP"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="XSn-hL-U1p" secondAttribute="bottom" constant="32" id="lHT-N9-4hP"/>
                             <constraint firstItem="lwQ-LT-5Jj" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="rtz-Do-JXE"/>
                             <constraint firstItem="lwQ-LT-5Jj" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="zlg-oP-Ayk"/>
                         </constraints>
