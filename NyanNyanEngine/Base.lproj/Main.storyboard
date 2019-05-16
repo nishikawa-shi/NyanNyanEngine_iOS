@@ -103,6 +103,10 @@
                                     <constraint firstAttribute="height" constant="96" id="VdJ-6c-IuQ"/>
                                 </constraints>
                             </activityIndicatorView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="XSn-hL-U1p">
+                                <rect key="frame" x="304" y="768" width="46" height="30"/>
+                                <state key="normal" title="Button"/>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" red="0.99215686274509807" green="0.96470588235294119" blue="0.8901960784313725" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
@@ -110,6 +114,8 @@
                             <constraint firstItem="rhv-87-lQP" firstAttribute="centerY" secondItem="6Tk-OE-BBY" secondAttribute="centerY" id="Kh7-98-mCb"/>
                             <constraint firstItem="rhv-87-lQP" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" id="MWP-XE-wYU"/>
                             <constraint firstItem="lwQ-LT-5Jj" firstAttribute="bottom" secondItem="6Tk-OE-BBY" secondAttribute="bottom" id="R4M-jv-8A9"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="XSn-hL-U1p" secondAttribute="trailing" constant="64" id="Xa6-gt-Rff"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="XSn-hL-U1p" secondAttribute="bottom" constant="64" id="lHT-N9-4hP"/>
                             <constraint firstItem="lwQ-LT-5Jj" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="rtz-Do-JXE"/>
                             <constraint firstItem="lwQ-LT-5Jj" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="zlg-oP-Ayk"/>
                         </constraints>
