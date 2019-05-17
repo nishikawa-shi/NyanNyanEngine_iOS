@@ -10,4 +10,7 @@ import UIKit
 
 class PostNekogoViewController: UIViewController {
     
+    @IBAction func touchCancelAction(_ sender: UIBarButtonItem) {
+        self.dismiss(animated: true, completion: nil)
+    }
 }

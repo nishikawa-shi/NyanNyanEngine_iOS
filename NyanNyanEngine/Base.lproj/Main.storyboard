@@ -164,7 +164,13 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <viewLayoutGuide key="safeArea" id="H5w-C7-zSx"/>
                     </view>
-                    <navigationItem key="navigationItem" id="SSO-CY-sNi"/>
+                    <navigationItem key="navigationItem" id="SSO-CY-sNi">
+                        <barButtonItem key="leftBarButtonItem" title="キャンセル" id="7cV-OL-7iV">
+                            <connections>
+                                <action selector="touchCancelAction:" destination="Ync-nX-9TU" id="fZw-Gf-Ja7"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dCe-LR-bsa" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
