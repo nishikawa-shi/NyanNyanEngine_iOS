@@ -257,6 +257,9 @@
                             </connections>
                         </barButtonItem>
                     </navigationItem>
+                    <connections>
+                        <outlet property="originalText" destination="L1b-m5-lsS" id="xN9-of-KnR"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dCe-LR-bsa" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
