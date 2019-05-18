@@ -161,7 +161,62 @@
                     <view key="view" contentMode="scaleToFill" id="ET2-d6-0et">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="iDn-Mt-gFw" userLabel="Profile Image">
+                                <rect key="frame" x="350" y="120" width="48" height="48"/>
+                                <color key="backgroundColor" red="1" green="0.8338769587" blue="0.61603361320000005" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="48" id="bNi-F0-MdQ"/>
+                                    <constraint firstAttribute="height" constant="48" id="mtE-Hf-0Qw"/>
+                                </constraints>
+                            </imageView>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" text="ツイートをここに書くにゃ" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="L1b-m5-lsS" userLabel="Original Text">
+                                <rect key="frame" x="16" y="120" width="318" height="144"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                            </textView>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="NyanNyaSensei" translatesAutoresizingMaskIntoConstraints="NO" id="xRT-Xg-9i7">
+                                <rect key="frame" x="20" y="312" width="144" height="192"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="192" id="H3z-pe-5gn"/>
+                                    <constraint firstAttribute="width" constant="144" id="zqv-X7-Gf3"/>
+                                </constraints>
+                            </imageView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="にゃーおんにゃーおんにゃーおん" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="none" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="0.0" translatesAutoresizingMaskIntoConstraints="NO" id="0wL-SI-Y2R" userLabel="Nekogo Text">
+                                <rect key="frame" x="180" y="344" width="218" height="78"/>
+                                <color key="backgroundColor" red="0.93333333333333335" green="0.90980392156862744" blue="0.83529411764705885" alpha="1" colorSpace="calibratedRGB"/>
+                                <fontDescription key="fontDescription" name=".HiraKakuInterface-W3" family=".Hiragino Kaku Gothic Interface" pointSize="17"/>
+                                <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zbK-Xh-RcE" userLabel="Tweet Button">
+                                <rect key="frame" x="290" y="438" width="108" height="34"/>
+                                <color key="backgroundColor" red="0.14901960784313725" green="0.54509803921568623" blue="0.82352941176470584" alpha="1" colorSpace="calibratedRGB"/>
+                                <fontDescription key="fontDescription" name=".AppleSystemUIFont" family=".AppleSystemUIFont" pointSize="15"/>
+                                <inset key="contentEdgeInsets" minX="8" minY="8" maxX="8" maxY="8"/>
+                                <state key="normal" title="ツイートする">
+                                    <color key="titleColor" red="0.99215686270000003" green="0.96470588239999999" blue="0.89019607840000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                </state>
+                            </button>
+                        </subviews>
                         <color key="backgroundColor" red="0.99215686270000003" green="0.96470588239999999" blue="0.89019607840000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="xRT-Xg-9i7" firstAttribute="leading" secondItem="H5w-C7-zSx" secondAttribute="leading" constant="20" id="0yF-Zr-pfD"/>
+                            <constraint firstItem="L1b-m5-lsS" firstAttribute="height" secondItem="iDn-Mt-gFw" secondAttribute="height" multiplier="3" id="8Yo-Xa-oWg"/>
+                            <constraint firstItem="0wL-SI-Y2R" firstAttribute="trailing" secondItem="H5w-C7-zSx" secondAttribute="trailing" constant="-16" id="A77-nO-KkM"/>
+                            <constraint firstItem="L1b-m5-lsS" firstAttribute="trailing" secondItem="iDn-Mt-gFw" secondAttribute="leading" constant="-16" id="CnD-ef-L3R"/>
+                            <constraint firstItem="0wL-SI-Y2R" firstAttribute="leading" secondItem="xRT-Xg-9i7" secondAttribute="trailing" constant="16" id="HYC-RA-gmp"/>
+                            <constraint firstItem="zbK-Xh-RcE" firstAttribute="trailing" secondItem="0wL-SI-Y2R" secondAttribute="trailing" id="IdD-N2-B63"/>
+                            <constraint firstItem="0wL-SI-Y2R" firstAttribute="height" secondItem="xRT-Xg-9i7" secondAttribute="height" multiplier="0.4" constant="1" id="XO3-Pz-2bh"/>
+                            <constraint firstItem="xRT-Xg-9i7" firstAttribute="top" secondItem="L1b-m5-lsS" secondAttribute="bottom" constant="48" id="cUO-AE-Oa0"/>
+                            <constraint firstItem="iDn-Mt-gFw" firstAttribute="top" secondItem="H5w-C7-zSx" secondAttribute="top" constant="32" id="dSo-B7-UHh"/>
+                            <constraint firstItem="L1b-m5-lsS" firstAttribute="leading" secondItem="H5w-C7-zSx" secondAttribute="leading" constant="16" id="mHd-pa-C9h"/>
+                            <constraint firstItem="0wL-SI-Y2R" firstAttribute="top" secondItem="xRT-Xg-9i7" secondAttribute="top" constant="32" id="qre-G8-yMR"/>
+                            <constraint firstItem="L1b-m5-lsS" firstAttribute="top" secondItem="iDn-Mt-gFw" secondAttribute="top" id="rAr-yl-68H"/>
+                            <constraint firstItem="zbK-Xh-RcE" firstAttribute="top" secondItem="0wL-SI-Y2R" secondAttribute="bottom" constant="16" id="rvg-Ui-QSW"/>
+                            <constraint firstItem="iDn-Mt-gFw" firstAttribute="trailing" secondItem="H5w-C7-zSx" secondAttribute="trailing" constant="-16" id="uOr-oY-mbQ"/>
+                        </constraints>
                         <viewLayoutGuide key="safeArea" id="H5w-C7-zSx"/>
                     </view>
                     <navigationItem key="navigationItem" id="SSO-CY-sNi">
@@ -214,6 +269,7 @@
         </scene>
     </scenes>
     <resources>
+        <image name="NyanNyaSensei" width="192" height="256"/>
         <image name="PostButton" width="64" height="64"/>
     </resources>
 </document>
