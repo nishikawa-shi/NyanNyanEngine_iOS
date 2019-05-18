@@ -15,23 +15,14 @@ protocol BaseApiRequestFactory: AnyObject {
 }
 
 class ApiRequestFactory: BaseApiRequestFactory {
-    private let apiKey: String
     private let apiSecret: String
-    
-    private let oauthNonce: String
     private let accessTokenSecret: String
-    private let accessToken: String
-    private var params: [(key: String, value: String)]
     
     private let allowedCharacterSet: CharacterSet
-    
-    private let oauthTimeStamp = String(Int(NSDate().timeIntervalSince1970))
-    private let oauthCallBackUrl = "https://nyannyanengine.firebaseapp.com/authorized/"
-    private let oauthSignatureMethod = "HMAC-SHA1"
-    private let oauthVersion = "1.0"
+    private var params: [(key: String, value: String)]
     
     private let requestTokenApiUrl = "https://api.twitter.com/oauth/request_token"
-    private let accessTokenApiUrl = "https://api.twitter.com/oauth/access_token?"
+    private let accessTokenApiUrl = "https://api.twitter.com/oauth/access_token"
     private let homeTimelineApiUrl = "https://api.twitter.com/1.1/statuses/home_timeline.json"
     private let postTweetApiUrl = "https://api.twitter.com/1.1/statuses/update.json"
     
@@ -40,11 +31,8 @@ class ApiRequestFactory: BaseApiRequestFactory {
          oauthNonce: String = "0000",
          accessTokenSecret: String = "",
          accessToken: String = "") {
-        self.apiKey = apiKey
         self.apiSecret = apiSecret
-        self.oauthNonce = oauthNonce
         self.accessTokenSecret = accessTokenSecret
-        self.accessToken = accessToken
         
         var baseAllowed = CharacterSet.alphanumerics
         baseAllowed.insert(charactersIn: "-._~")
@@ -52,10 +40,10 @@ class ApiRequestFactory: BaseApiRequestFactory {
         
         self.params =  [(key: "oauth_consumer_key", value: apiKey),
                         (key: "oauth_nonce", value: oauthNonce),
-                        (key: "oauth_signature_method", value: oauthSignatureMethod),
-                        (key: "oauth_timestamp", value: oauthTimeStamp),
+                        (key: "oauth_signature_method", value: "HMAC-SHA1"),
+                        (key: "oauth_timestamp", value: String(Int(NSDate().timeIntervalSince1970))),
                         (key: "oauth_token", value: accessToken),
-                        (key: "oauth_version", value: oauthVersion)]
+                        (key: "oauth_version", value: "1.0")]
             .map { (key: $0.key, value: $0.value.addingPercentEncoding(withAllowedCharacters: baseAllowed)!) }
     }
     
@@ -66,7 +54,7 @@ class ApiRequestFactory: BaseApiRequestFactory {
     }
     
     func createRequestTokenRequest() -> URLRequest? {
-        params.append((key: "oauth_callback", value: oauthCallBackUrl))
+        params.append((key: "oauth_callback", value: "https://nyannyanengine.firebaseapp.com/authorized/"))
         return createSignedUrlRequest(baseUrlStr: requestTokenApiUrl,
                                 urlStr: requestTokenApiUrl,
                                 requestMethod: "POST")
@@ -74,7 +62,7 @@ class ApiRequestFactory: BaseApiRequestFactory {
     
     func createAccessTokenRequest(redirectedUrl: URL) -> URLRequest? {
         guard let query = NSURLComponents(string: redirectedUrl.absoluteString)?.query else { return nil }
-        let fullPath = accessTokenApiUrl + query
+        let fullPath = accessTokenApiUrl + "?" + query
         
         return createSignedUrlRequest(baseUrlStr: accessTokenApiUrl,
                                 urlStr: fullPath,
