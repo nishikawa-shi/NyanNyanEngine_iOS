@@ -31,12 +31,9 @@ class PostNekogoViewController: UIViewController {
     
     @IBOutlet weak var originalText: UITextView!
     @IBOutlet weak var nekogoText: UILabel!
+    @IBOutlet weak var tweetButton: UIButton!
     
     @IBAction func touchCancelAction(_ sender: UIBarButtonItem) {
-        self.dismiss(animated: true, completion: nil)
-    }
-    
-    @IBAction func touchPostNekogoAction(_ sender: UIButton) {
         self.dismiss(animated: true, completion: nil)
     }
     
@@ -46,6 +43,14 @@ class PostNekogoViewController: UIViewController {
 
         originalText.rx.text
             .bind(to: input.originalTextChangedTo!)
+            .disposed(by: disposeBag)
+        
+        tweetButton.rx.tap
+            .map { [unowned self] in
+                self.input.postExecutedAs?.onNext(self.nekogoText.text)
+                self.dismiss(animated: true, completion: nil)
+            }
+            .subscribe()
             .disposed(by: disposeBag)
         
         output.nekogoText

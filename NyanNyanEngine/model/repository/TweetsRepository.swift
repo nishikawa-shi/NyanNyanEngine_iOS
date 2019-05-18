@@ -14,6 +14,7 @@ protocol BaseTweetsRepository: AnyObject {
     var nyanNyanStatuses: Observable<[NyanNyan]?> { get }
     var buttonRefreshExecutedAt: AnyObserver<(() -> Void)>? { get }
     var pullToRefreshExecutedAt: AnyObserver<UIRefreshControl?>? { get }
+    var postExecutedAs: AnyObserver<String?>? { get }
 }
 
 class TweetsRepository: BaseTweetsRepository {
@@ -26,6 +27,7 @@ class TweetsRepository: BaseTweetsRepository {
     let nyanNyanStatuses: Observable<[NyanNyan]?>
     var buttonRefreshExecutedAt: AnyObserver<(() -> Void)>? = nil
     var pullToRefreshExecutedAt: AnyObserver<UIRefreshControl?>? = nil
+    var postExecutedAs: AnyObserver<String?>? = nil
     
     private init(apiClient: BaseApiClient = ApiClient.shared,
                  userDefaultsConnector: BaseUserDefaultsConnector = UserDefaultsConnector.shared) {
@@ -72,6 +74,26 @@ class TweetsRepository: BaseTweetsRepository {
                 }
                 .bind(to: _statuses)
                 .disposed(by: self.disposeBag)
+        }
+        
+        self.postExecutedAs = AnyObserver<String?> { nekosanText in
+            guard let apiKey = PlistConnector.shared.getString(withKey: "apiKey"),
+                let apiSecret = PlistConnector.shared.getString(withKey: "apiSecret"),
+                let accessToken = UserDefaultsConnector.shared.getString(withKey: "oauth_token"),
+                let accessTokenSecret = UserDefaultsConnector.shared.getString(withKey: "oauth_token_secret"),
+                let nekosanTextValue = nekosanText.element,
+                let nekosanTextBody = nekosanTextValue,
+                let urlRequest = ApiRequestFactory(apiKey: apiKey,
+                                                   apiSecret: apiSecret,
+                                                   oauthNonce: "0000",
+                                                   accessTokenSecret: accessTokenSecret,
+                                                   accessToken: accessToken).createPostTweetRequest(tweetBody: nekosanTextBody) else {
+                                                    return
+            }
+            self.apiClient.executeHttpRequest(urlRequest: urlRequest)
+                .subscribe { res in
+                    print("tsuushinn shimashita")
+                }.disposed(by: self.disposeBag)
         }
     }
     

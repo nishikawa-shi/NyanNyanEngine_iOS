@@ -32,6 +32,7 @@ class ApiRequestFactory: BaseApiRequestFactory {
     private let requestTokenApiUrl = "https://api.twitter.com/oauth/request_token"
     private let accessTokenApiUrl = "https://api.twitter.com/oauth/access_token?"
     private let homeTimelineApiUrl = "https://api.twitter.com/1.1/statuses/home_timeline.json"
+    private let postTweetApiUrl = "https://api.twitter.com/1.1/statuses/update.json"
     
     init(apiKey: String = "abcdefghijklMNOPQRSTU0123",
          apiSecret: String = "abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMN",
@@ -94,6 +95,37 @@ class ApiRequestFactory: BaseApiRequestFactory {
                                     cachePolicy: .reloadIgnoringLocalCacheData,
                                     timeoutInterval: 5)
         urlRequest.httpMethod = "GET"
+        urlRequest.addValue(headerValue, forHTTPHeaderField: "Authorization")
+        
+        return urlRequest
+    }
+    
+    func createPostTweetRequest(tweetBody: String) -> URLRequest? {
+        var params = [(key: "oauth_consumer_key", value: apiKey),
+                      (key: "oauth_nonce", value: oauthNonce),
+                      (key: "oauth_signature_method", value: oauthSignatureMethod),
+                      (key: "oauth_timestamp", value: oauthTimeStamp),
+                      (key: "oauth_token", value: accessToken),
+                      (key: "oauth_version", value: oauthVersion)]
+            .map { (key: $0.key, value: $0.value.addingPercentEncoding(withAllowedCharacters: allowedCharacterSet)!) }
+        params.append((key: "status", value: tweetBody))
+        params.append((key: "oauth_signature", value: createSignature(params: params, requestMethod: "POST", apiUrl: postTweetApiUrl)))
+        
+        let headerParams = params
+            .map { [$0.key.addingPercentEncoding(withAllowedCharacters: allowedCharacterSet)!,
+                    $0.value.addingPercentEncoding(withAllowedCharacters: allowedCharacterSet)!]
+                .joined(separator: "=") }
+            .joined(separator: ",")
+        let headerValue = "OAuth " + headerParams
+        
+        guard let apiUrlObj = URL(string: postTweetApiUrl),
+            var components = URLComponents(url: apiUrlObj, resolvingAgainstBaseURL: apiUrlObj.baseURL != nil) else {return nil}
+        components.queryItems = [URLQueryItem(name: "status", value: tweetBody)]
+        guard let requestFullPath = components.url else { return nil }
+        var urlRequest = URLRequest(url: requestFullPath,
+                                    cachePolicy: .reloadIgnoringLocalCacheData,
+                                    timeoutInterval: 5)
+        urlRequest.httpMethod = "POST"
         urlRequest.addValue(headerValue, forHTTPHeaderField: "Authorization")
         
         return urlRequest

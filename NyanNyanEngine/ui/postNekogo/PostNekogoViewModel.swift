@@ -12,6 +12,7 @@ import RxRelay
 
 protocol PostNekogoViewModelInput: AnyObject {
     var originalTextChangedTo: AnyObserver<String?>? { get }
+    var postExecutedAs: AnyObserver<String?>? { get }
 }
 
 protocol PostNekogoViewModelOutput: AnyObject {
@@ -19,11 +20,16 @@ protocol PostNekogoViewModelOutput: AnyObject {
 }
 
 final class PostNekogoViewModel: PostNekogoViewModelInput, PostNekogoViewModelOutput {
+    private let tweetsRepository: BaseTweetsRepository
+    
     var originalTextChangedTo: AnyObserver<String?>? = nil
+    var postExecutedAs: AnyObserver<String?>? = nil
     
     var nekogoText: Observable<String?>
     
-    init() {
+    init(tweetsRepository: BaseTweetsRepository = TweetsRepository.shared) {
+        self.tweetsRepository = tweetsRepository
+        
         let _nekogoText = BehaviorRelay<String?>(value: nil)
         self.nekogoText = _nekogoText.asObservable()
         
@@ -31,6 +37,11 @@ final class PostNekogoViewModel: PostNekogoViewModelInput, PostNekogoViewModelOu
             guard let texiViewValue = $0.element,
                 let originalText = texiViewValue else { return }
             _nekogoText.accept(Nekosan().createNekogo(sourceStr: originalText))
+        }
+        
+        self.postExecutedAs = AnyObserver<String?> {
+            guard let labelValue = $0.element else { return }
+            tweetsRepository.postExecutedAs?.onNext(labelValue)
         }
     }
 }
