@@ -47,6 +47,7 @@ class PostNekogoViewController: UIViewController {
         
         tweetButton.rx.tap
             .map { [unowned self] in
+                self.input.postExecutedAs?.onNext(self.nekogoText.text)
                 self.dismiss(animated: true, completion: nil)
             }
             .subscribe()

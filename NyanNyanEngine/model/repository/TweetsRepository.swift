@@ -14,6 +14,7 @@ protocol BaseTweetsRepository: AnyObject {
     var nyanNyanStatuses: Observable<[NyanNyan]?> { get }
     var buttonRefreshExecutedAt: AnyObserver<(() -> Void)>? { get }
     var pullToRefreshExecutedAt: AnyObserver<UIRefreshControl?>? { get }
+    var postExecutedAs: AnyObserver<String?>? { get }
 }
 
 class TweetsRepository: BaseTweetsRepository {
@@ -26,6 +27,7 @@ class TweetsRepository: BaseTweetsRepository {
     let nyanNyanStatuses: Observable<[NyanNyan]?>
     var buttonRefreshExecutedAt: AnyObserver<(() -> Void)>? = nil
     var pullToRefreshExecutedAt: AnyObserver<UIRefreshControl?>? = nil
+    var postExecutedAs: AnyObserver<String?>? = nil
     
     private init(apiClient: BaseApiClient = ApiClient.shared,
                  userDefaultsConnector: BaseUserDefaultsConnector = UserDefaultsConnector.shared) {
@@ -72,6 +74,9 @@ class TweetsRepository: BaseTweetsRepository {
                 }
                 .bind(to: _statuses)
                 .disposed(by: self.disposeBag)
+        }
+        
+        self.postExecutedAs = AnyObserver<String?> { nekosanText in
         }
     }
     
