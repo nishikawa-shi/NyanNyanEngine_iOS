@@ -120,6 +120,9 @@
                                         <size key="value" width="4" height="4"/>
                                     </userDefinedRuntimeAttribute>
                                 </userDefinedRuntimeAttributes>
+                                <connections>
+                                    <segue destination="LYu-3r-FH9" kind="presentation" id="BLp-Ns-ZnC"/>
+                                </connections>
                             </button>
                         </subviews>
                         <color key="backgroundColor" red="0.99215686274509807" green="0.96470588235294119" blue="0.8901960784313725" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -151,6 +154,28 @@
             </objects>
             <point key="canvasLocation" x="957.97101449275374" y="65.625"/>
         </scene>
+        <!--Post Nekogo View Controller-->
+        <scene sceneID="Kyq-F9-b0r">
+            <objects>
+                <viewController id="Ync-nX-9TU" customClass="PostNekogoViewController" customModule="NyanNyanEngine" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="ET2-d6-0et">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <viewLayoutGuide key="safeArea" id="H5w-C7-zSx"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="SSO-CY-sNi">
+                        <barButtonItem key="leftBarButtonItem" title="キャンセル" id="7cV-OL-7iV">
+                            <connections>
+                                <action selector="touchCancelAction:" destination="Ync-nX-9TU" id="fZw-Gf-Ja7"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="dCe-LR-bsa" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2920" y="66"/>
+        </scene>
         <!--Navigation Controller-->
         <scene sceneID="EEO-D0-jEw">
             <objects>
@@ -168,6 +193,24 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="KRH-Pl-DIJ" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-400.00000000000006" y="-609.375"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="52R-9p-DVO">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="LYu-3r-FH9" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="VzC-gj-IGQ">
+                        <rect key="frame" x="0.0" y="44" width="414" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="Ync-nX-9TU" kind="relationship" relationship="rootViewController" id="4Sb-HW-CA5"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="QAL-3M-Ecs" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1952" y="66"/>
         </scene>
     </scenes>
     <resources>
