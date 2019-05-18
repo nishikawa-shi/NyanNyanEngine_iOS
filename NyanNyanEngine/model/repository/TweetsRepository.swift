@@ -77,6 +77,23 @@ class TweetsRepository: BaseTweetsRepository {
         }
         
         self.postExecutedAs = AnyObserver<String?> { nekosanText in
+            guard let apiKey = PlistConnector.shared.getString(withKey: "apiKey"),
+                let apiSecret = PlistConnector.shared.getString(withKey: "apiSecret"),
+                let accessToken = UserDefaultsConnector.shared.getString(withKey: "oauth_token"),
+                let accessTokenSecret = UserDefaultsConnector.shared.getString(withKey: "oauth_token_secret"),
+                let nekosanTextValue = nekosanText.element,
+                let nekosanTextBody = nekosanTextValue,
+                let urlRequest = ApiRequestFactory(apiKey: apiKey,
+                                                   apiSecret: apiSecret,
+                                                   oauthNonce: "0000",
+                                                   accessTokenSecret: accessTokenSecret,
+                                                   accessToken: accessToken).createPostTweetRequest(tweetBody: nekosanTextBody) else {
+                                                    return
+            }
+            self.apiClient.executeHttpRequest(urlRequest: urlRequest)
+                .subscribe { res in
+                    print("tsuushinn shimashita")
+                }.disposed(by: self.disposeBag)
         }
     }
     
