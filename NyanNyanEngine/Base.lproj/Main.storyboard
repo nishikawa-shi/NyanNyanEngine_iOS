@@ -263,6 +263,7 @@
                         </barButtonItem>
                     </navigationItem>
                     <connections>
+                        <outlet property="nekogoText" destination="0wL-SI-Y2R" id="jGK-F0-mqW"/>
                         <outlet property="originalText" destination="L1b-m5-lsS" id="xN9-of-KnR"/>
                     </connections>
                 </viewController>

@@ -7,10 +7,30 @@
 //
 
 import UIKit
+import RxSwift
+import RxCocoa
 
 class PostNekogoViewController: UIViewController {
+    private let input: PostNekogoViewModelInput
+    private let output: PostNekogoViewModelOutput
+    private let disposeBag = DisposeBag()
+    
+    //ストーリーボードから呼ばれることが前提のクラスなので、こちらのイニシャライザは呼ばれない想定
+    init(viewModel: PostNekogoViewModelInput & PostNekogoViewModelOutput = PostNekogoViewModel()) {
+        self.input = viewModel
+        self.output = viewModel
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        let viewModel = PostNekogoViewModel()
+        self.input = viewModel
+        self.output = viewModel
+        super.init(coder: aDecoder)
+    }
     
     @IBOutlet weak var originalText: UITextView!
+    @IBOutlet weak var nekogoText: UILabel!
     
     @IBAction func touchCancelAction(_ sender: UIBarButtonItem) {
         self.dismiss(animated: true, completion: nil)
@@ -21,9 +41,16 @@ class PostNekogoViewController: UIViewController {
     }
     
     override func viewDidLoad() {
-        
         super.viewDidLoad()
         self.originalText.delegate = self
+
+        originalText.rx.text
+            .bind(to: input.originalTextChangedTo!)
+            .disposed(by: disposeBag)
+        
+        output.nekogoText
+            .bind(to: nekogoText.rx.text)
+            .disposed(by: disposeBag)
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
