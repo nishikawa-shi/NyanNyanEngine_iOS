@@ -13,4 +13,8 @@ class PostNekogoViewController: UIViewController {
     @IBAction func touchCancelAction(_ sender: UIBarButtonItem) {
         self.dismiss(animated: true, completion: nil)
     }
+    
+    @IBAction func touchPostNekogoAction(_ sender: UIButton) {
+        self.dismiss(animated: true, completion: nil)
+    }
 }
