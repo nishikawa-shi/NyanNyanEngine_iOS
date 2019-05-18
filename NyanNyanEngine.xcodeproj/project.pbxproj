@@ -34,6 +34,7 @@
 		679A5E60227B1F250043D0E1 /* ApiRequestFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 679A5E5F227B1F250043D0E1 /* ApiRequestFactory.swift */; };
 		679A5E65227B3B590043D0E1 /* PlistConnector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 679A5E64227B3B590043D0E1 /* PlistConnector.swift */; };
 		679A5E67227B3E960043D0E1 /* ApiKeys.plist in Resources */ = {isa = PBXBuildFile; fileRef = 679A5E66227B3E960043D0E1 /* ApiKeys.plist */; };
+		67A1AAA2228FF0B700BF640A /* PostNekogoViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67A1AAA1228FF0B700BF640A /* PostNekogoViewModel.swift */; };
 		67D86EE0227FC5DB00965816 /* NyanNyan.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67D86EDF227FC5DB00965816 /* NyanNyan.swift */; };
 		67D86EE2227FDE9B00965816 /* TwitterDateFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67D86EE1227FDE9B00965816 /* TwitterDateFormatter.swift */; };
 		67D86EE4227FE20E00965816 /* DateFormatterTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67D86EE3227FE20E00965816 /* DateFormatterTest.swift */; };
@@ -97,6 +98,7 @@
 		679A5E5F227B1F250043D0E1 /* ApiRequestFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApiRequestFactory.swift; sourceTree = "<group>"; };
 		679A5E64227B3B590043D0E1 /* PlistConnector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlistConnector.swift; sourceTree = "<group>"; };
 		679A5E66227B3E960043D0E1 /* ApiKeys.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = ApiKeys.plist; sourceTree = "<group>"; };
+		67A1AAA1228FF0B700BF640A /* PostNekogoViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostNekogoViewModel.swift; sourceTree = "<group>"; };
 		67D86EDF227FC5DB00965816 /* NyanNyan.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NyanNyan.swift; sourceTree = "<group>"; };
 		67D86EE1227FDE9B00965816 /* TwitterDateFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TwitterDateFormatter.swift; sourceTree = "<group>"; };
 		67D86EE3227FE20E00965816 /* DateFormatterTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateFormatterTest.swift; sourceTree = "<group>"; };
@@ -318,6 +320,7 @@
 			isa = PBXGroup;
 			children = (
 				67E3C4D3228E2F6900B93E1D /* PostNekogoViewController.swift */,
+				67A1AAA1228FF0B700BF640A /* PostNekogoViewModel.swift */,
 			);
 			path = postNekogo;
 			sourceTree = "<group>";
@@ -612,6 +615,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				67666167227527FF004C886C /* HomeTimelineViewController.swift in Sources */,
+				67A1AAA2228FF0B700BF640A /* PostNekogoViewModel.swift in Sources */,
 				6767B0D022791033008913EA /* TweetsRepository.swift in Sources */,
 				6723B28C2276970A0004FB3D /* Status.swift in Sources */,
 				670E3980227FB67C002318AE /* Nekosan.swift in Sources */,

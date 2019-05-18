@@ -11,6 +11,10 @@ import CryptoSwift
 
 struct Nekosan {
     func createNekogo(sourceStr: String) -> String {
+        if(sourceStr.isEmpty) {
+            return ""
+        }
+        
         let nekogoSource = sourceStr.md5()
         let nekogoBody = String(nekogoSource.prefix(3))
             .reduce("") { $0 + getNekogoBody(sourceChar: $1) }
