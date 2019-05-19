@@ -14,7 +14,7 @@ class NekosanConverterTest: XCTestCase {
         let testStr = "どんな嫌なツイートでも、猫語だと可愛いですね。"
         
         let testNekogo = Nekosan().createNekogo(sourceStr: testStr)
-        let expectedNekogo = "にゃーおんにゃおにゃー"
+        let expectedNekogo = "にゃーおんにゃおにゃー🌈"
         XCTAssertEqual(testNekogo, expectedNekogo)
     }
 }

@@ -18,7 +18,7 @@ struct Nekosan {
         let nekogoSource = sourceStr.md5()
         let nekogoBody = String(nekogoSource.prefix(3))
             .reduce("") { $0 + getNekogoBody(sourceChar: $1) }
-        let nyankoSuffix = String(nekogoSource.prefix(1))
+        let nyankoSuffix = String(nekogoSource.suffix(1))
             .reduce("") { $0 + getNekogoSuffix(sourceChar: $1) }
         return nekogoBody + nyankoSuffix
     }
