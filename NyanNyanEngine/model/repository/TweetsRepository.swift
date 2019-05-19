@@ -39,7 +39,7 @@ class TweetsRepository: BaseTweetsRepository {
         let _statuses = BehaviorRelay<[NyanNyan]?>(value: nil)
         self.nyanNyanStatuses = _statuses.asObservable()
         
-        let _postedStatus = BehaviorRelay<Status?>(value: nil)
+        let _postedStatus = PublishRelay<Status?>()
         self.postedStatus = _postedStatus.asObservable()
         
         self.buttonRefreshExecutedAt = AnyObserver<(() -> Void)> { [unowned self] stopActivityIndicator in

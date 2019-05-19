@@ -46,15 +46,16 @@ class PostNekogoViewController: UIViewController {
             .disposed(by: disposeBag)
         
         tweetButton.rx.tap
-            .map { [unowned self] in
-                self.input.postExecutedAs?.onNext(self.nekogoText.text)
-                self.dismiss(animated: true, completion: nil)
-            }
-            .subscribe()
+            .map { [unowned self] in self.nekogoText.text }
+            .bind(to: self.input.postExecutedAs!)
             .disposed(by: disposeBag)
         
         output.nekogoText
             .bind(to: nekogoText.rx.text)
+            .disposed(by: disposeBag)
+        
+        output.postSucceeded
+            .subscribe {[unowned self] _ in self.dismiss(animated: true, completion: nil)}
             .disposed(by: disposeBag)
     }
     

@@ -17,6 +17,7 @@ protocol PostNekogoViewModelInput: AnyObject {
 
 protocol PostNekogoViewModelOutput: AnyObject {
     var nekogoText: Observable<String?> { get }
+    var postSucceeded: Observable<Status?> { get }
 }
 
 final class PostNekogoViewModel: PostNekogoViewModelInput, PostNekogoViewModelOutput {
@@ -28,6 +29,7 @@ final class PostNekogoViewModel: PostNekogoViewModelInput, PostNekogoViewModelOu
     var postExecutedAs: AnyObserver<String?>? = nil
     
     var nekogoText: Observable<String?>
+    let postSucceeded: Observable<Status?>
     
     init(tweetsRepository: BaseTweetsRepository = TweetsRepository.shared,
          loadingStatusRepository: BaseLoadingStatusRepository = LoadingStatusRepository.shared) {
@@ -36,6 +38,7 @@ final class PostNekogoViewModel: PostNekogoViewModelInput, PostNekogoViewModelOu
         
         let _nekogoText = BehaviorRelay<String?>(value: nil)
         self.nekogoText = _nekogoText.asObservable()
+        self.postSucceeded = tweetsRepository.postedStatus
         
         self.originalTextChangedTo = AnyObserver<String?> {
             guard let texiViewValue = $0.element,
