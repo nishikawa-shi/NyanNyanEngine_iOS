@@ -74,10 +74,6 @@ final class HomeTimelineViewModel: HomeTimelineViewModelInput, HomeTimelineViewM
             self.tweetsRepository
                 .pullToRefreshExecutedAt?
                 .onNext(uiRefreshControl.element)
-            
-            self.loadingStatusRepository
-                .loadingStatusChangedTo
-                .onNext(false)
         }
         
         self.authExecutedAt = AnyObserver<String>() { [unowned self] authedAt in
