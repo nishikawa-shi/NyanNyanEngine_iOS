@@ -62,12 +62,8 @@ class HomeTimelineViewController: UIViewController {
             .disposed(by: disposeBag)
         
         output.isLoading
-            .subscribe() { status in
-                if (status.element ?? false) {
-                    self.activityIndicator.startAnimating()
-                } else {
-                    self.activityIndicator.stopAnimating()
-                }
+            .subscribe() { ($0.element ?? false) ?
+                self.activityIndicator.startAnimating() : self.activityIndicator.stopAnimating()
         }.disposed(by: disposeBag)
         
         output.isLoggedIn?
