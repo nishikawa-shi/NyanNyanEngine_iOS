@@ -12,6 +12,7 @@ import RxRelay
 
 protocol BaseTweetsRepository: AnyObject {
     var nyanNyanStatuses: Observable<[NyanNyan]?> { get }
+    var postedStatus: Observable<Status?> { get }
     var buttonRefreshExecutedAt: AnyObserver<(() -> Void)>? { get }
     var pullToRefreshExecutedAt: AnyObserver<UIRefreshControl?>? { get }
     var postExecutedAs: AnyObserver<String?>? { get }
@@ -25,6 +26,7 @@ class TweetsRepository: BaseTweetsRepository {
     private let userDefaultsConnector: BaseUserDefaultsConnector
     
     let nyanNyanStatuses: Observable<[NyanNyan]?>
+    let postedStatus: Observable<Status?>
     var buttonRefreshExecutedAt: AnyObserver<(() -> Void)>? = nil
     var pullToRefreshExecutedAt: AnyObserver<UIRefreshControl?>? = nil
     var postExecutedAs: AnyObserver<String?>? = nil
@@ -36,6 +38,9 @@ class TweetsRepository: BaseTweetsRepository {
         
         let _statuses = BehaviorRelay<[NyanNyan]?>(value: nil)
         self.nyanNyanStatuses = _statuses.asObservable()
+        
+        let _postedStatus = BehaviorRelay<Status?>(value: nil)
+        self.postedStatus = _postedStatus.asObservable()
         
         self.buttonRefreshExecutedAt = AnyObserver<(() -> Void)> { [unowned self] stopActivityIndicator in
             self.getHomeTimeLine()
@@ -77,23 +82,11 @@ class TweetsRepository: BaseTweetsRepository {
         }
         
         self.postExecutedAs = AnyObserver<String?> { nekosanText in
-            guard let apiKey = PlistConnector.shared.getString(withKey: "apiKey"),
-                let apiSecret = PlistConnector.shared.getString(withKey: "apiSecret"),
-                let accessToken = UserDefaultsConnector.shared.getString(withKey: "oauth_token"),
-                let accessTokenSecret = UserDefaultsConnector.shared.getString(withKey: "oauth_token_secret"),
-                let nekosanTextValue = nekosanText.element,
-                let nekosanTextBody = nekosanTextValue,
-                let urlRequest = ApiRequestFactory(apiKey: apiKey,
-                                                   apiSecret: apiSecret,
-                                                   oauthNonce: "0000",
-                                                   accessTokenSecret: accessTokenSecret,
-                                                   accessToken: accessToken).createPostTweetRequest(tweetBody: nekosanTextBody) else {
-                                                    return
-            }
-            self.apiClient.executeHttpRequest(urlRequest: urlRequest)
-                .subscribe { res in
-                    print("tsuushinn shimashita")
-                }.disposed(by: self.disposeBag)
+            guard let nekosanTextValue = nekosanText.element,
+                let nekosanTextBody = nekosanTextValue else { return }
+            self.postTweets(nekosanText: nekosanTextBody)
+                .bind(to: _postedStatus)
+                .disposed(by: self.disposeBag)
         }
     }
     
@@ -116,11 +109,36 @@ class TweetsRepository: BaseTweetsRepository {
             .map { [unowned self] in self.toNyanNyan(rawTweets: $0) }
     }
     
+    private func postTweets(nekosanText: String) -> Observable<Status?> {
+        guard let apiKey = PlistConnector.shared.getString(withKey: "apiKey"),
+            let apiSecret = PlistConnector.shared.getString(withKey: "apiSecret"),
+            let accessToken = UserDefaultsConnector.shared.getString(withKey: "oauth_token"),
+            let accessTokenSecret = UserDefaultsConnector.shared.getString(withKey: "oauth_token_secret"),
+            let urlRequest = ApiRequestFactory(apiKey: apiKey,
+                                               apiSecret: apiSecret,
+                                               oauthNonce: "0000",
+                                               accessTokenSecret: accessTokenSecret,
+                                               accessToken: accessToken)
+                .createPostTweetRequest(tweetBody: nekosanText) else {
+                    return Observable<Status?>.just(nil)
+        }
+        return self.apiClient
+            .executeHttpRequest(urlRequest: urlRequest)
+            .map { [unowned self] in self.toStatus(data: $0)}
+    }
+    
     private func toStatuses(data: Data?) -> [Status]? {
         let decoder = JSONDecoder()
         decoder.keyDecodingStrategy = .convertFromSnakeCase
         guard let d = data else { return nil }
         return try? decoder.decode([Status].self, from: d)
+    }
+    
+    private func toStatus(data: Data?) -> Status? {
+        let decoder = JSONDecoder()
+        decoder.keyDecodingStrategy = .convertFromSnakeCase
+        guard let d = data else { return nil }
+        return try? decoder.decode(Status.self, from: d)
     }
     
     private func toNyanNyan(rawTweets: [Status]?) -> [NyanNyan] {

@@ -21,14 +21,18 @@ protocol PostNekogoViewModelOutput: AnyObject {
 
 final class PostNekogoViewModel: PostNekogoViewModelInput, PostNekogoViewModelOutput {
     private let tweetsRepository: BaseTweetsRepository
+    private let loadingStatusRepository: BaseLoadingStatusRepository
+    private let disposeBag = DisposeBag()
     
     var originalTextChangedTo: AnyObserver<String?>? = nil
     var postExecutedAs: AnyObserver<String?>? = nil
     
     var nekogoText: Observable<String?>
     
-    init(tweetsRepository: BaseTweetsRepository = TweetsRepository.shared) {
+    init(tweetsRepository: BaseTweetsRepository = TweetsRepository.shared,
+         loadingStatusRepository: BaseLoadingStatusRepository = LoadingStatusRepository.shared) {
         self.tweetsRepository = tweetsRepository
+        self.loadingStatusRepository = loadingStatusRepository
         
         let _nekogoText = BehaviorRelay<String?>(value: nil)
         self.nekogoText = _nekogoText.asObservable()
@@ -43,5 +47,15 @@ final class PostNekogoViewModel: PostNekogoViewModelInput, PostNekogoViewModelOu
             guard let labelValue = $0.element else { return }
             tweetsRepository.postExecutedAs?.onNext(labelValue)
         }
+        
+        self.tweetsRepository.postedStatus.subscribe { _ in
+            self.loadingStatusRepository
+                .loadingStatusChangedTo
+                .onNext(true)
+            
+            self.tweetsRepository
+                .buttonRefreshExecutedAt?
+                .onNext() { self.loadingStatusRepository.loadingStatusChangedTo.onNext(false) }
+            }.disposed(by: self.disposeBag)
     }
 }
