@@ -15,12 +15,27 @@ struct Nekosan {
             return ""
         }
         
+        if(isNekogo(sourceStr: sourceStr)) {
+            return sourceStr
+        }
+        
         let nekogoSource = sourceStr.md5()
         let nekogoBody = String(nekogoSource.prefix(3))
             .reduce("") { $0 + getNekogoBody(sourceChar: $1) }
         let nyankoSuffix = String(nekogoSource.suffix(1))
             .reduce("") { $0 + getNekogoSuffix(sourceChar: $1) }
         return nekogoBody + nyankoSuffix
+    }
+    
+    func isNekogo(sourceStr: String) -> Bool {
+        let nekogoBodyPattern = "(にゃん|にゃお|にゃー|にゃ|にゃーん|にゃーお|にゃおーん|にゃーおん|にゃあ)"
+        let nekosanPrefixPattern = "(😊|🙁|🐤|🐟|🏆|🌈|🎊|:\\)|XD)"
+        let pattern = ["^", nekogoBodyPattern, "{3}", nekosanPrefixPattern, "?", "$"].joined()
+        
+        guard let regex = try? NSRegularExpression(pattern: pattern) else { return false }
+        return (regex.matches(in: sourceStr,
+                              range: NSRange(location: 0, length:sourceStr.count))
+            .count) > 0
     }
     
     private func getNekogoBody(sourceChar: Character) -> String {

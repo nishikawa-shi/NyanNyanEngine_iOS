@@ -17,4 +17,14 @@ class NekosanConverterTest: XCTestCase {
         let expectedNekogo = "にゃーおんにゃおにゃー🌈"
         XCTAssertEqual(testNekogo, expectedNekogo)
     }
+    
+    func testDoesNekosanRemainNekogo() {
+        let rawStr = ["にゃーおんにゃにゃ",
+                      "にゃおーんにゃんにゃーおん🎊",
+                      "にゃあにゃーんにゃーん:)"]
+        let testStrs = rawStr.map { Nekosan().createNekogo(sourceStr: $0) }
+        let expectedStrs = rawStr
+        
+        XCTAssertEqual(testStrs, expectedStrs)
+    }
 }
