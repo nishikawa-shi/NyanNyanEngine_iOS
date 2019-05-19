@@ -85,6 +85,12 @@ class TweetsRepository: BaseTweetsRepository {
             guard let nekosanTextValue = nekosanText.element,
                 let nekosanTextBody = nekosanTextValue else { return }
             self.postTweets(nekosanText: nekosanTextBody)
+                .map {
+                    //Observerの型をラムダ式ではなくStringにしたかったのでここでLoadingStatusRepositoryへの依存が生まれてしまっている。
+                    //モジュール性が若干下がるので、構成を見直した方が良いかもしれない・・・
+                    LoadingStatusRepository.shared.loadingStatusChangedTo.onNext(false)
+                    return $0 ?? Status(text: "にゃにゃーーーおん", createdAt: "99日前", user: User(name: "エラー猫さん", screenName: "neko_error", profileImageUrlHttps: nil))
+                }
                 .bind(to: _postedStatus)
                 .disposed(by: self.disposeBag)
         }

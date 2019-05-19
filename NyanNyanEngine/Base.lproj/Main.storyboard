@@ -246,6 +246,14 @@
                                     </userDefinedRuntimeAttribute>
                                 </userDefinedRuntimeAttributes>
                             </button>
+                            <activityIndicatorView hidden="YES" opaque="NO" alpha="0.5" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" animating="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="Nqz-26-W5q" userLabel="Activity Indicator">
+                                <rect key="frame" x="159" y="427" width="96" height="96"/>
+                                <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="96" id="9gk-bi-bUG"/>
+                                    <constraint firstAttribute="height" constant="96" id="I1f-UT-8m4"/>
+                                </constraints>
+                            </activityIndicatorView>
                         </subviews>
                         <color key="backgroundColor" red="0.99215686270000003" green="0.96470588239999999" blue="0.89019607840000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
@@ -264,7 +272,9 @@
                             <constraint firstItem="0wL-SI-Y2R" firstAttribute="height" secondItem="xRT-Xg-9i7" secondAttribute="height" multiplier="0.4" constant="1" id="XO3-Pz-2bh"/>
                             <constraint firstItem="xRT-Xg-9i7" firstAttribute="top" secondItem="L1b-m5-lsS" secondAttribute="bottom" constant="48" id="cUO-AE-Oa0"/>
                             <constraint firstItem="iDn-Mt-gFw" firstAttribute="top" secondItem="H5w-C7-zSx" secondAttribute="top" constant="48" id="dSo-B7-UHh"/>
+                            <constraint firstItem="Nqz-26-W5q" firstAttribute="centerY" secondItem="H5w-C7-zSx" secondAttribute="centerY" id="fgL-iu-aQM"/>
                             <constraint firstItem="L1b-m5-lsS" firstAttribute="leading" secondItem="H5w-C7-zSx" secondAttribute="leading" constant="16" id="mHd-pa-C9h"/>
+                            <constraint firstItem="Nqz-26-W5q" firstAttribute="centerX" secondItem="H5w-C7-zSx" secondAttribute="centerX" id="pg3-Ob-rpQ"/>
                             <constraint firstItem="0wL-SI-Y2R" firstAttribute="top" secondItem="xRT-Xg-9i7" secondAttribute="top" constant="32" id="qre-G8-yMR"/>
                             <constraint firstItem="L1b-m5-lsS" firstAttribute="top" secondItem="iDn-Mt-gFw" secondAttribute="top" id="rAr-yl-68H"/>
                             <constraint firstItem="zbK-Xh-RcE" firstAttribute="top" secondItem="0wL-SI-Y2R" secondAttribute="bottom" constant="16" id="rvg-Ui-QSW"/>
@@ -280,6 +290,7 @@
                         </barButtonItem>
                     </navigationItem>
                     <connections>
+                        <outlet property="activityIndicator" destination="Nqz-26-W5q" id="K6O-cW-9XR"/>
                         <outlet property="nekogoText" destination="0wL-SI-Y2R" id="jGK-F0-mqW"/>
                         <outlet property="originalText" destination="L1b-m5-lsS" id="xN9-of-KnR"/>
                         <outlet property="tweetButton" destination="zbK-Xh-RcE" id="m6h-lA-hkV"/>
