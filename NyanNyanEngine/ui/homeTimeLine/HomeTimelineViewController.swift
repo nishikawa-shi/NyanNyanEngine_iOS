@@ -81,6 +81,13 @@ class HomeTimelineViewController: UIViewController {
                              completion: nil)
             }.disposed(by: disposeBag)
         
+        output.postSucceeded
+            .subscribe {
+                guard let text = $0.element as? String else { return }
+                self.popNoticeToast(message: text)
+            }
+            .disposed(by: disposeBag)
+
         tweetList.refreshControl = UIRefreshControl()
         tweetList.refreshControl?.addTarget(self, action: #selector(self.refresh(sender:)), for: .valueChanged)
         
@@ -96,6 +103,27 @@ class HomeTimelineViewController: UIViewController {
             return
         }
         self.tweetList.scrollToRow(at: IndexPath(row: 0, section: 0), at: .top, animated: true)
+    }
+    
+    private func popNoticeToast(message: String) {
+        self.noticeToast.text = message
+
+        self.noticeToast.alpha = 0.0
+        self.noticeToast.isHidden = false
+        UIView.animate(withDuration: 0.5, animations: {
+            self.noticeToast.alpha = 1.0
+        }, completion: { _ in
+        })
+        
+        DispatchQueue.main.asyncAfter(deadline: .now()+2.0) {
+            UIView.animate(withDuration: 0.5, animations: {
+                self.noticeToast.alpha = 0.0
+            }, completion: { _ in
+                self.noticeToast.isHidden = true
+                self.noticeToast.alpha = 1.0
+                self.noticeToast.text = "にゃーおんにゃーおんにゃーおん\nにゃんにゃにゃ！"
+            })
+        }
     }
 }
 
