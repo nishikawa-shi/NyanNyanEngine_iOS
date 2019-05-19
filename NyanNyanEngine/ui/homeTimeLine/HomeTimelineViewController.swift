@@ -34,6 +34,7 @@ class HomeTimelineViewController: UIViewController {
     @IBOutlet weak var authButton: UIBarButtonItem!
     @IBOutlet weak var refreshButton: UIBarButtonItem!
     @IBOutlet weak var tweetList: UITableView!
+    @IBOutlet weak var noticeToast: UILabel!
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     
     override func viewDidLoad() {
