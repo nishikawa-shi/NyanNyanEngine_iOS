@@ -49,15 +49,15 @@ class ApiRequestFactory: BaseApiRequestFactory {
     
     func createHomeTimelineRequest() -> URLRequest? {
         return createSignedUrlRequest(baseUrlStr: homeTimelineApiUrl,
-                                urlStr: homeTimelineApiUrl,
-                                requestMethod: "GET")
+                                      urlStr: homeTimelineApiUrl,
+                                      requestMethod: "GET")
     }
     
     func createRequestTokenRequest() -> URLRequest? {
         params.append((key: "oauth_callback", value: "https://nyannyanengine.firebaseapp.com/authorized/"))
         return createSignedUrlRequest(baseUrlStr: requestTokenApiUrl,
-                                urlStr: requestTokenApiUrl,
-                                requestMethod: "POST")
+                                      urlStr: requestTokenApiUrl,
+                                      requestMethod: "POST")
     }
     
     func createAccessTokenRequest(redirectedUrl: URL) -> URLRequest? {
@@ -65,8 +65,8 @@ class ApiRequestFactory: BaseApiRequestFactory {
         let fullPath = accessTokenApiUrl + "?" + query
         
         return createSignedUrlRequest(baseUrlStr: accessTokenApiUrl,
-                                urlStr: fullPath,
-                                requestMethod: "POST")
+                                      urlStr: fullPath,
+                                      requestMethod: "POST")
     }
     
     func createPostTweetRequest(tweetBody: String) -> URLRequest? {
@@ -77,8 +77,8 @@ class ApiRequestFactory: BaseApiRequestFactory {
         let fullPath = postTweetApiUrl + query
         
         return createSignedUrlRequest(baseUrlStr: postTweetApiUrl,
-                                urlStr: fullPath,
-                                requestMethod: "POST")
+                                      urlStr: fullPath,
+                                      requestMethod: "POST")
     }
     
     private func createSignedUrlRequest(baseUrlStr: String, urlStr: String, requestMethod: String) -> URLRequest? {
