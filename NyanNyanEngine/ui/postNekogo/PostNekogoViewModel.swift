@@ -17,12 +17,14 @@ protocol PostNekogoViewModelInput: AnyObject {
 
 protocol PostNekogoViewModelOutput: AnyObject {
     var nekogoText: Observable<String?> { get }
+    var allowTweet: Observable<Bool> { get }
     var postSucceeded: Observable<Status?> { get }
     var isLoading: Observable<Bool> { get }
 }
 
 final class PostNekogoViewModel: PostNekogoViewModelInput, PostNekogoViewModelOutput {
     private let tweetsRepository: BaseTweetsRepository
+    private let authRepository: BaseAuthRepository
     private let loadingStatusRepository: BaseLoadingStatusRepository
     private let disposeBag = DisposeBag()
     
@@ -30,16 +32,21 @@ final class PostNekogoViewModel: PostNekogoViewModelInput, PostNekogoViewModelOu
     var postExecutedAs: AnyObserver<String?>? = nil
     
     var nekogoText: Observable<String?>
+    let allowTweet: Observable<Bool>
     let postSucceeded: Observable<Status?>
     let isLoading: Observable<Bool>
     
     init(tweetsRepository: BaseTweetsRepository = TweetsRepository.shared,
+         authRepository: BaseAuthRepository = AuthRepository.shared,
          loadingStatusRepository: BaseLoadingStatusRepository = LoadingStatusRepository.shared) {
         self.tweetsRepository = tweetsRepository
+        self.authRepository = authRepository
         self.loadingStatusRepository = loadingStatusRepository
         
         let _nekogoText = BehaviorRelay<String?>(value: nil)
         self.nekogoText = _nekogoText.asObservable()
+        let _allowTweet = BehaviorRelay<Bool>(value: false)
+        self.allowTweet = _allowTweet.asObservable()
         self.postSucceeded = tweetsRepository.postedStatus
         self.isLoading = loadingStatusRepository.isLoading
         
@@ -47,6 +54,7 @@ final class PostNekogoViewModel: PostNekogoViewModelInput, PostNekogoViewModelOu
             guard let texiViewValue = $0.element,
                 let originalText = texiViewValue else { return }
             _nekogoText.accept(Nekosan().createNekogo(sourceStr: originalText))
+            _allowTweet.accept(authRepository.getLoggedInStatus() && self.isInputedValidText(inputedText: originalText))
         }
         
         self.postExecutedAs = AnyObserver<String?> {
@@ -64,5 +72,9 @@ final class PostNekogoViewModel: PostNekogoViewModelInput, PostNekogoViewModelOu
                 .buttonRefreshExecutedAt?
                 .onNext() { self.loadingStatusRepository.loadingStatusChangedTo.onNext(false) }
             }.disposed(by: self.disposeBag)
+    }
+    
+    private func isInputedValidText(inputedText: String) -> Bool {
+        return (inputedText != ("ツイートをここに書くにゃ") && (!inputedText.isEmpty))
     }
 }

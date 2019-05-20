@@ -14,6 +14,7 @@ protocol BaseAuthRepository: AnyObject {
     func downloadAccessToken(redirectedUrl: URL,
                              modelUpdateLogic: @escaping(() -> Void) ) -> Observable<Bool>
     func getRequestToken()
+    func getLoggedInStatus() -> Bool
     
     var currentUser: Observable<String> { get }
     var isLoggedIn: Observable<Bool>? { get }
@@ -87,7 +88,7 @@ class AuthRepository: BaseAuthRepository {
             .map { true }
     }
     
-    private func getLoggedInStatus() -> Bool {
+    func getLoggedInStatus() -> Bool {
         return self.userDefaultsConnector.getString(withKey: "screen_name") != nil
     }
     
