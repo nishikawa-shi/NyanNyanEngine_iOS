@@ -65,7 +65,7 @@ class HomeTimelineViewController: UIViewController {
         output.isLoading
             .subscribe() { [unowned self] in
                 ($0.element ?? false) ? self.activityIndicator.startAnimating() : self.activityIndicator.stopAnimating()
-        }.disposed(by: disposeBag)
+            }.disposed(by: disposeBag)
         
         output.isLoggedIn?
             .map { !$0 }
@@ -86,7 +86,7 @@ class HomeTimelineViewController: UIViewController {
                 self.popNoticeToast(message: text)
             }
             .disposed(by: disposeBag)
-
+        
         tweetList.refreshControl = UIRefreshControl()
         tweetList.refreshControl?.addTarget(self, action: #selector(self.refresh(sender:)), for: .valueChanged)
         
@@ -106,7 +106,7 @@ class HomeTimelineViewController: UIViewController {
     
     private func popNoticeToast(message: String) {
         self.noticeToast.text = message
-
+        
         self.noticeToast.alpha = 0.0
         self.noticeToast.isHidden = false
         UIView.animate(withDuration: 0.5, animations: { [unowned self] in
@@ -116,10 +116,10 @@ class HomeTimelineViewController: UIViewController {
         DispatchQueue.main.asyncAfter(deadline: .now()+2.0) {
             UIView.animate(withDuration: 0.5, animations: { [unowned self] in
                 self.noticeToast.alpha = 0.0
-            }, completion: { [unowned self] _ in
-                self.noticeToast.isHidden = true
-                self.noticeToast.alpha = 1.0
-                self.noticeToast.text = "にゃーおんにゃーおんにゃーおん\nにゃんにゃにゃ！"
+                }, completion: { [unowned self] _ in
+                    self.noticeToast.isHidden = true
+                    self.noticeToast.alpha = 1.0
+                    self.noticeToast.text = "にゃーおんにゃーおんにゃーおん\nにゃんにゃにゃ！"
             })
         }
     }

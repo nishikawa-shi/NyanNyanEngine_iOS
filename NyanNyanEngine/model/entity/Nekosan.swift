@@ -30,7 +30,7 @@ struct Nekosan {
     func isNekogo(sourceStr: String) -> Bool {
         let nekogoBodyPattern = "(にゃん|にゃお|にゃー|にゃ|にゃーん|にゃーお|にゃおーん|にゃーおん|にゃあ)"
         let nekosanPrefixPattern = "(😊|🙁|🐤|🐟|🏆|🌈|🎊|:\\)|XD)"
-        let pattern = ["^", nekogoBodyPattern, "{3}", nekosanPrefixPattern, "?", "$"].joined()
+        let pattern = ["^", nekogoBodyPattern, "{1,3}", nekosanPrefixPattern, "?", "$"].joined()
         
         guard let regex = try? NSRegularExpression(pattern: pattern) else { return false }
         return (regex.matches(in: sourceStr,

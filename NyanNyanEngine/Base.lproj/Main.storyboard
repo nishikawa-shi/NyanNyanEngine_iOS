@@ -10,7 +10,7 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--にゃんにゃんエンジン-->
+        <!--ネコさんビューアー-->
         <scene sceneID="tne-QT-ifu">
             <objects>
                 <viewController id="BYZ-38-t0r" customClass="HomeTimelineViewController" customModule="NyanNyanEngine" customModuleProvider="target" sceneMemberID="viewController">
@@ -114,7 +114,7 @@
                                 <string key="text">にゃーおんにゃーおんにゃーおん
 にゃんにゃにゃ！</string>
                                 <fontDescription key="fontDescription" name=".HiraKakuInterface-W3" family=".Hiragino Kaku Gothic Interface" pointSize="17"/>
-                                <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
+                                <color key="textColor" red="0.0" green="0.16862745100000001" blue="0.21176470589999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
                                 <userDefinedRuntimeAttributes>
                                     <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
@@ -137,7 +137,7 @@
                                         <real key="value" value="0.5"/>
                                     </userDefinedRuntimeAttribute>
                                     <userDefinedRuntimeAttribute type="size" keyPath="layer.shadowOffset">
-                                        <size key="value" width="4" height="4"/>
+                                        <size key="value" width="2" height="2"/>
                                     </userDefinedRuntimeAttribute>
                                 </userDefinedRuntimeAttributes>
                                 <connections>
@@ -162,7 +162,7 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
-                    <navigationItem key="navigationItem" title="にゃんにゃんエンジン" id="iLU-59-H1k">
+                    <navigationItem key="navigationItem" title="ネコさんビューアー" id="iLU-59-H1k">
                         <barButtonItem key="leftBarButtonItem" title="ログイン" id="p2V-y0-HXN" userLabel="Auth"/>
                         <barButtonItem key="rightBarButtonItem" systemItem="refresh" id="qPq-1x-X5L" userLabel="Refresh"/>
                     </navigationItem>
@@ -179,7 +179,7 @@
             </objects>
             <point key="canvasLocation" x="957.97101449275374" y="65.625"/>
         </scene>
-        <!--Post Nekogo View Controller-->
+        <!--にゃんにゃんエンジン-->
         <scene sceneID="Kyq-F9-b0r">
             <objects>
                 <viewController id="Ync-nX-9TU" customClass="PostNekogoViewController" customModule="NyanNyanEngine" customModuleProvider="target" sceneMemberID="viewController">
@@ -203,6 +203,7 @@
                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" text="ツイートをここに書くにゃ" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="L1b-m5-lsS" userLabel="Original Text">
                                 <rect key="frame" x="16" y="136" width="318" height="144"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <color key="textColor" red="0.0" green="0.16862745100000001" blue="0.21176470589999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                                 <userDefinedRuntimeAttributes>
@@ -223,7 +224,7 @@
                                 <rect key="frame" x="176" y="360" width="222" height="78"/>
                                 <color key="backgroundColor" red="0.93333333333333335" green="0.90980392156862744" blue="0.83529411764705885" alpha="1" colorSpace="calibratedRGB"/>
                                 <fontDescription key="fontDescription" name=".HiraKakuInterface-W3" family=".Hiragino Kaku Gothic Interface" pointSize="17"/>
-                                <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
+                                <color key="textColor" red="0.0" green="0.16862745100000001" blue="0.21176470589999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
                                 <userDefinedRuntimeAttributes>
                                     <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
@@ -282,7 +283,7 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="H5w-C7-zSx"/>
                     </view>
-                    <navigationItem key="navigationItem" id="SSO-CY-sNi">
+                    <navigationItem key="navigationItem" title="にゃんにゃんエンジン" id="SSO-CY-sNi">
                         <barButtonItem key="leftBarButtonItem" title="キャンセル" id="7cV-OL-7iV">
                             <connections>
                                 <action selector="touchCancelAction:" destination="Ync-nX-9TU" id="fZw-Gf-Ja7"/>

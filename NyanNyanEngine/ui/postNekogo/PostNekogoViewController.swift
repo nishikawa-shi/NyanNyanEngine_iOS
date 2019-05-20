@@ -41,7 +41,7 @@ class PostNekogoViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.originalText.delegate = self
-
+        
         originalText.rx.text
             .bind(to: input.originalTextChangedTo!)
             .disposed(by: disposeBag)

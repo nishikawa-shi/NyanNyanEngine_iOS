@@ -153,6 +153,6 @@ class TweetsRepository: BaseTweetsRepository {
                      userId: ("@" + $0.user.screenName),
                      nyanedAt: TwitterDateFormatter().getNyanNyanTimeStamp(apiTimeStamp: $0.createdAt),
                      nekogo: Nekosan().createNekogo(sourceStr: $0.text))
-        } ?? []
+            } ?? []
     }
 }

@@ -21,11 +21,11 @@ final class AppDelegateModel: AppDelegateModelInput, AppDelegateModelOutput {
     private let authRepository: BaseAuthRepository
     private let tweetsRepository: BaseTweetsRepository
     private let loadingStatusRepository: BaseLoadingStatusRepository
-
+    
     private let disposeBag = DisposeBag()
     
     var loginExecutedAt: AnyObserver<URL>? = nil
-
+    
     init(authRepository: BaseAuthRepository = AuthRepository.shared,
          tweetsRepository: BaseTweetsRepository = TweetsRepository.shared,
          loadingStatusRepository: BaseLoadingStatusRepository = LoadingStatusRepository.shared) {
@@ -50,5 +50,5 @@ final class AppDelegateModel: AppDelegateModelInput, AppDelegateModelOutput {
                 .disposed(by: self.disposeBag)
         }
     }
-
+    
 }
