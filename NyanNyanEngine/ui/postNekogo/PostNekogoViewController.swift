@@ -56,16 +56,16 @@ class PostNekogoViewController: UIViewController {
             .disposed(by: disposeBag)
         
         output.postSucceeded
-            .subscribe {[unowned self] _ in self.dismiss(animated: true, completion: nil)}
+            .subscribe { [unowned self] _ in self.dismiss(animated: true, completion: nil)}
             .disposed(by: disposeBag)
         
         output.allowTweet
-            .subscribe { self.setButtonStatus(enabled: $0.element ?? false) }
+            .subscribe { [unowned self] in self.setButtonStatus(enabled: $0.element ?? false) }
             .disposed(by: disposeBag)
         
         output.isLoading
-            .subscribe() { ($0.element ?? false) ?
-                self.activityIndicator.startAnimating() : self.activityIndicator.stopAnimating()
+            .subscribe() { [unowned self] in
+                ($0.element ?? false) ? self.activityIndicator.startAnimating() : self.activityIndicator.stopAnimating()
             }.disposed(by: disposeBag)
     }
     

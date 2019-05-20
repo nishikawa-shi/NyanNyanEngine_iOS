@@ -83,7 +83,7 @@ class AuthRepository: BaseAuthRepository {
             .executeHttpRequest(urlRequest: urlRequest)
             .map { [unowned self] in self.parseTokens(accessTokenApiResponse: $0) }
             .map { [unowned self] in self.saveTokens(accessTokenApiResponseQuery: $0 ?? [])}
-            .map { self._isLoggedIn.accept(self.getLoggedInStatus()) }
+            .map { [unowned self] in self._isLoggedIn.accept(self.getLoggedInStatus()) }
             .map (modelUpdateLogic)
             .map { true }
     }
@@ -113,7 +113,7 @@ class AuthRepository: BaseAuthRepository {
     }
     
     private func saveTokens(accessTokenApiResponseQuery: [URLQueryItem]) {
-        accessTokenApiResponseQuery.forEach { item in
+        accessTokenApiResponseQuery.forEach { [unowned self] item in
             print(item)
             guard let value = item.value else { return }
             self.userDefaultsConnector.registerString(key: item.name, value: value)
