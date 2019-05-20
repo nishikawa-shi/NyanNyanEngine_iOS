@@ -10,7 +10,7 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--にゃんにゃんエンジン-->
+        <!--ネコさんビューアー-->
         <scene sceneID="tne-QT-ifu">
             <objects>
                 <viewController id="BYZ-38-t0r" customClass="HomeTimelineViewController" customModule="NyanNyanEngine" customModuleProvider="target" sceneMemberID="viewController">
@@ -162,7 +162,7 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
-                    <navigationItem key="navigationItem" title="にゃんにゃんエンジン" id="iLU-59-H1k">
+                    <navigationItem key="navigationItem" title="ネコさんビューアー" id="iLU-59-H1k">
                         <barButtonItem key="leftBarButtonItem" title="ログイン" id="p2V-y0-HXN" userLabel="Auth"/>
                         <barButtonItem key="rightBarButtonItem" systemItem="refresh" id="qPq-1x-X5L" userLabel="Refresh"/>
                     </navigationItem>
@@ -179,7 +179,7 @@
             </objects>
             <point key="canvasLocation" x="957.97101449275374" y="65.625"/>
         </scene>
-        <!--Post Nekogo View Controller-->
+        <!--にゃんにゃんエンジン-->
         <scene sceneID="Kyq-F9-b0r">
             <objects>
                 <viewController id="Ync-nX-9TU" customClass="PostNekogoViewController" customModule="NyanNyanEngine" customModuleProvider="target" sceneMemberID="viewController">
@@ -283,7 +283,7 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="H5w-C7-zSx"/>
                     </view>
-                    <navigationItem key="navigationItem" id="SSO-CY-sNi">
+                    <navigationItem key="navigationItem" title="にゃんにゃんエンジン" id="SSO-CY-sNi">
                         <barButtonItem key="leftBarButtonItem" title="キャンセル" id="7cV-OL-7iV">
                             <connections>
                                 <action selector="touchCancelAction:" destination="Ync-nX-9TU" id="fZw-Gf-Ja7"/>
