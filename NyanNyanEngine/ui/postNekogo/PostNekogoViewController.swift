@@ -59,6 +59,10 @@ class PostNekogoViewController: UIViewController {
             .subscribe {[unowned self] _ in self.dismiss(animated: true, completion: nil)}
             .disposed(by: disposeBag)
         
+        output.allowTweet
+            .subscribe { self.setButtonStatus(enabled: $0.element ?? false) }
+            .disposed(by: disposeBag)
+        
         output.isLoading
             .subscribe() { ($0.element ?? false) ?
                 self.activityIndicator.startAnimating() : self.activityIndicator.stopAnimating()
@@ -67,6 +71,12 @@ class PostNekogoViewController: UIViewController {
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         self.view.endEditing(true)
+    }
+    
+    private func setButtonStatus(enabled: Bool) {
+        self.tweetButton.isEnabled = enabled
+        self.tweetButton.backgroundColor = enabled ?
+            UIColor(red: 0.1484375, green: 0.54296875, blue: 0.8203125, alpha: 1.0) : UIColor(red: 0.51171875, green: 0.578125, blue: 0.5859375, alpha: 1)
     }
 }
 
