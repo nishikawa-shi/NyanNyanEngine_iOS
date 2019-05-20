@@ -51,8 +51,7 @@ final class PostNekogoViewModel: PostNekogoViewModelInput, PostNekogoViewModelOu
         self.isLoading = loadingStatusRepository.isLoading
         
         self.originalTextChangedTo = AnyObserver<String?> {
-            guard let texiViewValue = $0.element,
-                let originalText = texiViewValue else { return }
+            guard let originalText = $0.element as? String else { return }
             _nekogoText.accept(Nekosan().createNekogo(sourceStr: originalText))
             _allowTweet.accept(authRepository.getLoggedInStatus() && self.isInputedValidText(inputedText: originalText))
         }

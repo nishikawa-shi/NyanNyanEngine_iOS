@@ -81,9 +81,8 @@ class TweetsRepository: BaseTweetsRepository {
                 .disposed(by: self.disposeBag)
         }
         
-        self.postExecutedAs = AnyObserver<String?> { nekosanText in
-            guard let nekosanTextValue = nekosanText.element,
-                let nekosanTextBody = nekosanTextValue else { return }
+        self.postExecutedAs = AnyObserver<String?> {
+            guard let nekosanTextBody = $0.element as? String else { return }
             self.postTweets(nekosanText: nekosanTextBody)
                 .map {
                     //Observerの型をラムダ式ではなくStringにしたかったのでここでLoadingStatusRepositoryへの依存が生まれてしまっている。

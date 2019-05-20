@@ -73,9 +73,8 @@ class HomeTimelineViewController: UIViewController {
             .disposed(by: disposeBag)
         
         output.authPageUrl?
-            .subscribe { url in
-                guard let urlElement = url.element,
-                    let pageUrl = urlElement else { return }
+            .subscribe {
+                guard let pageUrl = $0.element as? URL else { return }
                 self.present(SFSafariViewController(url: pageUrl),
                              animated: true,
                              completion: nil)
