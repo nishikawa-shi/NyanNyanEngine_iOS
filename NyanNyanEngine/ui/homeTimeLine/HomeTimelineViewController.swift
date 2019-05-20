@@ -63,8 +63,8 @@ class HomeTimelineViewController: UIViewController {
             .disposed(by: disposeBag)
         
         output.isLoading
-            .subscribe() { ($0.element ?? false) ?
-                self.activityIndicator.startAnimating() : self.activityIndicator.stopAnimating()
+            .subscribe() { [unowned self] in
+                ($0.element ?? false) ? self.activityIndicator.startAnimating() : self.activityIndicator.stopAnimating()
         }.disposed(by: disposeBag)
         
         output.isLoggedIn?
@@ -73,7 +73,7 @@ class HomeTimelineViewController: UIViewController {
             .disposed(by: disposeBag)
         
         output.authPageUrl?
-            .subscribe {
+            .subscribe { [unowned self] in
                 guard let pageUrl = $0.element as? URL else { return }
                 self.present(SFSafariViewController(url: pageUrl),
                              animated: true,
@@ -81,7 +81,7 @@ class HomeTimelineViewController: UIViewController {
             }.disposed(by: disposeBag)
         
         output.postSucceeded
-            .subscribe {
+            .subscribe { [unowned self] in
                 guard let text = $0.element as? String else { return }
                 self.popNoticeToast(message: text)
             }
@@ -109,15 +109,15 @@ class HomeTimelineViewController: UIViewController {
 
         self.noticeToast.alpha = 0.0
         self.noticeToast.isHidden = false
-        UIView.animate(withDuration: 0.5, animations: {
+        UIView.animate(withDuration: 0.5, animations: { [unowned self] in
             self.noticeToast.alpha = 1.0
         }, completion: { _ in
         })
         
         DispatchQueue.main.asyncAfter(deadline: .now()+2.0) {
-            UIView.animate(withDuration: 0.5, animations: {
+            UIView.animate(withDuration: 0.5, animations: { [unowned self] in
                 self.noticeToast.alpha = 0.0
-            }, completion: { _ in
+            }, completion: { [unowned self] _ in
                 self.noticeToast.isHidden = true
                 self.noticeToast.alpha = 1.0
                 self.noticeToast.text = "にゃーおんにゃーおんにゃーおん\nにゃんにゃにゃ！"
