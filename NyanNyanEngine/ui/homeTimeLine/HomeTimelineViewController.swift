@@ -111,7 +111,6 @@ class HomeTimelineViewController: UIViewController {
         self.noticeToast.isHidden = false
         UIView.animate(withDuration: 0.5, animations: { [unowned self] in
             self.noticeToast.alpha = 1.0
-        }, completion: { _ in
         })
         
         DispatchQueue.main.asyncAfter(deadline: .now()+2.0) {
