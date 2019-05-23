@@ -10,8 +10,12 @@ import UIKit
 import RxSwift
 import RxCocoa
 import SafariServices
+import IntentsUI
+import CoreSpotlight
+import MobileCoreServices
 
 class HomeTimelineViewController: UIViewController {
+    private let addToSiriActivity = NSUserActivity(activityType: "com.ntetz.ios.NyanNyanEngine.homeTimeline")
     private let input: HomeTimelineViewModelInput
     private let output: HomeTimelineViewModelOutput
     private let disposeBag = DisposeBag()
@@ -39,6 +43,7 @@ class HomeTimelineViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.registerAddToSiriActivity()
         
         authButton.rx.tap
             .throttle(DispatchTimeInterval.seconds(3), latest: false, scheduler: ConcurrentMainScheduler.instance)
@@ -95,6 +100,24 @@ class HomeTimelineViewController: UIViewController {
     
     @objc func refresh(sender: UIRefreshControl) {
         input.pullToRefreshExecutedAt?.onNext(sender)
+    }
+    
+    private func registerAddToSiriActivity() {
+        if #available(iOS 12.0, *) {
+            NSUserActivity.deleteAllSavedUserActivities { [unowned self] in
+                self.addToSiriActivity.isEligibleForSearch = true
+                self.addToSiriActivity.isEligibleForPrediction = true
+                
+                self.addToSiriActivity.title = "にゃんにゃんエンジン [タイムライン]"
+                self.addToSiriActivity.suggestedInvocationPhrase = "猫さんビューアー"
+                let attributes = CSSearchableItemAttributeSet(itemContentType: kUTTypeItem as String)
+                attributes.contentDescription = "ネコさんビューアー起動だにゃ"
+                attributes.thumbnailData = UIImage(named: "NyanNyaSensei")?.pngData()
+                
+                self.addToSiriActivity.contentAttributeSet = attributes
+                self.userActivity = self.addToSiriActivity
+            }
+        }
     }
     
     private func scrollTweetListToTop() {
