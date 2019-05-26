@@ -10,7 +10,7 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--ネコさんビューアー-->
+        <!--Cat-san viewer-->
         <scene sceneID="tne-QT-ifu">
             <objects>
                 <viewController id="BYZ-38-t0r" customClass="HomeTimelineViewController" customModule="NyanNyanEngine" customModuleProvider="target" sceneMemberID="viewController">
@@ -156,8 +156,8 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
-                    <navigationItem key="navigationItem" title="ネコさんビューアー" id="iLU-59-H1k">
-                        <barButtonItem key="leftBarButtonItem" title="ログイン" id="p2V-y0-HXN" userLabel="Auth"/>
+                    <navigationItem key="navigationItem" title="Cat-san viewer" id="iLU-59-H1k">
+                        <barButtonItem key="leftBarButtonItem" title="Login" id="p2V-y0-HXN" userLabel="Auth"/>
                         <barButtonItem key="rightBarButtonItem" systemItem="refresh" id="qPq-1x-X5L" userLabel="Refresh"/>
                     </navigationItem>
                     <connections>
@@ -173,7 +173,7 @@
             </objects>
             <point key="canvasLocation" x="957.97101449275374" y="65.625"/>
         </scene>
-        <!--にゃんにゃんエンジン-->
+        <!--MeowMeowEngine-->
         <scene sceneID="Kyq-F9-b0r">
             <objects>
                 <viewController id="Ync-nX-9TU" customClass="PostNekogoViewController" customModule="NyanNyanEngine" customModuleProvider="target" sceneMemberID="viewController">
@@ -194,7 +194,7 @@
                                     </userDefinedRuntimeAttribute>
                                 </userDefinedRuntimeAttributes>
                             </imageView>
-                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" text="ツイートをここに書くにゃ" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="L1b-m5-lsS" userLabel="Original Text">
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" text="Meeeow, write tweet here." textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="L1b-m5-lsS" userLabel="Original Text">
                                 <rect key="frame" x="16" y="136" width="318" height="144"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <color key="textColor" red="0.0" green="0.16862745100000001" blue="0.21176470589999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -214,7 +214,7 @@
                                     <constraint firstAttribute="width" constant="144" id="zqv-X7-Gf3"/>
                                 </constraints>
                             </imageView>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="にゃーおんにゃーおんにゃーおん" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="none" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="0.0" translatesAutoresizingMaskIntoConstraints="NO" id="0wL-SI-Y2R" userLabel="Nekogo Text">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="meowmeowmeow" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="none" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="0.0" translatesAutoresizingMaskIntoConstraints="NO" id="0wL-SI-Y2R" userLabel="Nekogo Text">
                                 <rect key="frame" x="176" y="360" width="222" height="78"/>
                                 <color key="backgroundColor" red="0.93333333333333335" green="0.90980392156862744" blue="0.83529411764705885" alpha="1" colorSpace="calibratedRGB"/>
                                 <fontDescription key="fontDescription" name=".HiraKakuInterface-W3" family=".Hiragino Kaku Gothic Interface" pointSize="17"/>
@@ -228,11 +228,11 @@
                                 </userDefinedRuntimeAttributes>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zbK-Xh-RcE" userLabel="Tweet Button">
-                                <rect key="frame" x="290" y="454" width="108" height="34"/>
+                                <rect key="frame" x="340" y="454" width="58" height="34"/>
                                 <color key="backgroundColor" red="0.14901960784313725" green="0.54509803921568623" blue="0.82352941176470584" alpha="1" colorSpace="calibratedRGB"/>
                                 <fontDescription key="fontDescription" name=".AppleSystemUIFont" family=".AppleSystemUIFont" pointSize="15"/>
                                 <inset key="contentEdgeInsets" minX="8" minY="8" maxX="8" maxY="8"/>
-                                <state key="normal" title="ツイートする">
+                                <state key="normal" title="Tweet">
                                     <color key="titleColor" red="0.99215686270000003" green="0.96470588239999999" blue="0.89019607840000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 </state>
                                 <userDefinedRuntimeAttributes>
@@ -277,8 +277,8 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="H5w-C7-zSx"/>
                     </view>
-                    <navigationItem key="navigationItem" title="にゃんにゃんエンジン" id="SSO-CY-sNi">
-                        <barButtonItem key="leftBarButtonItem" title="キャンセル" id="7cV-OL-7iV">
+                    <navigationItem key="navigationItem" title="MeowMeowEngine" id="SSO-CY-sNi">
+                        <barButtonItem key="leftBarButtonItem" systemItem="cancel" id="7cV-OL-7iV">
                             <connections>
                                 <action selector="touchCancelAction:" destination="Ync-nX-9TU" id="fZw-Gf-Ja7"/>
                             </connections>
