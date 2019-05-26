@@ -14,14 +14,14 @@ class NekosanConverterTest: XCTestCase {
         let testStr = "どんな嫌なツイートでも、猫語だと可愛いですね。"
         
         let testNekogo = Nekosan().createNekogo(sourceStr: testStr)
-        let expectedNekogo = "にゃーおんにゃおにゃー🌈"
+        let expectedNekogo = "MyauMiaowMew🌈"
         XCTAssertEqual(testNekogo, expectedNekogo)
     }
     
     func testDoesNekosanRemainNekogo() {
-        let rawStr = ["にゃーおんにゃにゃ",
-                      "にゃおーんにゃんにゃーおん🎊",
-                      "にゃあにゃーんにゃーん:)"]
+        let rawStr = ["MyauMewMiaow",
+                      "MeoowMeoowMyau🐟",
+                      "MeeowMeeowMeeow"]
         let testStrs = rawStr.map { Nekosan().createNekogo(sourceStr: $0) }
         let expectedStrs = rawStr
         
