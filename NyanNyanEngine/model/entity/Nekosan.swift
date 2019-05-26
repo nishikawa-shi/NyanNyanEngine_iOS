@@ -37,9 +37,9 @@ struct Nekosan {
                            R.string.stringValues.nekosan_nakigoe_type7(),
                            R.string.stringValues.nekosan_nakigoe_type8(),
                            R.string.stringValues.nekosan_nakigoe_type9(),
-        ].joined(separator: "|")
+            ].joined(separator: "|")
         let nekogoBodyPattern = ["(", nekogoRange, ")"].joined()
-
+        
         let nekosanPrefixPattern = "(😊|🙁|🐤|🐟|🏆|🌈|🎊|:\\)|XD)"
         let pattern = ["^", nekogoBodyPattern, "{1,3}", nekosanPrefixPattern, "?", "$"].joined()
         
