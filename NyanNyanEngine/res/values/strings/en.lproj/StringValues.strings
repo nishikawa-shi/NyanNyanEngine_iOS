@@ -9,3 +9,5 @@
 "default_user_id" = "@NNyansu";
 "default_user_posted_at" = "1 min";
 "default_user_text" = "Login with your Twitter♪\nYour timeline will be into Cat Lang.";
+
+"default_post_original_text" = "Meeeeow, write tweet here.";
