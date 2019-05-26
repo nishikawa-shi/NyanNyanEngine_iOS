@@ -28,7 +28,18 @@ struct Nekosan {
     }
     
     func isNekogo(sourceStr: String) -> Bool {
-        let nekogoBodyPattern = "(にゃん|にゃお|にゃー|にゃ|にゃーん|にゃーお|にゃおーん|にゃーおん|にゃあ)"
+        let nekogoRange = [R.string.stringValues.nekosan_nakigoe_type1(),
+                           R.string.stringValues.nekosan_nakigoe_type2(),
+                           R.string.stringValues.nekosan_nakigoe_type3(),
+                           R.string.stringValues.nekosan_nakigoe_type4(),
+                           R.string.stringValues.nekosan_nakigoe_type5(),
+                           R.string.stringValues.nekosan_nakigoe_type6(),
+                           R.string.stringValues.nekosan_nakigoe_type7(),
+                           R.string.stringValues.nekosan_nakigoe_type8(),
+                           R.string.stringValues.nekosan_nakigoe_type9(),
+        ].joined(separator: "|")
+        let nekogoBodyPattern = ["(", nekogoRange, ")"].joined()
+
         let nekosanPrefixPattern = "(😊|🙁|🐤|🐟|🏆|🌈|🎊|:\\)|XD)"
         let pattern = ["^", nekogoBodyPattern, "{1,3}", nekosanPrefixPattern, "?", "$"].joined()
         
