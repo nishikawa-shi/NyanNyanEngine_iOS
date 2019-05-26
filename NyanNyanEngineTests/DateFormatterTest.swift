@@ -13,7 +13,7 @@ class DateFormatterTest: XCTestCase {
     func testGetNyanNyanTimeStamp() {
         let testApiTimeStamp = "Fri Apr 03 10:12:54 +0000 2018"
         let testNyanNyanTimeStamp = TwitterDateFormatter().getNyanNyanTimeStamp(apiTimeStamp: testApiTimeStamp)
-        let expectedNyanNyanTimeStamp = "2018/04/03"
+        let expectedNyanNyanTimeStamp = "2018/04"
         XCTAssertEqual(testNyanNyanTimeStamp, expectedNyanNyanTimeStamp)
     }
 }

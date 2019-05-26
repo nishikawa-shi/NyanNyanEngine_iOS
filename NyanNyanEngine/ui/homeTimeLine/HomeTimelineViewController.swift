@@ -80,7 +80,10 @@ class HomeTimelineViewController: UIViewController {
         output.authPageUrl?
             .subscribe { [unowned self] in
                 guard let pageUrl = $0.element as? URL else { return }
-                self.present(SFSafariViewController(url: pageUrl),
+                let sFSafariViewController = SFSafariViewController(url: pageUrl)
+                sFSafariViewController.dismissButtonStyle = .cancel
+                
+                self.present(sFSafariViewController,
                              animated: true,
                              completion: nil)
             }.disposed(by: disposeBag)
