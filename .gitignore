@@ -88,6 +88,7 @@ NyanNyanEngine/GoogleService-Info.plist
 # API keys
 
 NyanNyanEngine/ApiKeys.plist
+NyanNyanEngine/GoogleService-Info-Release.plist
 
 # R.swift
 *.generated.swift
