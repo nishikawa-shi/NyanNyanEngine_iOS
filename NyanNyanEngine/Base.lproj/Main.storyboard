@@ -44,12 +44,18 @@
                                                 </imageView>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="にしかわ" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hpO-br-q46" userLabel="User Name">
                                                     <rect key="frame" x="72" y="16" width="65.5" height="19.5"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" relation="lessThanOrEqual" constant="128" id="2Iw-6S-B6V"/>
+                                                    </constraints>
                                                     <fontDescription key="fontDescription" type="boldSystem" pointSize="16"/>
                                                     <color key="textColor" red="0.0" green="0.16862745098039217" blue="0.21176470588235294" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="@nishikawa_shi" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="A6H-dr-b3W" userLabel="User Id">
-                                                    <rect key="frame" x="145.5" y="16" width="100" height="19.5"/>
+                                                    <rect key="frame" x="145.5" y="16" width="96" height="19.5"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" relation="lessThanOrEqual" constant="96" id="IeI-he-qjV" userLabel="width ≤ 112"/>
+                                                    </constraints>
                                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                     <color key="textColor" red="0.34509803921568627" green="0.43137254901960786" blue="0.45882352941176469" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <nil key="highlightedColor"/>
@@ -75,7 +81,6 @@
                                                 <constraint firstItem="A6H-dr-b3W" firstAttribute="bottom" secondItem="hpO-br-q46" secondAttribute="bottom" id="MEK-tK-vc2"/>
                                                 <constraint firstItem="hpO-br-q46" firstAttribute="leading" secondItem="nsg-uh-dnN" secondAttribute="trailing" constant="8" id="PWp-Tf-vsk"/>
                                                 <constraint firstItem="nsg-uh-dnN" firstAttribute="leading" secondItem="3yw-Hu-2gQ" secondAttribute="leading" constant="16" id="aG9-LE-T29"/>
-                                                <constraint firstItem="A6H-dr-b3W" firstAttribute="trailing" relation="lessThanOrEqual" secondItem="3yw-Hu-2gQ" secondAttribute="trailing" constant="20" symbolic="YES" id="f1f-Um-W1M"/>
                                                 <constraint firstItem="tUf-t7-w8I" firstAttribute="top" secondItem="hpO-br-q46" secondAttribute="bottom" constant="8" id="gxj-kH-q6j"/>
                                                 <constraint firstItem="A6H-dr-b3W" firstAttribute="height" secondItem="hpO-br-q46" secondAttribute="height" id="nXP-3q-MVe"/>
                                                 <constraint firstItem="tUf-t7-w8I" firstAttribute="leading" secondItem="hpO-br-q46" secondAttribute="leading" id="v4A-MV-OwQ"/>
