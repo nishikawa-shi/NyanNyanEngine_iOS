@@ -1,0 +1,11 @@
+/* 
+  StringValues.strings
+  NyanNyanEngine
+
+  Created by Tetsuya Nishikawa on 2019/05/26.
+  Copyright © 2019 Tetsuya Nishikawa. All rights reserved.
+*/
+"default_user_name" = "にゃんにゃ先生";
+"default_user_id" = "@NNyansu";
+"default_user_posted_at" = "1分前";
+"default_user_text" = "Twitterでログインしてね♪\nあなたのタイムラインをネコ語化だにゃ";
