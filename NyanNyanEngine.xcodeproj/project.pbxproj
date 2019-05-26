@@ -31,6 +31,7 @@
 		67666188227527FF004C886C /* NyanNyanEngineUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67666187227527FF004C886C /* NyanNyanEngineUITests.swift */; };
 		6767B0D022791033008913EA /* TweetsRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6767B0CF22791033008913EA /* TweetsRepository.swift */; };
 		6767B0D322791745008913EA /* ApiClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6767B0D222791745008913EA /* ApiClient.swift */; };
+		678E360E229A9E7600CBBCCC /* R.generated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 678E360D229A9E7600CBBCCC /* R.generated.swift */; };
 		679A5E60227B1F250043D0E1 /* ApiRequestFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 679A5E5F227B1F250043D0E1 /* ApiRequestFactory.swift */; };
 		679A5E65227B3B590043D0E1 /* PlistConnector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 679A5E64227B3B590043D0E1 /* PlistConnector.swift */; };
 		679A5E67227B3E960043D0E1 /* ApiKeys.plist in Resources */ = {isa = PBXBuildFile; fileRef = 679A5E66227B3E960043D0E1 /* ApiKeys.plist */; };
@@ -95,6 +96,7 @@
 		67666189227527FF004C886C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		6767B0CF22791033008913EA /* TweetsRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TweetsRepository.swift; sourceTree = "<group>"; };
 		6767B0D222791745008913EA /* ApiClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApiClient.swift; sourceTree = "<group>"; };
+		678E360D229A9E7600CBBCCC /* R.generated.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = R.generated.swift; sourceTree = SOURCE_ROOT; };
 		679A5E5F227B1F250043D0E1 /* ApiRequestFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApiRequestFactory.swift; sourceTree = "<group>"; };
 		679A5E64227B3B590043D0E1 /* PlistConnector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlistConnector.swift; sourceTree = "<group>"; };
 		679A5E66227B3E960043D0E1 /* ApiKeys.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = ApiKeys.plist; sourceTree = "<group>"; };
@@ -237,6 +239,7 @@
 				6767B0D422791CF9008913EA /* ui */,
 				6723B27F22767C680004FB3D /* model */,
 				67666164227527FF004C886C /* AppDelegate.swift */,
+				678E360D229A9E7600CBBCCC /* R.generated.swift */,
 				67666168227527FF004C886C /* Main.storyboard */,
 				6766616E227527FF004C886C /* Assets.xcassets */,
 				67666170227527FF004C886C /* LaunchScreen.storyboard */,
@@ -343,6 +346,7 @@
 			buildConfigurationList = 6766618C227527FF004C886C /* Build configuration list for PBXNativeTarget "NyanNyanEngine" */;
 			buildPhases = (
 				534F71A88095062E15A86244 /* [CP] Check Pods Manifest.lock */,
+				67EB6486229A66D700D72E80 /* ShellScript */,
 				6766615D227527FF004C886C /* Sources */,
 				6766615E227527FF004C886C /* Frameworks */,
 				6766615F227527FF004C886C /* Resources */,
@@ -557,6 +561,25 @@
 			shellPath = /bin/sh;
 			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\n\"${PODS_ROOT}/Fabric/run\"\n";
 		};
+		67EB6486229A66D700D72E80 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"$TEMP_DIR/rswift-lastrun",
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				$SRCROOT/R.generated.swift,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\n\"$PODS_ROOT/R.swift/rswift\" generate \"$SRCROOT/R.generated.swift\"\n";
+		};
 		75244A1D80BF3B1A1BFC0A02 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -626,6 +649,7 @@
 				67E3C4D4228E2F6900B93E1D /* PostNekogoViewController.swift in Sources */,
 				67F88C0A227C2484004DF44A /* UserDefaultsConnector.swift in Sources */,
 				679A5E65227B3B590043D0E1 /* PlistConnector.swift in Sources */,
+				678E360E229A9E7600CBBCCC /* R.generated.swift in Sources */,
 				6723B2922277DFD60004FB3D /* HomeTimelineViewModel.swift in Sources */,
 				6723B28A2276926B0004FB3D /* User.swift in Sources */,
 				67D86EE0227FC5DB00965816 /* NyanNyan.swift in Sources */,
