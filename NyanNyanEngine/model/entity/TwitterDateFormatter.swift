@@ -29,13 +29,13 @@ class TwitterDateFormatter {
             let passedHours = String(Int(passedSecFromCreatedAt / (60 * 60)))
             let passedHoursSuffix = "時間前"
             return [passedHours + passedHoursSuffix].joined()
-        } else if (passedSecFromCreatedAt < 60 * 60 * 24 * 7) {
+        } else if (passedSecFromCreatedAt < 60 * 60 * 24 * 30) {
             let passedDays = String(Int(passedSecFromCreatedAt / (60 * 60 * 24)))
             let passedDaysSuffix = "日前"
             return [passedDays, passedDaysSuffix].joined()
         } else {
             let farPassedDateFormatter = DateFormatter()
-            farPassedDateFormatter.dateFormat = "y/MM/dd"
+            farPassedDateFormatter.dateFormat = "y/MM"
             return farPassedDateFormatter.string(from: createdAtDate)
         }
     }
