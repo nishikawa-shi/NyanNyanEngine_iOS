@@ -16,6 +16,9 @@ jobs:
           name: make ignored GoogleService.plist
           command: curl https://nyannyanengine-ios-d.firebaseapp.com/circleci/GoogleService-Info.plist > NyanNyanEngine/GoogleService-Info.plist
       - run:
+          name: make ignored GoogleService-Release.plist
+          command: curl https://nyannyanengine-ios-d.firebaseapp.com/circleci/GoogleService-Info.plist > NyanNyanEngine/GoogleService-Info-Release.plist
+      - run:
           name: test
           command: fastlane scan
           environment:

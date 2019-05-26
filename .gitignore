@@ -16,6 +16,7 @@ DerivedData/
 *.perspectivev3
 !default.perspectivev3
 xcuserdata/
+NyanNyanEngine.xcodeproj/xcshareddata/
 
 ## Other
 *.moved-aside
@@ -88,6 +89,7 @@ NyanNyanEngine/GoogleService-Info.plist
 # API keys
 
 NyanNyanEngine/ApiKeys.plist
+NyanNyanEngine/GoogleService-Info-Release.plist
 
 # R.swift
 *.generated.swift

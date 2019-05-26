@@ -28,7 +28,21 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
-        FirebaseApp.configure()
+        #if DEBUG
+        let fileName = "GoogleService-Info"
+        #elseif RELEASE
+        let fileName = "GoogleService-Info-Release"
+        #else
+        let fileName: String? = nil
+        #endif
+
+        guard let filePath = Bundle.main.path(forResource: fileName, ofType: "plist"),
+            let fileopts = FirebaseOptions(contentsOfFile: filePath) else {
+                //何もパスが設定されなくなるので、dev環境を向くようになる。
+                FirebaseApp.configure()
+                return true
+        }
+        FirebaseApp.configure(options: fileopts)
         return true
     }
 
