@@ -7,13 +7,13 @@ target 'NyanNyanEngine' do
 
   # Pods for NyanNyanEngine
   pod 'Firebase/Core'
-  pod 'Fabric', '~> 1.9.0'
+  pod 'Fabric',      '~> 1.9.0'
   pod 'Crashlytics', '~> 3.12.0'
   pod 'R.swift',     '~> 5'
   pod 'RxSwift',     '~> 5'
   pod 'RxCocoa',     '~> 5'
   pod 'CryptoSwift', '~> 1'
-  pod 'Nuke', '~> 7.0'
+  pod 'Nuke',        '~> 7.0'
 
   target 'NyanNyanEngineTests' do
     inherit! :search_paths
@@ -27,7 +27,7 @@ target 'NyanNyanEngine' do
     pod 'RxSwift',     '~> 5'
     pod 'RxCocoa',     '~> 5'
     pod 'CryptoSwift', '~> 1'
-    pod 'Nuke', '~> 7.0'
+    pod 'Nuke',        '~> 7.0'
     # Pods for testing
   end
 
