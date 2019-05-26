@@ -54,6 +54,9 @@ PODS:
   - nanopb/decode (0.3.901)
   - nanopb/encode (0.3.901)
   - Nuke (7.6.2)
+  - R.swift (5.0.3):
+    - R.swift.Library (~> 5.0.0)
+  - R.swift.Library (5.0.1)
   - RxCocoa (5.0.0):
     - RxRelay (~> 5)
     - RxSwift (~> 5)
@@ -67,6 +70,7 @@ DEPENDENCIES:
   - Fabric (~> 1.9.0)
   - Firebase/Core
   - Nuke (~> 7.0)
+  - R.swift (~> 5)
   - RxCocoa (~> 5)
   - RxSwift (~> 5)
 
@@ -83,6 +87,8 @@ SPEC REPOS:
     - GoogleUtilities
     - nanopb
     - Nuke
+    - R.swift
+    - R.swift.Library
     - RxCocoa
     - RxRelay
     - RxSwift
@@ -99,10 +105,12 @@ SPEC CHECKSUMS:
   GoogleUtilities: 04fce34bcd5620c1ee76fb79172105c74a4df335
   nanopb: 2901f78ea1b7b4015c860c2fdd1ea2fee1a18d48
   Nuke: 392eff7cb037adbec6699febe9237849ac5dcc47
+  R.swift: f5a87643b91ea569d23d6afb3eee9c743edde239
+  R.swift.Library: cfe85d569d9bae6cb262922db130e7c3a7a5fad1
   RxCocoa: fcf32050ac00d801f34a7f71d5e8e7f23026dcd8
   RxRelay: 4f7409406a51a55cd88483f21ed898c234d60f18
   RxSwift: 8b0671caa829a763bbce7271095859121cbd895f
 
-PODFILE CHECKSUM: bc44ccbc02ea6f44e4aa2608830d09528ca9f9f1
+PODFILE CHECKSUM: 6229396f9a58619d0d14d04db1cd1350939825c6
 
 COCOAPODS: 1.5.3
