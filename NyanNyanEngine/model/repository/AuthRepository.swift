@@ -93,7 +93,7 @@ class AuthRepository: BaseAuthRepository {
     }
     
     private func getCurrentUser() -> Observable<String> {
-        let currentUser = userDefaultsConnector.getString(withKey: "screen_name") ?? "ネコさんビューアー"
+        let currentUser = userDefaultsConnector.getString(withKey: "screen_name") ?? R.string.stringValues.default_timeline_name()
         return Observable<String>.create { observer in
             observer.onNext(currentUser)
             return Disposables.create()

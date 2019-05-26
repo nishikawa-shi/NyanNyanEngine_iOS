@@ -5,6 +5,7 @@
   Created by Tetsuya Nishikawa on 2019/05/26.
   Copyright © 2019 Tetsuya Nishikawa. All rights reserved.
 */
+"default_timeline_name" = "ネコさんビューアー";
 "default_user_name" = "にゃんにゃ先生";
 "default_user_id" = "@NNyansu";
 "default_user_posted_at" = "1分前";
@@ -27,3 +28,7 @@
 "time_suffix_min" = "分前";
 "time_suffix_hour" = "時間前";
 "time_suffix_day" = "日前";
+
+"siri_title" = "にゃんにゃんエンジン [タイムライン]";
+"siri_suggested_invocation_phrase" = "猫さんビューアー";
+"siri_content_description" = "ネコさんビューアー起動だにゃ";

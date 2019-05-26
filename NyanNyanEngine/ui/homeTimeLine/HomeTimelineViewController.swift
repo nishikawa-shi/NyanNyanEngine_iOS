@@ -111,10 +111,10 @@ class HomeTimelineViewController: UIViewController {
                 self.addToSiriActivity.isEligibleForSearch = true
                 self.addToSiriActivity.isEligibleForPrediction = true
                 
-                self.addToSiriActivity.title = "にゃんにゃんエンジン [タイムライン]"
-                self.addToSiriActivity.suggestedInvocationPhrase = "猫さんビューアー"
+                self.addToSiriActivity.title = R.string.stringValues.siri_title()
+                self.addToSiriActivity.suggestedInvocationPhrase = R.string.stringValues.siri_suggested_invocation_phrase()
                 let attributes = CSSearchableItemAttributeSet(itemContentType: kUTTypeItem as String)
-                attributes.contentDescription = "ネコさんビューアー起動だにゃ"
+                attributes.contentDescription = R.string.stringValues.siri_content_description()
                 attributes.thumbnailData = UIImage(named: "NyanNyaSensei")?.pngData()
                 
                 self.addToSiriActivity.contentAttributeSet = attributes
