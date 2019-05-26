@@ -41,39 +41,39 @@ struct Nekosan {
     private func getNekogoBody(sourceChar: Character) -> String {
         switch(sourceChar) {
         case "0":
-            return "にゃん"
+            return R.string.stringValues.nekosan_nakigoe_type1()
         case "1":
-            return "にゃん"
+            return R.string.stringValues.nekosan_nakigoe_type1()
         case "2":
-            return "にゃお"
+            return R.string.stringValues.nekosan_nakigoe_type2()
         case "3":
-            return "にゃお"
+            return R.string.stringValues.nekosan_nakigoe_type2()
         case "4":
-            return "にゃー"
+            return R.string.stringValues.nekosan_nakigoe_type3()
         case "5":
-            return "にゃー"
+            return R.string.stringValues.nekosan_nakigoe_type3()
         case "6":
-            return "にゃ"
+            return R.string.stringValues.nekosan_nakigoe_type4()
         case "7":
-            return "にゃ"
+            return R.string.stringValues.nekosan_nakigoe_type4()
         case "8":
-            return "にゃ"
+            return R.string.stringValues.nekosan_nakigoe_type4()
         case "9":
-            return "にゃーん"
+            return R.string.stringValues.nekosan_nakigoe_type5()
         case "a":
-            return "にゃーん"
+            return R.string.stringValues.nekosan_nakigoe_type5()
         case "b":
-            return "にゃーお"
+            return R.string.stringValues.nekosan_nakigoe_type6()
         case "c":
-            return "にゃおーん"
+            return R.string.stringValues.nekosan_nakigoe_type7()
         case "d":
-            return "にゃーおん"
+            return R.string.stringValues.nekosan_nakigoe_type8()
         case "e":
-            return "にゃあ"
+            return R.string.stringValues.nekosan_nakigoe_type9()
         case "f":
-            return "にゃあ"
+            return R.string.stringValues.nekosan_nakigoe_type9()
         default:
-            return "ごろごろ"
+            return R.string.stringValues.nekosan_nakigoe_type99()
         }
     }
     
