@@ -23,3 +23,7 @@
 "nekosan_nakigoe_type8" = "にゃーおん";
 "nekosan_nakigoe_type9" = "にゃあ";
 "nekosan_nakigoe_type99" = "ごろごろ";
+
+"time_suffix_min" = "分前";
+"time_suffix_hour" = "時間前";
+"time_suffix_day" = "日前";

@@ -23,3 +23,7 @@
 "nekosan_nakigoe_type8" = "Myau";
 "nekosan_nakigoe_type9" = "Nyan";
 "nekosan_nakigoe_type99" = "Purr";
+
+"time_suffix_min" = "min";
+"time_suffix_hour" = "h";
+"time_suffix_day" = "day";
