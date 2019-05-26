@@ -23,15 +23,15 @@ class TwitterDateFormatter {
         
         if (passedSecFromCreatedAt < 60 * 60) {
             let passedMins = String(Int(passedSecFromCreatedAt / 60))
-            let passedMinsSuffix = "分前"
+            let passedMinsSuffix = R.string.stringValues.time_suffix_min()
             return [passedMins, passedMinsSuffix].joined()
         } else if (passedSecFromCreatedAt < 60 * 60 * 24) {
             let passedHours = String(Int(passedSecFromCreatedAt / (60 * 60)))
-            let passedHoursSuffix = "時間前"
+            let passedHoursSuffix = R.string.stringValues.time_suffix_hour()
             return [passedHours + passedHoursSuffix].joined()
         } else if (passedSecFromCreatedAt < 60 * 60 * 24 * 30) {
             let passedDays = String(Int(passedSecFromCreatedAt / (60 * 60 * 24)))
-            let passedDaysSuffix = "日前"
+            let passedDaysSuffix = R.string.stringValues.time_suffix_day()
             return [passedDays, passedDaysSuffix].joined()
         } else {
             let farPassedDateFormatter = DateFormatter()

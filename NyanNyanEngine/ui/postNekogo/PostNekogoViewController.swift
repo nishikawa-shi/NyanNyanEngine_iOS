@@ -41,6 +41,8 @@ class PostNekogoViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.originalText.delegate = self
+        //Storyboard上の指定だと、なぜかlocalizeが反映されないので、ここで指定する。
+        self.originalText.text = R.string.stringValues.default_post_original_text()
         
         originalText.rx.text
             .bind(to: input.originalTextChangedTo!)

@@ -1,0 +1,36 @@
+
+/* Class = "UILabel"; text = "にゃーおんにゃーおんにゃーおん"; ObjectID = "0wL-SI-Y2R"; */
+"0wL-SI-Y2R.text" = "にゃーおんにゃーおんにゃーおん";
+
+/* Class = "UILabel"; text = "にゃーおんにゃーおんにゃーおん\nにゃんにゃにゃ！"; ObjectID = "6AZ-pe-SGn"; */
+"6AZ-pe-SGn.text" = "にゃーおんにゃーおんにゃーおん\nにゃんにゃにゃ！";
+
+/* Class = "UIBarButtonItem"; title = "キャンセル"; ObjectID = "7cV-OL-7iV"; */
+"7cV-OL-7iV.title" = "キャンセル";
+
+/* Class = "UILabel"; text = "@nishikawa_shi"; ObjectID = "A6H-dr-b3W"; */
+"A6H-dr-b3W.text" = "@nishikawa_shi";
+
+/* Class = "UITextView"; text = "ツイートをここに書くにゃ"; ObjectID = "L1b-m5-lsS"; */
+"L1b-m5-lsS.text" = "ツイートをここに書くにゃ";
+
+/* Class = "UILabel"; text = "22 h"; ObjectID = "PEj-Gh-Mzy"; */
+"PEj-Gh-Mzy.text" = "22 h";
+
+/* Class = "UINavigationItem"; title = "にゃんにゃんエンジン"; ObjectID = "SSO-CY-sNi"; */
+"SSO-CY-sNi.title" = "にゃんにゃんエンジン";
+
+/* Class = "UILabel"; text = "にしかわ"; ObjectID = "hpO-br-q46"; */
+"hpO-br-q46.text" = "にしかわ";
+
+/* Class = "UINavigationItem"; title = "ネコさんビューアー"; ObjectID = "iLU-59-H1k"; */
+"iLU-59-H1k.title" = "ネコさんビューアー";
+
+/* Class = "UIBarButtonItem"; title = "ログイン"; ObjectID = "p2V-y0-HXN"; */
+"p2V-y0-HXN.title" = "ログイン";
+
+/* Class = "UILabel"; text = "Label"; ObjectID = "tUf-t7-w8I"; */
+"tUf-t7-w8I.text" = "Label";
+
+/* Class = "UIButton"; normalTitle = "ツイートする"; ObjectID = "zbK-Xh-RcE"; */
+"zbK-Xh-RcE.normalTitle" = "ツイートする";

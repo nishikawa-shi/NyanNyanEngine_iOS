@@ -74,6 +74,6 @@ final class PostNekogoViewModel: PostNekogoViewModelInput, PostNekogoViewModelOu
     }
     
     private func isInputedValidText(inputedText: String) -> Bool {
-        return (inputedText != ("ツイートをここに書くにゃ") && (!inputedText.isEmpty))
+        return (inputedText != (R.string.stringValues.default_post_original_text()) && (!inputedText.isEmpty))
     }
 }

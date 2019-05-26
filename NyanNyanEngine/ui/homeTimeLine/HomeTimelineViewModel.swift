@@ -55,7 +55,7 @@ final class HomeTimelineViewModel: HomeTimelineViewModelInput, HomeTimelineViewM
         self.authPageUrl = authRepository.authPageUrl
         self.postSucceeded = tweetsRepository.postedStatus.map {
             guard let text = $0?.text else { return nil }
-            return text + "\nってツイートしたにゃ"
+            return [text, R.string.stringValues.post_original_text()].joined()
         }
         
         self.buttonRefreshExecutedAt = AnyObserver<String>() { [unowned self] updatedAt in

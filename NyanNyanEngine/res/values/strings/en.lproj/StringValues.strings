@@ -1,0 +1,29 @@
+/* 
+  StringValues.strings
+  NyanNyanEngine
+
+  Created by Tetsuya Nishikawa on 2019/05/26.
+  Copyright © 2019 Tetsuya Nishikawa. All rights reserved.
+*/
+"default_user_name" = "Dr. Nyannya";
+"default_user_id" = "@NNyansu";
+"default_user_posted_at" = "1 min";
+"default_user_text" = "Login with your Twitter♪\nYour timeline will be into Cat Lang.";
+
+"default_post_original_text" = "Meeeeow, write tweet here.";
+"post_original_text" = "\n is your cry, meeow.";
+
+"nekosan_nakigoe_type1" = "Meow";
+"nekosan_nakigoe_type2" = "Miaow";
+"nekosan_nakigoe_type3" = "Mew";
+"nekosan_nakigoe_type4" = "Meoow";
+"nekosan_nakigoe_type5" = "Meeow";
+"nekosan_nakigoe_type6" = "Miau";
+"nekosan_nakigoe_type7" = "Miaaaow";
+"nekosan_nakigoe_type8" = "Myau";
+"nekosan_nakigoe_type9" = "Nyan";
+"nekosan_nakigoe_type99" = "Purr";
+
+"time_suffix_min" = "min";
+"time_suffix_hour" = "h";
+"time_suffix_day" = "day";
