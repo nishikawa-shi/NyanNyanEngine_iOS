@@ -11,6 +11,7 @@
 "default_user_text" = "Twitterでログインしてね♪\nあなたのタイムラインをネコ語化だにゃ";
 
 "default_post_original_text" = "ツイートをここに書くにゃ!";
+"post_original_text" = "\nってツイートしたにゃ";
 
 "nekosan_nakigoe_type1" = "にゃん";
 "nekosan_nakigoe_type2" = "にゃお";
