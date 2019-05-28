@@ -233,11 +233,11 @@
                                 </userDefinedRuntimeAttributes>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zbK-Xh-RcE" userLabel="Tweet Button">
-                                <rect key="frame" x="340" y="454" width="58" height="34"/>
+                                <rect key="frame" x="295" y="454" width="103" height="34"/>
                                 <color key="backgroundColor" red="0.14901960784313725" green="0.54509803921568623" blue="0.82352941176470584" alpha="1" colorSpace="calibratedRGB"/>
                                 <fontDescription key="fontDescription" name=".AppleSystemUIFont" family=".AppleSystemUIFont" pointSize="15"/>
                                 <inset key="contentEdgeInsets" minX="8" minY="8" maxX="8" maxY="8"/>
-                                <state key="normal" title="Tweet">
+                                <state key="normal" title="Tweet as cat">
                                     <color key="titleColor" red="0.99215686270000003" green="0.96470588239999999" blue="0.89019607840000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 </state>
                                 <userDefinedRuntimeAttributes>
