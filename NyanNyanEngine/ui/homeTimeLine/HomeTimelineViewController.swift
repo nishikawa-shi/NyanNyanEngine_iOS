@@ -139,7 +139,7 @@ class HomeTimelineViewController: UIViewController {
             self.noticeToast.alpha = 1.0
         })
         
-        DispatchQueue.main.asyncAfter(deadline: .now()+8.0) {
+        DispatchQueue.main.asyncAfter(deadline: .now()+5.0) {
             UIView.animate(withDuration: 0.5, animations: { [unowned self] in
                 self.noticeToast.alpha = 0.0
                 }, completion: { [unowned self] _ in
