@@ -91,5 +91,9 @@ NyanNyanEngine/GoogleService-Info.plist
 NyanNyanEngine/ApiKeys.plist
 NyanNyanEngine/GoogleService-Info-Release.plist
 
+# Universal Link
+public/apple-app-site-association
+public/.well-known/apple-app-site-association
+
 # R.swift
 *.generated.swift
