@@ -897,7 +897,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 0F29B6DB666E02B7C3169F94 /* Pods-NyanNyanEngine.debug.xcconfig */;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon${BUNDLE_ID_SUFFIX}";
 				BUNDLE_ID_SUFFIX = .debug;
 				CODE_SIGN_ENTITLEMENTS = NyanNyanEngine/NyanNyanEngine.entitlements;
 				CODE_SIGN_STYLE = Automatic;
@@ -918,7 +918,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 6F7E9C80946FAE4B36BBC437 /* Pods-NyanNyanEngine.release.xcconfig */;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon${BUNDLE_ID_SUFFIX}";
 				BUNDLE_ID_SUFFIX = "";
 				CODE_SIGN_ENTITLEMENTS = NyanNyanEngine/NyanNyanEngine.entitlements;
 				CODE_SIGN_STYLE = Automatic;
