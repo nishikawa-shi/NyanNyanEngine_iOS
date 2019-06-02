@@ -4,6 +4,7 @@
 <dict>
 	<key>com.apple.developer.associated-domains</key>
 	<array>
+		<string>applinks:nyannyanengine-ios-d.firebaseapp.com</string>
 		<string>applinks:nyannyanengine.firebaseapp.com</string>
 	</array>
 </dict>

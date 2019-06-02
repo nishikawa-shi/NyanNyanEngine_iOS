@@ -18,6 +18,28 @@ class PlistConnector: BasePlistConnector {
     
     private let keyFilePath = Bundle.main.path(forResource: "ApiKeys", ofType: "plist")
     
+    func getApiKey() -> String? {
+        #if DEBUG
+        let keyName = "apiKeyD"
+        #elseif RELEASE
+        let keyName = "apiKey"
+        #else
+        return nil
+        #endif
+        return self.getString(withKey: keyName)
+    }
+    
+    func getApiSecret() -> String? {
+        #if DEBUG
+        let keyName = "apiSecretD"
+        #elseif RELEASE
+        let keyName = "apiSecret"
+        #else
+        return nil
+        #endif
+        return self.getString(withKey: keyName)
+    }
+    
     func getString(withKey: String) -> String? {
         guard let keys = getKeys() else { return nil }
         return keys[withKey] as? String

@@ -25,6 +25,15 @@ class ApiRequestFactory: BaseApiRequestFactory {
     private let accessTokenApiUrl = "https://api.twitter.com/oauth/access_token"
     private let homeTimelineApiUrl = "https://api.twitter.com/1.1/statuses/home_timeline.json"
     private let postTweetApiUrl = "https://api.twitter.com/1.1/statuses/update.json"
+
+    #if DEBUG
+    private let callBackUrl: String! = "https://nyannyanengine-ios-d.firebaseapp.com/authorized/"
+    #elseif RELEASE
+    private let callBackUrl: String! = "https://nyannyanengine.firebaseapp.com/authorized/"
+    #else
+    private let callBackUrl: String! = nil
+    #endif
+
     
     init(apiKey: String = "abcdefghijklMNOPQRSTU0123",
          apiSecret: String = "abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMN",
@@ -54,7 +63,7 @@ class ApiRequestFactory: BaseApiRequestFactory {
     }
     
     func createRequestTokenRequest() -> URLRequest? {
-        params.append((key: "oauth_callback", value: "https://nyannyanengine.firebaseapp.com/authorized/"))
+        params.append((key: "oauth_callback", value: callBackUrl))
         return createSignedUrlRequest(baseUrlStr: requestTokenApiUrl,
                                       urlStr: requestTokenApiUrl,
                                       requestMethod: "POST")

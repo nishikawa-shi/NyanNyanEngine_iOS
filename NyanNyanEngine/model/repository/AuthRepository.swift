@@ -63,8 +63,8 @@ class AuthRepository: BaseAuthRepository {
     }
     
     func getRequestToken() {
-        guard let apiKey = PlistConnector.shared.getString(withKey: "apiKey"),
-            let apiSecret = PlistConnector.shared.getString(withKey: "apiSecret"),
+        guard let apiKey = PlistConnector.shared.getApiKey(),
+            let apiSecret = PlistConnector.shared.getApiSecret(),
             let urlRequest = ApiRequestFactory(apiKey: apiKey,
                                                apiSecret: apiSecret,
                                                oauthNonce: "0000").createRequestTokenRequest() else { return }
