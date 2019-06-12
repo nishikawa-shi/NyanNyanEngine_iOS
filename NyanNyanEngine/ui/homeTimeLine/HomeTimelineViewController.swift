@@ -97,6 +97,7 @@ class HomeTimelineViewController: UIViewController {
         
         tweetList.refreshControl = UIRefreshControl()
         tweetList.refreshControl?.addTarget(self, action: #selector(self.refresh(sender:)), for: .valueChanged)
+        tweetList.rowHeight = UITableView.automaticDimension
         
         input.buttonRefreshExecutedAt?.onNext("2019/04/30 12:12:12")
     }
