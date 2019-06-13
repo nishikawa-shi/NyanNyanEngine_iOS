@@ -98,6 +98,7 @@ class HomeTimelineViewController: UIViewController {
         tweetList.refreshControl = UIRefreshControl()
         tweetList.refreshControl?.addTarget(self, action: #selector(self.refresh(sender:)), for: .valueChanged)
         tweetList.rowHeight = UITableView.automaticDimension
+        tweetList.delegate = self
         
         input.buttonRefreshExecutedAt?.onNext("2019/04/30 12:12:12")
     }
@@ -152,3 +153,9 @@ class HomeTimelineViewController: UIViewController {
     }
 }
 
+extension HomeTimelineViewController: UITableViewDelegate {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        guard let selectedRow = tableView.indexPathForSelectedRow else { return }
+        tableView.deselectRow(at: selectedRow, animated: true)
+    }
+}
