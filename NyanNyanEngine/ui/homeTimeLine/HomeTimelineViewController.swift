@@ -58,6 +58,14 @@ class HomeTimelineViewController: UIViewController {
             .bind(to: input.buttonRefreshExecutedAt!)
             .disposed(by: disposeBag)
         
+        tweetList.rx.itemSelected
+            .map { [unowned self] in
+                self.tweetList.deselectRow(at: $0, animated: true)
+                return $0
+            }
+            .bind(to: input.cellTapExecutedOn!)
+            .disposed(by: disposeBag)
+        
         output.nyanNyanStatuses
             .flatMap{ $0.flatMap { Observable<[NyanNyan]>.just($0) } ?? Observable<[NyanNyan]>.empty() }
             .bind(to: tweetList.rx.items(dataSource: TweetSummaryDataSource()))
@@ -98,7 +106,6 @@ class HomeTimelineViewController: UIViewController {
         tweetList.refreshControl = UIRefreshControl()
         tweetList.refreshControl?.addTarget(self, action: #selector(self.refresh(sender:)), for: .valueChanged)
         tweetList.rowHeight = UITableView.automaticDimension
-        tweetList.delegate = self
         
         input.buttonRefreshExecutedAt?.onNext("2019/04/30 12:12:12")
     }
@@ -150,12 +157,5 @@ class HomeTimelineViewController: UIViewController {
                     self.noticeToast.text = "にゃーおんにゃーおんにゃーおん\nにゃんにゃにゃ！"
             })
         }
-    }
-}
-
-extension HomeTimelineViewController: UITableViewDelegate {
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        guard let selectedRow = tableView.indexPathForSelectedRow else { return }
-        tableView.deselectRow(at: selectedRow, animated: true)
     }
 }

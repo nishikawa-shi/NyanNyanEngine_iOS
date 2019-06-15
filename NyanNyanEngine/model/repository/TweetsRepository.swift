@@ -15,6 +15,7 @@ protocol BaseTweetsRepository: AnyObject {
     var postedStatus: Observable<Status?> { get }
     var buttonRefreshExecutedAt: AnyObserver<(() -> Void)>? { get }
     var pullToRefreshExecutedAt: AnyObserver<UIRefreshControl?>? { get }
+    var nekogoToggleExecutedAt: AnyObserver<IndexPath>? { get }
     var postExecutedAs: AnyObserver<String?>? { get }
 }
 
@@ -29,6 +30,7 @@ class TweetsRepository: BaseTweetsRepository {
     let postedStatus: Observable<Status?>
     var buttonRefreshExecutedAt: AnyObserver<(() -> Void)>? = nil
     var pullToRefreshExecutedAt: AnyObserver<UIRefreshControl?>? = nil
+    var nekogoToggleExecutedAt: AnyObserver<IndexPath>? = nil
     var postExecutedAs: AnyObserver<String?>? = nil
     
     private init(apiClient: BaseApiClient = ApiClient.shared,
@@ -79,6 +81,10 @@ class TweetsRepository: BaseTweetsRepository {
                 }
                 .bind(to: _statuses)
                 .disposed(by: self.disposeBag)
+        }
+        
+        self.nekogoToggleExecutedAt = AnyObserver<IndexPath> { indexPath in
+            //indexPathに応じて用意した[NyanNyan]を_statusにacceptする処理
         }
         
         self.postExecutedAs = AnyObserver<String?> {
