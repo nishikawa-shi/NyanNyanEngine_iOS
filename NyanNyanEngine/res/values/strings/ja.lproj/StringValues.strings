@@ -10,6 +10,7 @@
 "default_user_id" = "@NNyansu";
 "default_user_posted_at" = "1分前";
 "default_user_text" = "Twitterでログインしてね♪\nあなたのタイムラインをネコ語化だにゃ";
+"default_user_nekogo" = "にゃんにゃにゃーん";
 
 "default_post_original_text" = "ここに文章を書くと、下でネコ語表示されるにゃ!";
 "post_original_text" = "\nってツイートしたにゃ";

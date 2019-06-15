@@ -158,7 +158,8 @@ class TweetsRepository: BaseTweetsRepository {
                      userName: $0.user.name,
                      userId: ("@" + $0.user.screenName),
                      nyanedAt: TwitterDateFormatter().getNyanNyanTimeStamp(apiTimeStamp: $0.createdAt),
-                     nekogo: Nekosan().createNekogo(sourceStr: $0.text))
+                     nekogo: Nekosan().createNekogo(sourceStr: $0.text),
+                     ningengo: $0.text)
             } ?? []
     }
 }

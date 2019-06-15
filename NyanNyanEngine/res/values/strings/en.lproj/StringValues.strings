@@ -10,6 +10,7 @@
 "default_user_id" = "@NNyansu";
 "default_user_posted_at" = "1 min";
 "default_user_text" = "Login with your Twitter♪\nYour timeline will be into Cat Lang.";
+"default_user_nekogo" = "MeowMeeeeeow";
 
 "default_post_original_text" = "This text is translated into cat lang. below, meeow.";
 "post_original_text" = "\n is your cry, meeow.";
