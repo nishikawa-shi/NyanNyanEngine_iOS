@@ -13,6 +13,7 @@ struct DefaultNekosan {
                  userId: R.string.stringValues.default_user_id(),
                  nyanedAt: R.string.stringValues.default_user_posted_at(),
                  nekogo: R.string.stringValues.default_user_text(),
-                 ningengo: R.string.stringValues.default_user_nekogo())
+                 ningengo: R.string.stringValues.default_user_nekogo(),
+                 isNekogo: false)
     ]
 }
