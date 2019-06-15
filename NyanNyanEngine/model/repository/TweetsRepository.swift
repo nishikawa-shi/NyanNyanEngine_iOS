@@ -83,8 +83,11 @@ class TweetsRepository: BaseTweetsRepository {
                 .disposed(by: self.disposeBag)
         }
         
-        self.nekogoToggleExecutedAt = AnyObserver<IndexPath> { indexPath in
-            //indexPathに応じて用意した[NyanNyan]を_statusにacceptする処理
+        self.nekogoToggleExecutedAt = AnyObserver<IndexPath> {
+            guard let row = $0.element?.row else { return }
+            var statuses = _statuses.value
+            statuses?[row].isNekogo.toggle()
+            _statuses.accept(statuses)
         }
         
         self.postExecutedAs = AnyObserver<String?> {
