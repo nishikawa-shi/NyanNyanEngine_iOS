@@ -115,8 +115,8 @@ class TweetsRepository: BaseTweetsRepository {
     }
     
     private func postTweets(nekosanText: String) -> Observable<Status?> {
-        guard let apiKey = PlistConnector.shared.getString(withKey: "apiKey"),
-            let apiSecret = PlistConnector.shared.getString(withKey: "apiSecret"),
+        guard let apiKey = PlistConnector.shared.getApiKey(),
+            let apiSecret = PlistConnector.shared.getApiSecret(),
             let accessToken = UserDefaultsConnector.shared.getString(withKey: "oauth_token"),
             let accessTokenSecret = UserDefaultsConnector.shared.getString(withKey: "oauth_token_secret"),
             let urlRequest = ApiRequestFactory(apiKey: apiKey,
