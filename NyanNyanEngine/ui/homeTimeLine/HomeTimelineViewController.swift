@@ -59,10 +59,6 @@ class HomeTimelineViewController: UIViewController {
             .disposed(by: disposeBag)
         
         tweetList.rx.itemSelected
-            .map { [unowned self] in
-                self.tweetList.deselectRow(at: $0, animated: true)
-                return $0
-            }
             .bind(to: input.cellTapExecutedOn!)
             .disposed(by: disposeBag)
         
