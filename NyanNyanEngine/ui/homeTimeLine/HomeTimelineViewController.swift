@@ -9,8 +9,6 @@
 import UIKit
 import RxSwift
 import RxCocoa
-import RxDataSources
-import Nuke
 import SafariServices
 import IntentsUI
 import CoreSpotlight
@@ -64,26 +62,10 @@ class HomeTimelineViewController: UIViewController {
             .bind(to: input.cellTapExecutedOn!)
             .disposed(by: disposeBag)
         
-        let dataSource = RxTableViewSectionedReloadDataSource<NyanNyanSection>(
-            configureCell: { dataS, tableView, indexPath, item in
-                let cell = tableView.dequeueReusableCell(withIdentifier: "TweetSummaryCell", for: indexPath) as! TweetSummaryCell
-
-                item.profileUrl
-                    .flatMap({ URL(string: $0) })
-                    .map({ Nuke.loadImage(with: $0, into: cell.userImage)
-                        return
-                    })
-                cell.userName?.text = item.userName
-                cell.userId?.text = item.userId
-                cell.publishedAt?.text = item.nyanedAt
-                cell.tweetBody?.text = item.isNekogo ? item.nekogo : item.ningengo
-                return cell
-        })
-        
         output.nyanNyanStatuses
             .flatMap{ $0.flatMap { Observable<[NyanNyan]>.just($0) } ?? Observable<[NyanNyan]>.empty() }
             .map { return [NyanNyanSection(items: $0)] }
-            .bind(to: tweetList.rx.items(dataSource: dataSource))
+            .bind(to: tweetList.rx.items(dataSource: DataSourceFactory.shared.createTweetSummary()))
             .disposed(by: disposeBag)
         
         output.currentUser
