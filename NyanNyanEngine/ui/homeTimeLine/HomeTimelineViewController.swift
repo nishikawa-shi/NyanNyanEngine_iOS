@@ -64,7 +64,8 @@ class HomeTimelineViewController: UIViewController {
         
         output.nyanNyanStatuses
             .flatMap{ $0.flatMap { Observable<[NyanNyan]>.just($0) } ?? Observable<[NyanNyan]>.empty() }
-            .bind(to: tweetList.rx.items(dataSource: TweetSummaryDataSource()))
+            .map { return [NyanNyanSection(items: $0)] }
+            .bind(to: tweetList.rx.items(dataSource: DataSourceFactory.shared.createTweetSummary()))
             .disposed(by: disposeBag)
         
         output.currentUser
