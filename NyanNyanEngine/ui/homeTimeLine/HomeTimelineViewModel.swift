@@ -14,6 +14,7 @@ protocol HomeTimelineViewModelInput: AnyObject {
     var authExecutedAt: AnyObserver<String>? { get }
     var buttonRefreshExecutedAt: AnyObserver<String>? { get }
     var pullToRefreshExecutedAt: AnyObserver<UIRefreshControl>? { get }
+    var cellTapExecutedOn: AnyObserver<IndexPath>? { get }
 }
 
 protocol HomeTimelineViewModelOutput: AnyObject {
@@ -34,6 +35,7 @@ final class HomeTimelineViewModel: HomeTimelineViewModelInput, HomeTimelineViewM
     var authExecutedAt: AnyObserver<String>? = nil
     var buttonRefreshExecutedAt: AnyObserver<String>? = nil
     var pullToRefreshExecutedAt: AnyObserver<UIRefreshControl>? = nil
+    var cellTapExecutedOn: AnyObserver<IndexPath>? = nil
     let currentUser: Observable<String>
     let nyanNyanStatuses: Observable<[NyanNyan]?>
     let isLoading: Observable<Bool>
@@ -80,6 +82,13 @@ final class HomeTimelineViewModel: HomeTimelineViewModelInput, HomeTimelineViewM
             self.tweetsRepository
                 .pullToRefreshExecutedAt?
                 .onNext(uiRefreshControl.element)
+        }
+        
+        self.cellTapExecutedOn = AnyObserver<IndexPath>() { [unowned self] in
+            guard let index = $0.element else { return }
+            self.tweetsRepository
+                .nekogoToggleExecutedAt?
+                .onNext(index)
         }
         
         self.authExecutedAt = AnyObserver<String>() { [unowned self] authedAt in

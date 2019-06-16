@@ -14,4 +14,6 @@ struct NyanNyan {
     let userId: String
     let nyanedAt: String
     let nekogo: String
+    let ningengo: String
+    var isNekogo: Bool = true
 }

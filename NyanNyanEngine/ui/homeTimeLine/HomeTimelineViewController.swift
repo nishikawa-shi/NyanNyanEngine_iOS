@@ -58,6 +58,10 @@ class HomeTimelineViewController: UIViewController {
             .bind(to: input.buttonRefreshExecutedAt!)
             .disposed(by: disposeBag)
         
+        tweetList.rx.itemSelected
+            .bind(to: input.cellTapExecutedOn!)
+            .disposed(by: disposeBag)
+        
         output.nyanNyanStatuses
             .flatMap{ $0.flatMap { Observable<[NyanNyan]>.just($0) } ?? Observable<[NyanNyan]>.empty() }
             .bind(to: tweetList.rx.items(dataSource: TweetSummaryDataSource()))
@@ -151,4 +155,3 @@ class HomeTimelineViewController: UIViewController {
         }
     }
 }
-

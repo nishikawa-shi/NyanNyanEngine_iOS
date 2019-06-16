@@ -15,6 +15,7 @@ protocol BaseTweetsRepository: AnyObject {
     var postedStatus: Observable<Status?> { get }
     var buttonRefreshExecutedAt: AnyObserver<(() -> Void)>? { get }
     var pullToRefreshExecutedAt: AnyObserver<UIRefreshControl?>? { get }
+    var nekogoToggleExecutedAt: AnyObserver<IndexPath>? { get }
     var postExecutedAs: AnyObserver<String?>? { get }
 }
 
@@ -29,6 +30,7 @@ class TweetsRepository: BaseTweetsRepository {
     let postedStatus: Observable<Status?>
     var buttonRefreshExecutedAt: AnyObserver<(() -> Void)>? = nil
     var pullToRefreshExecutedAt: AnyObserver<UIRefreshControl?>? = nil
+    var nekogoToggleExecutedAt: AnyObserver<IndexPath>? = nil
     var postExecutedAs: AnyObserver<String?>? = nil
     
     private init(apiClient: BaseApiClient = ApiClient.shared,
@@ -79,6 +81,13 @@ class TweetsRepository: BaseTweetsRepository {
                 }
                 .bind(to: _statuses)
                 .disposed(by: self.disposeBag)
+        }
+        
+        self.nekogoToggleExecutedAt = AnyObserver<IndexPath> {
+            guard let row = $0.element?.row else { return }
+            var statuses = _statuses.value
+            statuses?[row].isNekogo.toggle()
+            _statuses.accept(statuses)
         }
         
         self.postExecutedAs = AnyObserver<String?> {
@@ -152,7 +161,9 @@ class TweetsRepository: BaseTweetsRepository {
                      userName: $0.user.name,
                      userId: ("@" + $0.user.screenName),
                      nyanedAt: TwitterDateFormatter().getNyanNyanTimeStamp(apiTimeStamp: $0.createdAt),
-                     nekogo: Nekosan().createNekogo(sourceStr: $0.text))
+                     nekogo: Nekosan().createNekogo(sourceStr: $0.text),
+                     ningengo: $0.text,
+                     isNekogo: true)
             } ?? []
     }
 }
