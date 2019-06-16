@@ -86,7 +86,9 @@ class HomeTimelineViewController: UIViewController {
             .subscribe { [unowned self] in
                 guard let pageUrl = $0.element as? URL else { return }
                 let sFSafariViewController = SFSafariViewController(url: pageUrl)
-                sFSafariViewController.dismissButtonStyle = .cancel
+                if #available(iOS 11.0, *) {
+                    sFSafariViewController.dismissButtonStyle = .cancel
+                }
                 
                 self.present(sFSafariViewController,
                              animated: true,
