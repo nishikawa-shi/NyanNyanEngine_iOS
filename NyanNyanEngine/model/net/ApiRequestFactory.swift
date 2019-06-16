@@ -25,7 +25,7 @@ class ApiRequestFactory: BaseApiRequestFactory {
     private let accessTokenApiUrl = "https://api.twitter.com/oauth/access_token"
     private let homeTimelineApiUrl = "https://api.twitter.com/1.1/statuses/home_timeline.json"
     private let postTweetApiUrl = "https://api.twitter.com/1.1/statuses/update.json"
-
+    
     #if DEBUG
     private let callBackUrl: String! = "https://nyannyanengine-ios-d.firebaseapp.com/authorized/"
     #elseif RELEASE
@@ -33,7 +33,7 @@ class ApiRequestFactory: BaseApiRequestFactory {
     #else
     private let callBackUrl: String! = nil
     #endif
-
+    
     
     init(apiKey: String = "abcdefghijklMNOPQRSTU0123",
          apiSecret: String = "abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMN",
