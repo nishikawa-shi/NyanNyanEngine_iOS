@@ -15,8 +15,8 @@ class DataSourceFactory {
     
     private init() { }
     
-    func createTweetSummary() -> RxTableViewSectionedReloadDataSource<NyanNyanSection> {
-        return RxTableViewSectionedReloadDataSource<NyanNyanSection>(
+    func createTweetSummary() -> RxTableViewSectionedAnimatedDataSource<NyanNyanSection> {
+        return RxTableViewSectionedAnimatedDataSource<NyanNyanSection>(
             configureCell: { dataS, tableView, indexPath, item in
                 let cell = tableView.dequeueReusableCell(withIdentifier: "TweetSummaryCell", for: indexPath) as! TweetSummaryCell
                 

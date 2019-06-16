@@ -20,3 +20,9 @@ extension NyanNyanSection: SectionModelType {
         self.items = items
     }
 }
+extension NyanNyanSection: AnimatableSectionModelType {
+    var identity: String {
+        return "NyanNyan"
+    }
+    typealias Identity = String
+}
