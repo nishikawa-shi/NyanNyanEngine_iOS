@@ -97,9 +97,16 @@ final class HomeTimelineViewModel: HomeTimelineViewModelInput, HomeTimelineViewM
         
         self.cellTapExecutedOn = AnyObserver<IndexPath>() { [unowned self] in
             guard let index = $0.element else { return }
-            self.tweetsRepository
-                .nekogoToggleExecutedAt?
-                .onNext(index)
+            switch(index.section) {
+            case 0:
+                self.tweetsRepository
+                    .nekogoToggleExecutedAt?
+                    .onNext(index)
+            
+            default:
+                //ローディングのせるの選択解除をするための処理
+                return
+            }
         }
         
         self.authExecutedAt = AnyObserver<String>() { [unowned self] authedAt in
