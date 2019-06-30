@@ -14,6 +14,7 @@ protocol HomeTimelineViewModelInput: AnyObject {
     var authExecutedAt: AnyObserver<String>? { get }
     var buttonRefreshExecutedAt: AnyObserver<String>? { get }
     var pullToRefreshExecutedAt: AnyObserver<UIRefreshControl>? { get }
+    var infiniteScrollExecutedAt: AnyObserver<String>? { get }
     var cellTapExecutedOn: AnyObserver<IndexPath>? { get }
 }
 
@@ -21,6 +22,7 @@ protocol HomeTimelineViewModelOutput: AnyObject {
     var nyanNyanStatuses: Observable<[NyanNyan]?> { get }
     var currentUser: Observable<String> { get }
     var isLoading: Observable<Bool> { get }
+    var isInfiniteLoading: Observable<Bool> { get }
     var isLoggedIn: Observable<Bool>? { get }
     var authPageUrl: Observable<URL?>? { get }
     var postSucceeded: Observable<String?> { get }
@@ -35,10 +37,12 @@ final class HomeTimelineViewModel: HomeTimelineViewModelInput, HomeTimelineViewM
     var authExecutedAt: AnyObserver<String>? = nil
     var buttonRefreshExecutedAt: AnyObserver<String>? = nil
     var pullToRefreshExecutedAt: AnyObserver<UIRefreshControl>? = nil
+    var infiniteScrollExecutedAt: AnyObserver<String>? = nil
     var cellTapExecutedOn: AnyObserver<IndexPath>? = nil
     let currentUser: Observable<String>
     let nyanNyanStatuses: Observable<[NyanNyan]?>
     let isLoading: Observable<Bool>
+    let isInfiniteLoading: Observable<Bool>
     let isLoggedIn: Observable<Bool>?
     let authPageUrl: Observable<URL?>?
     let postSucceeded: Observable<String?>
@@ -53,6 +57,7 @@ final class HomeTimelineViewModel: HomeTimelineViewModelInput, HomeTimelineViewM
         self.currentUser = authRepository.currentUser
         self.nyanNyanStatuses = tweetsRepository.nyanNyanStatuses
         self.isLoading = loadingStatusRepository.isLoading
+        self.isInfiniteLoading = loadingStatusRepository.isInfiniteLoading
         self.isLoggedIn = authRepository.isLoggedIn
         self.authPageUrl = authRepository.authPageUrl
         self.postSucceeded = tweetsRepository.postedStatus.map {
@@ -82,6 +87,12 @@ final class HomeTimelineViewModel: HomeTimelineViewModelInput, HomeTimelineViewM
             self.tweetsRepository
                 .pullToRefreshExecutedAt?
                 .onNext(uiRefreshControl.element)
+        }
+        
+        self.infiniteScrollExecutedAt = AnyObserver<String>() { [unowned self] res in
+            self.loadingStatusRepository
+                .infiniteLoadingStatusChangedTo
+                .onNext(true)
         }
         
         self.cellTapExecutedOn = AnyObserver<IndexPath>() { [unowned self] in

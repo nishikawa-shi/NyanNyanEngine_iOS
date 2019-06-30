@@ -65,7 +65,9 @@ class HomeTimelineViewController: UIViewController {
         let prefetchRatio = 0.6
         tweetList.rx.contentOffset
             .filter { $0.y > (self.tweetList.frame.size.height * CGFloat(prefetchRatio))}
-            .subscribe() { res in print("nyaa")}
+            .throttle(DispatchTimeInterval.seconds(3), latest: false, scheduler: ConcurrentMainScheduler.instance)
+            .map { _ in return "9999/12/31 23:59:59" }
+            .bind(to: input.infiniteScrollExecutedAt!)
             .disposed(by: disposeBag)
         
         output.nyanNyanStatuses
@@ -81,6 +83,11 @@ class HomeTimelineViewController: UIViewController {
         output.isLoading
             .subscribe() { [unowned self] in
                 ($0.element ?? false) ? self.activityIndicator.startAnimating() : self.activityIndicator.stopAnimating()
+            }.disposed(by: disposeBag)
+        
+        output.isInfiniteLoading
+            .subscribe() { _ in
+                print("ローディングボタン表示処理開始！")
             }.disposed(by: disposeBag)
         
         output.isLoggedIn?
