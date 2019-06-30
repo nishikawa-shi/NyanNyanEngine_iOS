@@ -96,7 +96,7 @@
                                             <outlet property="userName" destination="hpO-br-q46" id="aFd-jJ-xgw"/>
                                         </connections>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="LoadingCell" id="SIG-QX-tzI" userLabel="LoadingCell" customClass="LoadingCell" customModule="NyanNyanEngine" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="LoadingCell" id="SIG-QX-tzI" userLabel="LoadingCell" customClass="LoadingCell" customModule="NyanNyanEngine" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="124" width="414" height="96"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="SIG-QX-tzI" id="6iK-wZ-W8J">
