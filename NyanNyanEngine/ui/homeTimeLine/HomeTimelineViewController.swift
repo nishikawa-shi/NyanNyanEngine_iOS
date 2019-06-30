@@ -62,6 +62,12 @@ class HomeTimelineViewController: UIViewController {
             .bind(to: input.cellTapExecutedOn!)
             .disposed(by: disposeBag)
         
+        let prefetchRatio = 0.6
+        tweetList.rx.contentOffset
+            .filter { $0.y > (self.tweetList.frame.size.height * CGFloat(prefetchRatio))}
+            .subscribe() { res in print("nyaa")}
+            .disposed(by: disposeBag)
+        
         output.nyanNyanStatuses
             .flatMap{ $0.flatMap { Observable<[NyanNyan]>.just($0) } ?? Observable<[NyanNyan]>.empty() }
             .map { return [NyanNyanSection(items: $0)] }
