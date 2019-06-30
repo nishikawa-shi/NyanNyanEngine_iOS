@@ -10,4 +10,5 @@ import UIKit
 
 class LoadingCell: UITableViewCell {
     
+    @IBOutlet weak var infiniteLoadIndicator: UIActivityIndicatorView!
 }

@@ -113,6 +113,9 @@
                                             </constraints>
                                         </tableViewCellContentView>
                                         <color key="backgroundColor" red="0.99215686270000003" green="0.96470588239999999" blue="0.89019607840000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <connections>
+                                            <outlet property="infiniteLoadIndicator" destination="nz3-lK-q4l" id="Kyc-fp-58X"/>
+                                        </connections>
                                     </tableViewCell>
                                 </prototypes>
                             </tableView>

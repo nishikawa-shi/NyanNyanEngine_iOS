@@ -34,7 +34,9 @@ class DataSourceFactory {
                     return cell
                     
                 case 1:
-                    return tableView.dequeueReusableCell(withIdentifier: "LoadingCell", for: indexPath) as! LoadingCell
+                    let cell = tableView.dequeueReusableCell(withIdentifier: "LoadingCell", for: indexPath) as! LoadingCell
+                    cell.infiniteLoadIndicator.startAnimating()
+                    return cell
                     
                 default:
                     return UITableViewCell()
