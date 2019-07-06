@@ -18,18 +18,29 @@ class DataSourceFactory {
     func createTweetSummary() -> RxTableViewSectionedAnimatedDataSource<NyanNyanSection> {
         return RxTableViewSectionedAnimatedDataSource<NyanNyanSection>(
             configureCell: { dataS, tableView, indexPath, item in
-                let cell = tableView.dequeueReusableCell(withIdentifier: "TweetSummaryCell", for: indexPath) as! TweetSummaryCell
-                
-                item.profileUrl
-                    .flatMap({ URL(string: $0) })
-                    .map({ Nuke.loadImage(with: $0, into: cell.userImage)
-                        return
-                    })
-                cell.userName?.text = item.userName
-                cell.userId?.text = item.userId
-                cell.publishedAt?.text = item.nyanedAt
-                cell.tweetBody?.text = item.isNekogo ? item.nekogo : item.ningengo
-                return cell
+                switch(indexPath.section) {
+                case 0:
+                    let cell = tableView.dequeueReusableCell(withIdentifier: "TweetSummaryCell", for: indexPath) as! TweetSummaryCell
+                    
+                    item.profileUrl
+                        .flatMap({ URL(string: $0) })
+                        .map({ Nuke.loadImage(with: $0, into: cell.userImage)
+                            return
+                        })
+                    cell.userName?.text = item.userName
+                    cell.userId?.text = item.userId
+                    cell.publishedAt?.text = item.nyanedAt
+                    cell.tweetBody?.text = item.isNekogo ? item.nekogo : item.ningengo
+                    return cell
+                    
+                case 1:
+                    let cell = tableView.dequeueReusableCell(withIdentifier: "LoadingCell", for: indexPath) as! LoadingCell
+                    cell.infiniteLoadIndicator.startAnimating()
+                    return cell
+                    
+                default:
+                    return UITableViewCell()
+                }
         })
     }
 }

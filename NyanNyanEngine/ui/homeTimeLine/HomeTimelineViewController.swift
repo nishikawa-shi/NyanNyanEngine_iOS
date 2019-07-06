@@ -62,9 +62,29 @@ class HomeTimelineViewController: UIViewController {
             .bind(to: input.cellTapExecutedOn!)
             .disposed(by: disposeBag)
         
-        output.nyanNyanStatuses
+        let prefetchRatio = 0.6
+        tweetList.rx.contentOffset
+            .filter { $0.y > (self.tweetList.frame.size.height * CGFloat(prefetchRatio))}
+            .throttle(DispatchTimeInterval.seconds(3), latest: false, scheduler: ConcurrentMainScheduler.instance)
+            .map { _ in return "9999/12/31 23:59:59" }
+            .bind(to: input.infiniteScrollExecutedAt!)
+            .disposed(by: disposeBag)
+        
+        let tweetObservable = output.nyanNyanStatuses
             .flatMap{ $0.flatMap { Observable<[NyanNyan]>.just($0) } ?? Observable<[NyanNyan]>.empty() }
-            .map { return [NyanNyanSection(items: $0)] }
+            .map { NyanNyanSection(items: $0, idSuffix: "main") }
+
+        let loadingObservable = output.isInfiniteLoading
+            .map { $0 ? [NyanNyan(profileUrl: nil,
+                userName: "LoadingName",
+                userId: "LoadingId",
+                nyanedAt: "LoadingNyan",
+                nekogo: "LoadingNekogo",
+                ningengo: "LoadingNingengo")] : []}
+            .map { NyanNyanSection(items: $0, idSuffix: "infiniteLoading") }
+
+        Observable.combineLatest(tweetObservable, loadingObservable)
+            .map { return [$0, $1] }
             .bind(to: tweetList.rx.items(dataSource: DataSourceFactory.shared.createTweetSummary()))
             .disposed(by: disposeBag)
         

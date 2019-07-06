@@ -11,6 +11,7 @@ import RxDataSources
 
 struct NyanNyanSection {
     var items: [Item]
+    var idSuffix: String
 }
 extension NyanNyanSection: SectionModelType {
     typealias Item = NyanNyan
@@ -22,7 +23,7 @@ extension NyanNyanSection: SectionModelType {
 }
 extension NyanNyanSection: AnimatableSectionModelType {
     var identity: String {
-        return "NyanNyan"
+        return "NyanNyan" + idSuffix
     }
     typealias Identity = String
 }

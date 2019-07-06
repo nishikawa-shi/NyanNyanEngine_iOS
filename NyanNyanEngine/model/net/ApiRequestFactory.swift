@@ -56,9 +56,16 @@ class ApiRequestFactory: BaseApiRequestFactory {
             .map { (key: $0.key, value: $0.value.addingPercentEncoding(withAllowedCharacters: baseAllowed)!) }
     }
     
-    func createHomeTimelineRequest() -> URLRequest? {
+    func createHomeTimelineRequest(maxId: String? = nil) -> URLRequest? {
+        var query = ""
+        if let maxId = maxId {
+            params.append((key: "max_id", value: maxId))
+            query += ("?max_id=" + maxId)
+        }
+        let fullPath = homeTimelineApiUrl + query
+        
         return createSignedUrlRequest(baseUrlStr: homeTimelineApiUrl,
-                                      urlStr: homeTimelineApiUrl,
+                                      urlStr: fullPath,
                                       requestMethod: "GET")
     }
     
