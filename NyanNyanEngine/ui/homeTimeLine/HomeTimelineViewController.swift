@@ -97,11 +97,6 @@ class HomeTimelineViewController: UIViewController {
                 ($0.element ?? false) ? self.activityIndicator.startAnimating() : self.activityIndicator.stopAnimating()
             }.disposed(by: disposeBag)
         
-        output.isInfiniteLoading
-            .subscribe() { _ in
-                print("ローディングボタン表示処理開始！")
-            }.disposed(by: disposeBag)
-        
         output.isLoggedIn?
             .map { !$0 }
             .bind(to: authButton.rx.isEnabled)
