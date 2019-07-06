@@ -80,7 +80,8 @@ class HomeTimelineViewController: UIViewController {
                 userId: "LoadingId",
                 nyanedAt: "LoadingNyan",
                 nekogo: "LoadingNekogo",
-                ningengo: "LoadingNingengo")] : []}
+                ningengo: "LoadingNingengo",
+                isNekogo: true)] : []}
             .map { NyanNyanSection(items: $0, idSuffix: "infiniteLoading") }
 
         Observable.combineLatest(tweetObservable, loadingObservable)
