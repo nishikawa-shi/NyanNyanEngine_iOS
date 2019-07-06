@@ -1,0 +1,35 @@
+# Xcode
+# Build, test, and archive an Xcode workspace on macOS.
+# Add steps that install certificates, test, sign, and distribute an app, save build artifacts, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/languages/xcode
+
+trigger:
+- master
+- feature/*
+
+pool:
+  vmImage: 'macos-latest'
+
+steps:
+- bash: 'ls -latr'
+  displayName: 'file list up'
+- bash: 'xcrun instruments -s'
+  displayName: 'device check'
+- bash: 'curl https://nyannyanengine-ios-d.firebaseapp.com/circleci/ApiKeys.plist > NyanNyanEngine/ApiKeys.plist'
+  displayName: 'make ignored ApiKeys.plist'
+- bash: curl https://nyannyanengine-ios-d.firebaseapp.com/circleci/GoogleService-Info.plist > NyanNyanEngine/GoogleService-Info.plist
+  displayName: make ignored GoogleService.plist
+- bash: curl https://nyannyanengine-ios-d.firebaseapp.com/circleci/GoogleService-Info.plist > NyanNyanEngine/GoogleService-Info-Release.plist
+  displayName: make ignored GoogleService-Release.plist
+- bash: pod install
+  displayName: library introduction
+- task: Xcode@5
+  inputs:
+    actions: 'build test'
+    scheme: 'NyanNyanEngine'
+    sdk: 'iphoneos'
+    configuration: 'Debug'
+    xcWorkspacePath: 'NyanNyanEngine.xcworkspace'
+    xcodeVersion: 'default'
+    destinationPlatformOption: 'iOS'
+    destinationDevices: 'iPhone Xs Max'
