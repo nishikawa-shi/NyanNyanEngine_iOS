@@ -10,6 +10,7 @@ import Foundation
 import Differentiator
 
 struct NyanNyan: Equatable {
+    let id: Int
     let profileUrl: String?
     let userName: String
     let userId: String
@@ -19,7 +20,7 @@ struct NyanNyan: Equatable {
     var isNekogo: Bool = true
 }
 extension NyanNyan: IdentifiableType {
-    var identity: String {
-        return [ningengo, userId].joined()
+    var identity: Int {
+        return id
     }
 }

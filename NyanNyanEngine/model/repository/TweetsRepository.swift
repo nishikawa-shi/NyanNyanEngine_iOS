@@ -27,6 +27,8 @@ class TweetsRepository: BaseTweetsRepository {
     private let apiClient: BaseApiClient
     private let userDefaultsConnector: BaseUserDefaultsConnector
     
+    private var currentMinId = Int.max
+    
     let nyanNyanStatuses: Observable<[NyanNyan]?>
     let postedStatus: Observable<Status?>
     var buttonRefreshExecutedAt: AnyObserver<(() -> Void)>? = nil
@@ -48,12 +50,13 @@ class TweetsRepository: BaseTweetsRepository {
         
         self.buttonRefreshExecutedAt = AnyObserver<(() -> Void)> { [unowned self] stopActivityIndicator in
             self.getHomeTimeLine()
-                .map {
+                .map { [unowned self] in
                     stopActivityIndicator.element?()
                     
                     guard let statusValueResponse = $0 else {
                         return _statuses.value ?? []
                     }
+                    self.updateMin(statuses: statusValueResponse)
                     
                     if(statusValueResponse.isEmpty) {
                         return _statuses.value ?? []
@@ -67,7 +70,7 @@ class TweetsRepository: BaseTweetsRepository {
         
         self.pullToRefreshExecutedAt = AnyObserver<UIRefreshControl?> { [unowned self] uiRefreshControl in
             self.getHomeTimeLine()
-                .map {
+                .map { [unowned self] in
                     sleep(1)
                     uiRefreshControl.element??.endRefreshing()
                     
@@ -78,6 +81,7 @@ class TweetsRepository: BaseTweetsRepository {
                     if(statusValueResponse.isEmpty) {
                         return _statuses.value ?? []
                     }
+                    self.updateMin(statuses: statusValueResponse)
                     
                     return statusValueResponse
                 }
@@ -86,8 +90,15 @@ class TweetsRepository: BaseTweetsRepository {
         }
         
         self.infiniteScrollExecutedAt = AnyObserver<(() -> Void)> { stopActivityIndicator in
-            //TODO: 表示中ツイートのもっとも古いIDが動的に設定されるようにする
-            self.getHomeTimeLine(maxId: "1147106841010135040")
+            self.getHomeTimeLine(maxId: String(self.currentMinId))
+                .map { [unowned self] in
+                    self.updateMin(statuses: $0)
+                    guard var additive = $0 else { return $0 }
+                    if(!additive.isEmpty) {
+                        additive.removeFirst()
+                    }
+                    return additive
+                }
                 .map { (_statuses.value ?? []) + ($0 ?? []) }
                 .bind(to: _statuses)
                 .disposed(by: self.disposeBag)
@@ -107,7 +118,7 @@ class TweetsRepository: BaseTweetsRepository {
                     //Observerの型をラムダ式ではなくStringにしたかったのでここでLoadingStatusRepositoryへの依存が生まれてしまっている。
                     //モジュール性が若干下がるので、構成を見直した方が良いかもしれない・・・
                     LoadingStatusRepository.shared.loadingStatusChangedTo.onNext(false)
-                    return $0 ?? Status(text: "にゃにゃーーーおん", createdAt: "99日前", user: User(name: "エラー猫さん", screenName: "neko_error", profileImageUrlHttps: nil))
+                    return $0 ?? Status(id: 2828, text: "にゃにゃーーーおん", createdAt: "99日前", user: User(name: "エラー猫さん", screenName: "neko_error", profileImageUrlHttps: nil))
                 }
                 .bind(to: _postedStatus)
                 .disposed(by: self.disposeBag)
@@ -152,6 +163,14 @@ class TweetsRepository: BaseTweetsRepository {
             .map { [unowned self] in self.toStatus(data: $0)}
     }
     
+    private func updateMin(statuses: [NyanNyan]?) {
+        guard let statuses = statuses,
+            let minId = statuses.map({$0.id}).min() else { return }
+        if(minId < self.currentMinId) {
+            self.currentMinId = minId
+        }
+    }
+    
     private func toStatuses(data: Data?) -> [Status]? {
         let decoder = JSONDecoder()
         decoder.keyDecodingStrategy = .convertFromSnakeCase
@@ -168,7 +187,8 @@ class TweetsRepository: BaseTweetsRepository {
     
     private func toNyanNyan(rawTweets: [Status]?) -> [NyanNyan] {
         return rawTweets?.map {
-            NyanNyan(profileUrl: $0.user.profileImageUrlHttps,
+            NyanNyan(id: $0.id,
+                     profileUrl: $0.user.profileImageUrlHttps,
                      userName: $0.user.name,
                      userId: ("@" + $0.user.screenName),
                      nyanedAt: TwitterDateFormatter().getNyanNyanTimeStamp(apiTimeStamp: $0.createdAt),
