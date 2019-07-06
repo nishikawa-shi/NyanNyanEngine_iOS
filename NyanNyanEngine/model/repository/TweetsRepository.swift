@@ -88,12 +88,9 @@ class TweetsRepository: BaseTweetsRepository {
         self.infiniteScrollExecutedAt = AnyObserver<(() -> Void)> { stopActivityIndicator in
             //TODO: 表示中ツイートのもっとも古いIDが動的に設定されるようにする
             self.getHomeTimeLine(maxId: "1147106841010135040")
-                .subscribe() {
-                    print("request shitayo")
-                    print($0)
-                    print("request owatta")
-                    stopActivityIndicator.element?()
-                }.disposed(by: self.disposeBag)
+                .map { (_statuses.value ?? []) + ($0 ?? []) }
+                .bind(to: _statuses)
+                .disposed(by: self.disposeBag)
         }
         
         self.nekogoToggleExecutedAt = AnyObserver<IndexPath> {
