@@ -92,6 +92,7 @@ class TweetsRepository: BaseTweetsRepository {
                     print("request shitayo")
                     print($0)
                     print("request owatta")
+                    stopActivityIndicator.element?()
                 }.disposed(by: self.disposeBag)
         }
         
