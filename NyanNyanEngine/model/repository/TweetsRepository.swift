@@ -117,27 +117,8 @@ class TweetsRepository: BaseTweetsRepository {
         }
     }
     
-    private func getHomeTimeLine(uiRefreshControl: UIRefreshControl? = nil) -> Observable<[NyanNyan]?> {
-        guard let apiKey = PlistConnector.shared.getApiKey(),
-            let apiSecret = PlistConnector.shared.getApiSecret(),
-            let accessToken = UserDefaultsConnector.shared.getString(withKey: "oauth_token"),
-            let accessTokenSecret = UserDefaultsConnector.shared.getString(withKey: "oauth_token_secret"),
-            let urlRequest = ApiRequestFactory(apiKey: apiKey,
-                                               apiSecret: apiSecret,
-                                               oauthNonce: "0000",
-                                               accessTokenSecret: accessTokenSecret,
-                                               accessToken: accessToken).createHomeTimelineRequest() else {
-                                                uiRefreshControl?.endRefreshing()
-                                                return Observable<[NyanNyan]?>.just(DefaultNekosan().nyanNyanStatuses)}
-        
-        return self.apiClient
-            .executeHttpRequest(urlRequest: urlRequest)
-            .map { [unowned self] in self.toStatuses(data: $0) }
-            .map { [unowned self] in self.toNyanNyan(rawTweets: $0) }
-    }
-    
-    private func getHomeTimeLine(maxId: String) -> Observable<[NyanNyan]?> {
-        //TODO: getHomeTimeLine()と共通化
+    private func getHomeTimeLine(maxId: String? = nil,
+                                 uiRefreshControl: UIRefreshControl? = nil) -> Observable<[NyanNyan]?> {
         guard let apiKey = PlistConnector.shared.getApiKey(),
             let apiSecret = PlistConnector.shared.getApiSecret(),
             let accessToken = UserDefaultsConnector.shared.getString(withKey: "oauth_token"),
@@ -147,6 +128,7 @@ class TweetsRepository: BaseTweetsRepository {
                                                oauthNonce: "0000",
                                                accessTokenSecret: accessTokenSecret,
                                                accessToken: accessToken).createHomeTimelineRequest(maxId: maxId) else {
+                                                uiRefreshControl?.endRefreshing()
                                                 return Observable<[NyanNyan]?>.just(DefaultNekosan().nyanNyanStatuses)}
         
         return self.apiClient

@@ -56,16 +56,12 @@ class ApiRequestFactory: BaseApiRequestFactory {
             .map { (key: $0.key, value: $0.value.addingPercentEncoding(withAllowedCharacters: baseAllowed)!) }
     }
     
-    func createHomeTimelineRequest() -> URLRequest? {
-        return createSignedUrlRequest(baseUrlStr: homeTimelineApiUrl,
-                                      urlStr: homeTimelineApiUrl,
-                                      requestMethod: "GET")
-    }
-    
-    func createHomeTimelineRequest(maxId: String) -> URLRequest? {
-        //TODO: createHomeTimelineRequest()と共通化
-        params.append((key: "max_id", value: maxId))
-        let query = "?max_id=" + maxId
+    func createHomeTimelineRequest(maxId: String? = nil) -> URLRequest? {
+        var query = ""
+        if let maxId = maxId {
+            params.append((key: "max_id", value: maxId))
+            query += ("?max_id=" + maxId)
+        }
         let fullPath = homeTimelineApiUrl + query
         
         return createSignedUrlRequest(baseUrlStr: homeTimelineApiUrl,
