@@ -110,7 +110,7 @@ final class HomeTimelineViewModel: HomeTimelineViewModelInput, HomeTimelineViewM
                 self.tweetsRepository
                     .nekogoToggleExecutedAt?
                     .onNext(index)
-            
+                
             case 1:
                 //ローディングのセルがタップされても、何もしない
                 return
