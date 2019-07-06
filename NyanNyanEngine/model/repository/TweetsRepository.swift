@@ -107,7 +107,7 @@ class TweetsRepository: BaseTweetsRepository {
                     //Observerの型をラムダ式ではなくStringにしたかったのでここでLoadingStatusRepositoryへの依存が生まれてしまっている。
                     //モジュール性が若干下がるので、構成を見直した方が良いかもしれない・・・
                     LoadingStatusRepository.shared.loadingStatusChangedTo.onNext(false)
-                    return $0 ?? Status(text: "にゃにゃーーーおん", createdAt: "99日前", user: User(name: "エラー猫さん", screenName: "neko_error", profileImageUrlHttps: nil))
+                    return $0 ?? Status(id: 2828, text: "にゃにゃーーーおん", createdAt: "99日前", user: User(name: "エラー猫さん", screenName: "neko_error", profileImageUrlHttps: nil))
                 }
                 .bind(to: _postedStatus)
                 .disposed(by: self.disposeBag)
@@ -168,7 +168,8 @@ class TweetsRepository: BaseTweetsRepository {
     
     private func toNyanNyan(rawTweets: [Status]?) -> [NyanNyan] {
         return rawTweets?.map {
-            NyanNyan(profileUrl: $0.user.profileImageUrlHttps,
+            NyanNyan(id: $0.id,
+                     profileUrl: $0.user.profileImageUrlHttps,
                      userName: $0.user.name,
                      userId: ("@" + $0.user.screenName),
                      nyanedAt: TwitterDateFormatter().getNyanNyanTimeStamp(apiTimeStamp: $0.createdAt),

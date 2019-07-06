@@ -10,6 +10,7 @@ import Foundation
 import Differentiator
 
 struct NyanNyan: Equatable {
+    let id: Int
     let profileUrl: String?
     let userName: String
     let userId: String

@@ -75,7 +75,8 @@ class HomeTimelineViewController: UIViewController {
             .map { NyanNyanSection(items: $0, idSuffix: "main") }
 
         let loadingObservable = output.isInfiniteLoading
-            .map { $0 ? [NyanNyan(profileUrl: nil,
+            .map { $0 ? [NyanNyan(id: 282828,
+                profileUrl: nil,
                 userName: "LoadingName",
                 userId: "LoadingId",
                 nyanedAt: "LoadingNyan",
