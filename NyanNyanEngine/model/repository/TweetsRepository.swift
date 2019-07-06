@@ -90,11 +90,12 @@ class TweetsRepository: BaseTweetsRepository {
         }
         
         self.infiniteScrollExecutedAt = AnyObserver<(() -> Void)> { stopActivityIndicator in
-            //TODO: 表示中ツイートのもっとも古いIDが動的に設定されるようにする
-            self.getHomeTimeLine(maxId: "1147106841010135040")
+            self.getHomeTimeLine(maxId: String(self.currentMinId))
                 .map { [unowned self] in
                     self.updateMin(statuses: $0)
-                    return $0
+                    var additive = $0
+                    additive?.removeFirst()
+                    return additive
                 }
                 .map { (_statuses.value ?? []) + ($0 ?? []) }
                 .bind(to: _statuses)
