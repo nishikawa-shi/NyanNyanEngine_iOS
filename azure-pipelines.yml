@@ -13,6 +13,8 @@ pool:
 steps:
 - bash: 'ls -latr'
   displayName: 'file list up'
+- bash: 'xcrun instruments -s'
+  displayName: 'device check'
 - bash: 'curl https://nyannyanengine-ios-d.firebaseapp.com/circleci/ApiKeys.plist > NyanNyanEngine/ApiKeys.plist'
   displayName: 'make ignored ApiKeys.plist'
 - bash: curl https://nyannyanengine-ios-d.firebaseapp.com/circleci/GoogleService-Info.plist > NyanNyanEngine/GoogleService-Info.plist
@@ -23,9 +25,11 @@ steps:
   displayName: library introduction
 - task: Xcode@5
   inputs:
-    actions: 'build'
+    actions: 'build test'
     scheme: 'NyanNyanEngine'
     sdk: 'iphoneos'
-    configuration: 'Release'
+    configuration: 'Debug'
     xcWorkspacePath: 'NyanNyanEngine.xcworkspace'
     xcodeVersion: 'default'
+    destinationPlatformOption: 'iOS'
+    destinationDevices: 'iPhone Xs Max'
