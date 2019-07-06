@@ -93,6 +93,10 @@ final class HomeTimelineViewModel: HomeTimelineViewModelInput, HomeTimelineViewM
             self.loadingStatusRepository
                 .infiniteLoadingStatusChangedTo
                 .onNext(true)
+            
+            self.tweetsRepository
+                .infiniteScrollExecutedAt?
+                .onNext { self.loadingStatusRepository.infiniteLoadingStatusChangedTo.onNext(false) }
         }
         
         self.cellTapExecutedOn = AnyObserver<IndexPath>() { [unowned self] in

@@ -15,6 +15,7 @@ protocol BaseTweetsRepository: AnyObject {
     var postedStatus: Observable<Status?> { get }
     var buttonRefreshExecutedAt: AnyObserver<(() -> Void)>? { get }
     var pullToRefreshExecutedAt: AnyObserver<UIRefreshControl?>? { get }
+    var infiniteScrollExecutedAt: AnyObserver<(() -> Void)>? { get }
     var nekogoToggleExecutedAt: AnyObserver<IndexPath>? { get }
     var postExecutedAs: AnyObserver<String?>? { get }
 }
@@ -30,6 +31,7 @@ class TweetsRepository: BaseTweetsRepository {
     let postedStatus: Observable<Status?>
     var buttonRefreshExecutedAt: AnyObserver<(() -> Void)>? = nil
     var pullToRefreshExecutedAt: AnyObserver<UIRefreshControl?>? = nil
+    var infiniteScrollExecutedAt: AnyObserver<(() -> Void)>? = nil
     var nekogoToggleExecutedAt: AnyObserver<IndexPath>? = nil
     var postExecutedAs: AnyObserver<String?>? = nil
     
@@ -83,6 +85,16 @@ class TweetsRepository: BaseTweetsRepository {
                 .disposed(by: self.disposeBag)
         }
         
+        self.infiniteScrollExecutedAt = AnyObserver<(() -> Void)> { stopActivityIndicator in
+            //TODO: 表示中ツイートのもっとも古いIDが動的に設定されるようにする
+            self.getHomeTimeLine(maxId: "1147106841010135040")
+                .subscribe() {
+                    print("request shitayo")
+                    print($0)
+                    print("request owatta")
+                }.disposed(by: self.disposeBag)
+        }
+        
         self.nekogoToggleExecutedAt = AnyObserver<IndexPath> {
             guard let row = $0.element?.row else { return }
             var statuses = _statuses.value
@@ -115,6 +127,25 @@ class TweetsRepository: BaseTweetsRepository {
                                                accessTokenSecret: accessTokenSecret,
                                                accessToken: accessToken).createHomeTimelineRequest() else {
                                                 uiRefreshControl?.endRefreshing()
+                                                return Observable<[NyanNyan]?>.just(DefaultNekosan().nyanNyanStatuses)}
+        
+        return self.apiClient
+            .executeHttpRequest(urlRequest: urlRequest)
+            .map { [unowned self] in self.toStatuses(data: $0) }
+            .map { [unowned self] in self.toNyanNyan(rawTweets: $0) }
+    }
+    
+    private func getHomeTimeLine(maxId: String) -> Observable<[NyanNyan]?> {
+        //TODO: getHomeTimeLine()と共通化
+        guard let apiKey = PlistConnector.shared.getApiKey(),
+            let apiSecret = PlistConnector.shared.getApiSecret(),
+            let accessToken = UserDefaultsConnector.shared.getString(withKey: "oauth_token"),
+            let accessTokenSecret = UserDefaultsConnector.shared.getString(withKey: "oauth_token_secret"),
+            let urlRequest = ApiRequestFactory(apiKey: apiKey,
+                                               apiSecret: apiSecret,
+                                               oauthNonce: "0000",
+                                               accessTokenSecret: accessTokenSecret,
+                                               accessToken: accessToken).createHomeTimelineRequest(maxId: maxId) else {
                                                 return Observable<[NyanNyan]?>.just(DefaultNekosan().nyanNyanStatuses)}
         
         return self.apiClient

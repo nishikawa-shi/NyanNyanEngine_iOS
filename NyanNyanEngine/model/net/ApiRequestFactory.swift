@@ -62,6 +62,17 @@ class ApiRequestFactory: BaseApiRequestFactory {
                                       requestMethod: "GET")
     }
     
+    func createHomeTimelineRequest(maxId: String) -> URLRequest? {
+        //TODO: createHomeTimelineRequest()と共通化
+        params.append((key: "max_id", value: maxId))
+        let query = "?max_id=" + maxId
+        let fullPath = homeTimelineApiUrl + query
+        
+        return createSignedUrlRequest(baseUrlStr: homeTimelineApiUrl,
+                                      urlStr: fullPath,
+                                      requestMethod: "GET")
+    }
+    
     func createRequestTokenRequest() -> URLRequest? {
         params.append((key: "oauth_callback", value: callBackUrl))
         return createSignedUrlRequest(baseUrlStr: requestTokenApiUrl,
