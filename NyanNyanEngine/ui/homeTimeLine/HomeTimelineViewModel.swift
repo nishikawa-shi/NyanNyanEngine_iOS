@@ -107,8 +107,11 @@ final class HomeTimelineViewModel: HomeTimelineViewModelInput, HomeTimelineViewM
                     .nekogoToggleExecutedAt?
                     .onNext(index)
             
+            case 1:
+                //ローディングのセルがタップされても、何もしない
+                return
+                
             default:
-                //ローディングのせるの選択解除をするための処理
                 return
             }
         }
