@@ -27,6 +27,8 @@ class TweetsRepository: BaseTweetsRepository {
     private let apiClient: BaseApiClient
     private let userDefaultsConnector: BaseUserDefaultsConnector
     
+    private var currentMinId = Int.max
+    
     let nyanNyanStatuses: Observable<[NyanNyan]?>
     let postedStatus: Observable<Status?>
     var buttonRefreshExecutedAt: AnyObserver<(() -> Void)>? = nil
@@ -48,12 +50,13 @@ class TweetsRepository: BaseTweetsRepository {
         
         self.buttonRefreshExecutedAt = AnyObserver<(() -> Void)> { [unowned self] stopActivityIndicator in
             self.getHomeTimeLine()
-                .map {
+                .map { [unowned self] in
                     stopActivityIndicator.element?()
                     
                     guard let statusValueResponse = $0 else {
                         return _statuses.value ?? []
                     }
+                    self.updateMin(statuses: statusValueResponse)
                     
                     if(statusValueResponse.isEmpty) {
                         return _statuses.value ?? []
@@ -67,7 +70,7 @@ class TweetsRepository: BaseTweetsRepository {
         
         self.pullToRefreshExecutedAt = AnyObserver<UIRefreshControl?> { [unowned self] uiRefreshControl in
             self.getHomeTimeLine()
-                .map {
+                .map { [unowned self] in
                     sleep(1)
                     uiRefreshControl.element??.endRefreshing()
                     
@@ -78,6 +81,7 @@ class TweetsRepository: BaseTweetsRepository {
                     if(statusValueResponse.isEmpty) {
                         return _statuses.value ?? []
                     }
+                    self.updateMin(statuses: statusValueResponse)
                     
                     return statusValueResponse
                 }
@@ -88,6 +92,10 @@ class TweetsRepository: BaseTweetsRepository {
         self.infiniteScrollExecutedAt = AnyObserver<(() -> Void)> { stopActivityIndicator in
             //TODO: 表示中ツイートのもっとも古いIDが動的に設定されるようにする
             self.getHomeTimeLine(maxId: "1147106841010135040")
+                .map { [unowned self] in
+                    self.updateMin(statuses: $0)
+                    return $0
+                }
                 .map { (_statuses.value ?? []) + ($0 ?? []) }
                 .bind(to: _statuses)
                 .disposed(by: self.disposeBag)
@@ -150,6 +158,14 @@ class TweetsRepository: BaseTweetsRepository {
         return self.apiClient
             .executeHttpRequest(urlRequest: urlRequest)
             .map { [unowned self] in self.toStatus(data: $0)}
+    }
+    
+    private func updateMin(statuses: [NyanNyan]?) {
+        guard let statuses = statuses,
+            let minId = statuses.map({$0.id}).min() else { return }
+        if(minId < self.currentMinId) {
+            self.currentMinId = minId
+        }
     }
     
     private func toStatuses(data: Data?) -> [Status]? {
