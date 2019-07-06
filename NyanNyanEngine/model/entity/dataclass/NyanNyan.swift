@@ -20,7 +20,7 @@ struct NyanNyan: Equatable {
     var isNekogo: Bool = true
 }
 extension NyanNyan: IdentifiableType {
-    var identity: String {
-        return [ningengo, userId].joined()
+    var identity: Int {
+        return id
     }
 }
