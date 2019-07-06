@@ -62,9 +62,11 @@ class HomeTimelineViewController: UIViewController {
             .bind(to: input.cellTapExecutedOn!)
             .disposed(by: disposeBag)
         
-        let prefetchRatio = 0.6
+        let prefetchRatio = 0.95
+        let prefetchOffset: CGFloat = tweetList.frame.size.height
         tweetList.rx.contentOffset
-            .filter { $0.y > (self.tweetList.frame.size.height * CGFloat(prefetchRatio))}
+            .filter {
+                return ($0.y + prefetchOffset) > (self.tweetList.contentSize.height * CGFloat(prefetchRatio))}
             .throttle(DispatchTimeInterval.seconds(3), latest: false, scheduler: ConcurrentMainScheduler.instance)
             .map { _ in return "9999/12/31 23:59:59" }
             .bind(to: input.infiniteScrollExecutedAt!)

@@ -60,7 +60,8 @@ class ApiRequestFactory: BaseApiRequestFactory {
         var query = ""
         if let maxId = maxId {
             params.append((key: "max_id", value: maxId))
-            query += ("?max_id=" + maxId)
+            params.append((key: "count", value: "200"))
+            query += ("?max_id=" + maxId + "&count=200")
         }
         let fullPath = homeTimelineApiUrl + query
         
