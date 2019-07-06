@@ -76,7 +76,9 @@ final class HomeTimelineViewModel: HomeTimelineViewModelInput, HomeTimelineViewM
             
             self.tweetsRepository
                 .buttonRefreshExecutedAt?
-                .onNext() { self.loadingStatusRepository.loadingStatusChangedTo.onNext(false) }
+                .onNext() { [unowned self] in
+                    self.loadingStatusRepository.loadingStatusChangedTo.onNext(false)
+            }
         }
         
         self.pullToRefreshExecutedAt = AnyObserver<UIRefreshControl>() { [unowned self] uiRefreshControl in
@@ -96,7 +98,9 @@ final class HomeTimelineViewModel: HomeTimelineViewModelInput, HomeTimelineViewM
             
             self.tweetsRepository
                 .infiniteScrollExecutedAt?
-                .onNext { self.loadingStatusRepository.infiniteLoadingStatusChangedTo.onNext(false) }
+                .onNext { [unowned self] in
+                    self.loadingStatusRepository.infiniteLoadingStatusChangedTo.onNext(false)
+            }
         }
         
         self.cellTapExecutedOn = AnyObserver<IndexPath>() { [unowned self] in
