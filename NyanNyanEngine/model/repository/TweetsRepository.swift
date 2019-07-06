@@ -93,8 +93,10 @@ class TweetsRepository: BaseTweetsRepository {
             self.getHomeTimeLine(maxId: String(self.currentMinId))
                 .map { [unowned self] in
                     self.updateMin(statuses: $0)
-                    var additive = $0
-                    additive?.removeFirst()
+                    guard var additive = $0 else { return $0 }
+                    if(!additive.isEmpty) {
+                        additive.removeFirst()
+                    }
                     return additive
                 }
                 .map { (_statuses.value ?? []) + ($0 ?? []) }
