@@ -75,18 +75,18 @@ class HomeTimelineViewController: UIViewController {
         let tweetObservable = output.nyanNyanStatuses
             .flatMap{ $0.flatMap { Observable<[NyanNyan]>.just($0) } ?? Observable<[NyanNyan]>.empty() }
             .map { NyanNyanSection(items: $0, idSuffix: "main") }
-
+        
         let loadingObservable = output.isInfiniteLoading
             .map { $0 ? [NyanNyan(id: 282828,
-                profileUrl: nil,
-                userName: "LoadingName",
-                userId: "LoadingId",
-                nyanedAt: "LoadingNyan",
-                nekogo: "LoadingNekogo",
-                ningengo: "LoadingNingengo",
-                isNekogo: true)] : []}
+                                  profileUrl: nil,
+                                  userName: "LoadingName",
+                                  userId: "LoadingId",
+                                  nyanedAt: "LoadingNyan",
+                                  nekogo: "LoadingNekogo",
+                                  ningengo: "LoadingNingengo",
+                                  isNekogo: true)] : []}
             .map { NyanNyanSection(items: $0, idSuffix: "infiniteLoading") }
-
+        
         Observable.combineLatest(tweetObservable, loadingObservable)
             .map { return [$0, $1] }
             .bind(to: tweetList.rx.items(dataSource: DataSourceFactory.shared.createTweetSummary()))

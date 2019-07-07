@@ -90,6 +90,7 @@ class TweetsRepository: BaseTweetsRepository {
         }
         
         self.infiniteScrollExecutedAt = AnyObserver<(() -> Void)> { stopActivityIndicator in
+            let currentStatuses = _statuses.value ?? []
             self.getHomeTimeLine(maxId: String(self.currentMinId))
                 .map { [unowned self] in
                     stopActivityIndicator.element?()
@@ -100,7 +101,7 @@ class TweetsRepository: BaseTweetsRepository {
                     }
                     return additive
                 }
-                .map { (_statuses.value ?? []) + ($0 ?? []) }
+                .map { currentStatuses + ($0 ?? []) }
                 .bind(to: _statuses)
                 .disposed(by: self.disposeBag)
         }
