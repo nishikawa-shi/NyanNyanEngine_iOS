@@ -33,6 +33,7 @@
 		6767B0D022791033008913EA /* TweetsRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6767B0CF22791033008913EA /* TweetsRepository.swift */; };
 		6767B0D322791745008913EA /* ApiClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6767B0D222791745008913EA /* ApiClient.swift */; };
 		6776339E22B60F6500D9CCC3 /* NyanNyanSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6776339D22B60F6500D9CCC3 /* NyanNyanSection.swift */; };
+		677D5BF522E2F250007381E6 /* PostNekogo.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 677D5BF422E2F250007381E6 /* PostNekogo.storyboard */; };
 		678E360E229A9E7600CBBCCC /* R.generated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 678E360D229A9E7600CBBCCC /* R.generated.swift */; };
 		678E3614229A9F9200CBBCCC /* StringValues.strings in Resources */ = {isa = PBXBuildFile; fileRef = 678E3616229A9F9200CBBCCC /* StringValues.strings */; };
 		678E361F229AD6EE00CBBCCC /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 678E3621229AD6EE00CBBCCC /* InfoPlist.strings */; };
@@ -103,6 +104,7 @@
 		6767B0CF22791033008913EA /* TweetsRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TweetsRepository.swift; sourceTree = "<group>"; };
 		6767B0D222791745008913EA /* ApiClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApiClient.swift; sourceTree = "<group>"; };
 		6776339D22B60F6500D9CCC3 /* NyanNyanSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NyanNyanSection.swift; sourceTree = "<group>"; };
+		677D5BF422E2F250007381E6 /* PostNekogo.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = PostNekogo.storyboard; sourceTree = "<group>"; };
 		678E360D229A9E7600CBBCCC /* R.generated.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = R.generated.swift; sourceTree = SOURCE_ROOT; };
 		678E3615229A9F9200CBBCCC /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/StringValues.strings; sourceTree = "<group>"; };
 		678E3617229A9FC700CBBCCC /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/Main.strings; sourceTree = "<group>"; };
@@ -366,6 +368,7 @@
 			children = (
 				67E3C4D3228E2F6900B93E1D /* PostNekogoViewController.swift */,
 				67A1AAA1228FF0B700BF640A /* PostNekogoViewModel.swift */,
+				677D5BF422E2F250007381E6 /* PostNekogo.storyboard */,
 			);
 			path = postNekogo;
 			sourceTree = "<group>";
@@ -498,6 +501,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				67666172227527FF004C886C /* LaunchScreen.storyboard in Resources */,
+				677D5BF522E2F250007381E6 /* PostNekogo.storyboard in Resources */,
 				678E361F229AD6EE00CBBCCC /* InfoPlist.strings in Resources */,
 				679A5E67227B3E960043D0E1 /* ApiKeys.plist in Resources */,
 				672C882A2283A54B00312408 /* GoogleService-Info.plist in Resources */,
