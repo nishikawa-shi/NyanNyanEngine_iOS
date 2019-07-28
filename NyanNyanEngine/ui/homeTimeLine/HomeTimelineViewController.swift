@@ -126,6 +126,7 @@ class HomeTimelineViewController: UIViewController {
             }
             .disposed(by: disposeBag)
         
+        tweetList.register(UINib(nibName: "TweetSummaryCell", bundle: nil), forCellReuseIdentifier: "TweetSummaryCell")
         tweetList.refreshControl = UIRefreshControl()
         tweetList.refreshControl?.addTarget(self, action: #selector(self.refresh(sender:)), for: .valueChanged)
         tweetList.rowHeight = UITableView.automaticDimension

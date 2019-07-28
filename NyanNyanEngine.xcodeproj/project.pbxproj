@@ -23,6 +23,7 @@
 		672FA83E227BE17E00BAB1A7 /* AppDelegateModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 672FA83D227BE17E00BAB1A7 /* AppDelegateModel.swift */; };
 		6734D7F32279803200A19044 /* TweetSummaryCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6734D7F22279803200A19044 /* TweetSummaryCell.swift */; };
 		67392B0D227AF07900D5E77C /* AuthRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67392B0C227AF07900D5E77C /* AuthRepository.swift */; };
+		675A2E1E22E5CB5200290C14 /* TweetSummaryCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 675A2E1C22E5CB5200290C14 /* TweetSummaryCell.xib */; };
 		67666165227527FF004C886C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67666164227527FF004C886C /* AppDelegate.swift */; };
 		67666167227527FF004C886C /* HomeTimelineViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67666166227527FF004C886C /* HomeTimelineViewController.swift */; };
 		6766616A227527FF004C886C /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 67666168227527FF004C886C /* Main.storyboard */; };
@@ -88,6 +89,7 @@
 		672FA83D227BE17E00BAB1A7 /* AppDelegateModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegateModel.swift; sourceTree = "<group>"; };
 		6734D7F22279803200A19044 /* TweetSummaryCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TweetSummaryCell.swift; sourceTree = "<group>"; };
 		67392B0C227AF07900D5E77C /* AuthRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthRepository.swift; sourceTree = "<group>"; };
+		675A2E1C22E5CB5200290C14 /* TweetSummaryCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TweetSummaryCell.xib; sourceTree = "<group>"; };
 		67666161227527FF004C886C /* NyanNyanEngine.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NyanNyanEngine.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		67666164227527FF004C886C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		67666166227527FF004C886C /* HomeTimelineViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeTimelineViewController.swift; sourceTree = "<group>"; };
@@ -220,6 +222,7 @@
 		6734D7F12279800C00A19044 /* view */ = {
 			isa = PBXGroup;
 			children = (
+				675A2E1C22E5CB5200290C14 /* TweetSummaryCell.xib */,
 				6734D7F22279803200A19044 /* TweetSummaryCell.swift */,
 				670777FD22B61CE30057B457 /* DataSourceFactory.swift */,
 				67B787E422C8427400BDC612 /* LoadingCell.swift */,
@@ -501,6 +504,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				67666172227527FF004C886C /* LaunchScreen.storyboard in Resources */,
+				675A2E1E22E5CB5200290C14 /* TweetSummaryCell.xib in Resources */,
 				677D5BF522E2F250007381E6 /* PostNekogo.storyboard in Resources */,
 				678E361F229AD6EE00CBBCCC /* InfoPlist.strings in Resources */,
 				679A5E67227B3E960043D0E1 /* ApiKeys.plist in Resources */,
