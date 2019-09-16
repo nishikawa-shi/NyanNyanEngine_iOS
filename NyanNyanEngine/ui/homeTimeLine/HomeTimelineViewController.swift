@@ -34,12 +34,12 @@ class HomeTimelineViewController: UIViewController {
         super.init(coder: aDecoder)
     }
     
-    @IBOutlet weak var navigationBar: UINavigationItem!
-    @IBOutlet weak var authButton: UIBarButtonItem!
-    @IBOutlet weak var refreshButton: UIBarButtonItem!
-    @IBOutlet weak var tweetList: UITableView!
-    @IBOutlet weak var noticeToast: UILabel!
-    @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
+    @IBOutlet private weak var navigationBar: UINavigationItem!
+    @IBOutlet private weak var authButton: UIBarButtonItem!
+    @IBOutlet private weak var refreshButton: UIBarButtonItem!
+    @IBOutlet private weak var tweetList: UITableView!
+    @IBOutlet private weak var noticeToast: UILabel!
+    @IBOutlet private weak var activityIndicator: UIActivityIndicatorView!
     
     override func viewDidLoad() {
         super.viewDidLoad()

@@ -29,12 +29,12 @@ class PostNekogoViewController: UIViewController {
         super.init(coder: aDecoder)
     }
     
-    @IBOutlet weak var originalText: UITextView!
-    @IBOutlet weak var nekogoText: UILabel!
-    @IBOutlet weak var tweetButton: UIButton!
-    @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
+    @IBOutlet private weak var originalText: UITextView!
+    @IBOutlet private weak var nekogoText: UILabel!
+    @IBOutlet private weak var tweetButton: UIButton!
+    @IBOutlet private weak var activityIndicator: UIActivityIndicatorView!
     
-    @IBAction func touchCancelAction(_ sender: UIBarButtonItem) {
+    @IBAction private func touchCancelAction(_ sender: UIBarButtonItem) {
         self.dismiss(animated: true, completion: nil)
     }
     
