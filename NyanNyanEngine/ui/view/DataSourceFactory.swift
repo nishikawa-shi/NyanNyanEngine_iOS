@@ -8,7 +8,6 @@
 
 import Foundation
 import RxDataSources
-import Nuke
 
 class DataSourceFactory {
     static let shared = DataSourceFactory()
@@ -21,21 +20,12 @@ class DataSourceFactory {
                 switch(indexPath.section) {
                 case 0:
                     let cell = tableView.dequeueReusableCell(withIdentifier: "TweetSummaryCell", for: indexPath) as! TweetSummaryCell
-                    
-                    item.profileUrl
-                        .flatMap({ URL(string: $0) })
-                        .map({ Nuke.loadImage(with: $0, into: cell.userImage)
-                            return
-                        })
-                    cell.userName?.text = item.userName
-                    cell.userId?.text = item.userId
-                    cell.publishedAt?.text = item.nyanedAt
-                    cell.tweetBody?.text = item.isNekogo ? item.nekogo : item.ningengo
+                    cell.configure(nyanNyan: item)
                     return cell
                     
                 case 1:
                     let cell = tableView.dequeueReusableCell(withIdentifier: "LoadingCell", for: indexPath) as! LoadingCell
-                    cell.infiniteLoadIndicator.startAnimating()
+                    cell.startAnimating()
                     return cell
                     
                 default:

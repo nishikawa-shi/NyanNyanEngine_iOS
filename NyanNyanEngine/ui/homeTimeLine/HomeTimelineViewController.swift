@@ -34,15 +34,16 @@ class HomeTimelineViewController: UIViewController {
         super.init(coder: aDecoder)
     }
     
-    @IBOutlet weak var navigationBar: UINavigationItem!
-    @IBOutlet weak var authButton: UIBarButtonItem!
-    @IBOutlet weak var refreshButton: UIBarButtonItem!
-    @IBOutlet weak var tweetList: UITableView!
-    @IBOutlet weak var noticeToast: UILabel!
-    @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
+    @IBOutlet private weak var navigationBar: UINavigationItem!
+    @IBOutlet private weak var authButton: UIBarButtonItem!
+    @IBOutlet private weak var refreshButton: UIBarButtonItem!
+    @IBOutlet private weak var tweetList: UITableView!
+    @IBOutlet private weak var noticeToast: UILabel!
+    @IBOutlet private weak var activityIndicator: UIActivityIndicatorView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.configureTweetList()
         self.registerAddToSiriActivity()
         
         authButton.rx.tap
@@ -126,15 +127,19 @@ class HomeTimelineViewController: UIViewController {
             }
             .disposed(by: disposeBag)
         
-        tweetList.refreshControl = UIRefreshControl()
-        tweetList.refreshControl?.addTarget(self, action: #selector(self.refresh(sender:)), for: .valueChanged)
-        tweetList.rowHeight = UITableView.automaticDimension
-        
         input.buttonRefreshExecutedAt?.onNext("2019/04/30 12:12:12")
     }
     
     @objc func refresh(sender: UIRefreshControl) {
         input.pullToRefreshExecutedAt?.onNext(sender)
+    }
+    
+    private func configureTweetList() {
+        tweetList.register(UINib(nibName: "TweetSummaryCell", bundle: nil), forCellReuseIdentifier: "TweetSummaryCell")
+        tweetList.register(UINib(nibName: "LoadingCell", bundle: nil), forCellReuseIdentifier: "LoadingCell")
+        tweetList.refreshControl = UIRefreshControl()
+        tweetList.refreshControl?.addTarget(self, action: #selector(self.refresh(sender:)), for: .valueChanged)
+        tweetList.rowHeight = UITableView.automaticDimension
     }
     
     private func registerAddToSiriActivity() {
