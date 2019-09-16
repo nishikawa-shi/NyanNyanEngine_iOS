@@ -33,6 +33,7 @@
 		67666188227527FF004C886C /* NyanNyanEngineUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67666187227527FF004C886C /* NyanNyanEngineUITests.swift */; };
 		6767B0D022791033008913EA /* TweetsRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6767B0CF22791033008913EA /* TweetsRepository.swift */; };
 		6767B0D322791745008913EA /* ApiClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6767B0D222791745008913EA /* ApiClient.swift */; };
+		676DDFAF232F381D00C65FAD /* LoadingCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 676DDFAE232F381D00C65FAD /* LoadingCell.xib */; };
 		6776339E22B60F6500D9CCC3 /* NyanNyanSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6776339D22B60F6500D9CCC3 /* NyanNyanSection.swift */; };
 		677D5BF522E2F250007381E6 /* PostNekogo.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 677D5BF422E2F250007381E6 /* PostNekogo.storyboard */; };
 		678E360E229A9E7600CBBCCC /* R.generated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 678E360D229A9E7600CBBCCC /* R.generated.swift */; };
@@ -105,6 +106,7 @@
 		67666189227527FF004C886C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		6767B0CF22791033008913EA /* TweetsRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TweetsRepository.swift; sourceTree = "<group>"; };
 		6767B0D222791745008913EA /* ApiClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApiClient.swift; sourceTree = "<group>"; };
+		676DDFAE232F381D00C65FAD /* LoadingCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = LoadingCell.xib; sourceTree = "<group>"; };
 		6776339D22B60F6500D9CCC3 /* NyanNyanSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NyanNyanSection.swift; sourceTree = "<group>"; };
 		677D5BF422E2F250007381E6 /* PostNekogo.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = PostNekogo.storyboard; sourceTree = "<group>"; };
 		678E360D229A9E7600CBBCCC /* R.generated.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = R.generated.swift; sourceTree = SOURCE_ROOT; };
@@ -222,9 +224,10 @@
 		6734D7F12279800C00A19044 /* view */ = {
 			isa = PBXGroup;
 			children = (
+				670777FD22B61CE30057B457 /* DataSourceFactory.swift */,
 				675A2E1C22E5CB5200290C14 /* TweetSummaryCell.xib */,
 				6734D7F22279803200A19044 /* TweetSummaryCell.swift */,
-				670777FD22B61CE30057B457 /* DataSourceFactory.swift */,
+				676DDFAE232F381D00C65FAD /* LoadingCell.xib */,
 				67B787E422C8427400BDC612 /* LoadingCell.swift */,
 			);
 			path = view;
@@ -508,6 +511,7 @@
 				677D5BF522E2F250007381E6 /* PostNekogo.storyboard in Resources */,
 				678E361F229AD6EE00CBBCCC /* InfoPlist.strings in Resources */,
 				679A5E67227B3E960043D0E1 /* ApiKeys.plist in Resources */,
+				676DDFAF232F381D00C65FAD /* LoadingCell.xib in Resources */,
 				672C882A2283A54B00312408 /* GoogleService-Info.plist in Resources */,
 				6766616F227527FF004C886C /* Assets.xcassets in Resources */,
 				6766616A227527FF004C886C /* Main.storyboard in Resources */,
