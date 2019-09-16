@@ -9,6 +9,9 @@
 import UIKit
 
 class LoadingCell: UITableViewCell {
+    @IBOutlet private weak var infiniteLoadIndicator: UIActivityIndicatorView!
     
-    @IBOutlet weak var infiniteLoadIndicator: UIActivityIndicatorView!
+    func startAnimating() {
+        infiniteLoadIndicator.startAnimating()
+    }
 }
