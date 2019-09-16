@@ -1,132 +1,49 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14810.11" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BTe-GT-HhB">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14810.11" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Uai-ip-d6J">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14766.13"/>
-        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--Cat-san viewer-->
-        <scene sceneID="tne-QT-ifu">
+        <!--Main View Controller-->
+        <scene sceneID="faI-KN-FZI">
             <objects>
-                <viewController id="BYZ-38-t0r" customClass="HomeTimelineViewController" customModule="NyanNyanEngine" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsVerticalScrollIndicator="NO" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="96" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="lwQ-LT-5Jj">
-                                <rect key="frame" x="0.0" y="88" width="414" height="774"/>
-                                <color key="backgroundColor" red="0.99215686270000003" green="0.96470588239999999" blue="0.89019607840000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                            </tableView>
-                            <activityIndicatorView hidden="YES" opaque="NO" alpha="0.5" tag="900" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" animating="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="rhv-87-lQP">
-                                <rect key="frame" x="159" y="427" width="96" height="96"/>
-                                <color key="backgroundColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="96" id="TYp-Hy-0lp"/>
-                                    <constraint firstAttribute="height" constant="96" id="VdJ-6c-IuQ"/>
-                                </constraints>
-                            </activityIndicatorView>
-                            <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6AZ-pe-SGn" userLabel="Tweet Succeeded Label">
-                                <rect key="frame" x="32" y="704.5" width="350" height="89.5"/>
-                                <color key="backgroundColor" red="0.57647058823529407" green="0.63137254901960782" blue="0.63137254901960782" alpha="1" colorSpace="calibratedRGB"/>
-                                <string key="text">にゃーおんにゃーおんにゃーおん
-にゃんにゃにゃ！</string>
-                                <fontDescription key="fontDescription" name=".HiraKakuInterface-W3" family=".Hiragino Kaku Gothic Interface" pointSize="17"/>
-                                <color key="textColor" red="0.0" green="0.16862745100000001" blue="0.21176470589999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <nil key="highlightedColor"/>
-                                <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
-                                        <integer key="value" value="8"/>
-                                    </userDefinedRuntimeAttribute>
-                                    <userDefinedRuntimeAttribute type="boolean" keyPath="clipsToBounds" value="YES"/>
-                                </userDefinedRuntimeAttributes>
-                            </label>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="XSn-hL-U1p">
-                                <rect key="frame" x="381" y="810" width="1" height="20"/>
-                                <fontDescription key="fontDescription" name=".AppleSystemUIFont" family=".AppleSystemUIFont" pointSize="18"/>
-                                <size key="titleShadowOffset" width="96" height="96"/>
-                                <state key="normal" image="PostButton"/>
-                                <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="boolean" keyPath="layer.masksToBounds" value="NO"/>
-                                    <userDefinedRuntimeAttribute type="color" keyPath="layer.shadowIBColor">
-                                        <color key="value" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                    </userDefinedRuntimeAttribute>
-                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.shadowOpacity">
-                                        <real key="value" value="0.20000000000000001"/>
-                                    </userDefinedRuntimeAttribute>
-                                    <userDefinedRuntimeAttribute type="size" keyPath="layer.shadowOffset">
-                                        <size key="value" width="0.0" height="0.0"/>
-                                    </userDefinedRuntimeAttribute>
-                                </userDefinedRuntimeAttributes>
-                                <connections>
-                                    <segue destination="V12-kJ-dCK" kind="presentation" id="PFi-Pn-7eK"/>
-                                </connections>
-                            </button>
-                        </subviews>
-                        <color key="backgroundColor" red="0.99215686274509807" green="0.96470588235294119" blue="0.8901960784313725" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                        <constraints>
-                            <constraint firstItem="lwQ-LT-5Jj" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="H2h-n9-A18"/>
-                            <constraint firstItem="rhv-87-lQP" firstAttribute="centerY" secondItem="6Tk-OE-BBY" secondAttribute="centerY" id="Kh7-98-mCb"/>
-                            <constraint firstItem="rhv-87-lQP" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" id="MWP-XE-wYU"/>
-                            <constraint firstItem="6AZ-pe-SGn" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="32" id="O5P-i3-4MB"/>
-                            <constraint firstItem="lwQ-LT-5Jj" firstAttribute="bottom" secondItem="6Tk-OE-BBY" secondAttribute="bottom" id="R4M-jv-8A9"/>
-                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="XSn-hL-U1p" secondAttribute="trailing" constant="32" id="Xa6-gt-Rff"/>
-                            <constraint firstItem="6AZ-pe-SGn" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" constant="-32" id="Z6p-oG-HMQ"/>
-                            <constraint firstItem="6AZ-pe-SGn" firstAttribute="bottom" secondItem="XSn-hL-U1p" secondAttribute="top" constant="-16" id="fGC-Lr-GLV"/>
-                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="XSn-hL-U1p" secondAttribute="bottom" constant="32" id="lHT-N9-4hP"/>
-                            <constraint firstItem="lwQ-LT-5Jj" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="rtz-Do-JXE"/>
-                            <constraint firstItem="6AZ-pe-SGn" firstAttribute="height" secondItem="8bC-Xf-vdC" secondAttribute="height" multiplier="0.1" id="sKs-no-5gB"/>
-                            <constraint firstItem="lwQ-LT-5Jj" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="zlg-oP-Ayk"/>
-                        </constraints>
-                        <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
-                    </view>
-                    <navigationItem key="navigationItem" title="Cat-san viewer" id="iLU-59-H1k">
-                        <barButtonItem key="leftBarButtonItem" title="Login" id="p2V-y0-HXN" userLabel="Auth"/>
-                        <barButtonItem key="rightBarButtonItem" systemItem="refresh" id="qPq-1x-X5L" userLabel="Refresh"/>
-                    </navigationItem>
-                    <connections>
-                        <outlet property="activityIndicator" destination="rhv-87-lQP" id="dku-AD-Wj9"/>
-                        <outlet property="authButton" destination="p2V-y0-HXN" id="fHf-oh-usq"/>
-                        <outlet property="navigationBar" destination="iLU-59-H1k" id="DZW-Vg-cvu"/>
-                        <outlet property="noticeToast" destination="6AZ-pe-SGn" id="veH-DL-leg"/>
-                        <outlet property="refreshButton" destination="qPq-1x-X5L" id="M8u-ap-M8C"/>
-                        <outlet property="tweetList" destination="lwQ-LT-5Jj" id="Drh-V6-6L7"/>
-                    </connections>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="957.97101449275374" y="65.625"/>
-        </scene>
-        <!--Navigation Controller-->
-        <scene sceneID="EEO-D0-jEw">
-            <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="BTe-GT-HhB" sceneMemberID="viewController">
-                    <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="4fV-FZ-91x">
-                        <rect key="frame" x="0.0" y="44" width="414" height="44"/>
+                <tabBarController id="Uai-ip-d6J" customClass="MainViewController" customModule="NyanNyanEngine" customModuleProvider="target" sceneMemberID="viewController">
+                    <tabBar key="tabBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="BAO-74-xae">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="49"/>
                         <autoresizingMask key="autoresizingMask"/>
-                    </navigationBar>
-                    <nil name="viewControllers"/>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    </tabBar>
                     <connections>
-                        <segue destination="BYZ-38-t0r" kind="relationship" relationship="rootViewController" id="W71-tc-sYm"/>
+                        <segue destination="DgD-TJ-MFt" kind="relationship" relationship="viewControllers" id="Em0-1D-xkl"/>
+                        <segue destination="PIt-g2-xmx" kind="relationship" relationship="viewControllers" id="OFf-2p-SXy"/>
                     </connections>
-                </navigationController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="KRH-Pl-DIJ" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                </tabBarController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="sGr-GH-HXf" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="32" y="66"/>
+            <point key="canvasLocation" x="329" y="646"/>
         </scene>
-        <!--PostNekogo-->
-        <scene sceneID="gMy-9v-phe">
+        <!--HomeTimeline-->
+        <scene sceneID="YZM-eK-wkc">
             <objects>
-                <viewControllerPlaceholder storyboardName="PostNekogo" id="V12-kJ-dCK" sceneMemberID="viewController"/>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="J29-A8-UM6" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+                <viewControllerPlaceholder storyboardName="HomeTimeline" id="DgD-TJ-MFt" sceneMemberID="viewController">
+                    <tabBarItem key="tabBarItem" systemItem="recents" id="Pab-wk-Bd8"/>
+                </viewControllerPlaceholder>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="vuU-dW-9e5" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1704" y="66"/>
+            <point key="canvasLocation" x="113" y="1083"/>
+        </scene>
+        <!--Account-->
+        <scene sceneID="rpu-HG-nuK">
+            <objects>
+                <viewControllerPlaceholder storyboardName="Account" id="PIt-g2-xmx" sceneMemberID="viewController">
+                    <tabBarItem key="tabBarItem" systemItem="bookmarks" id="beD-Nf-3Kd"/>
+                </viewControllerPlaceholder>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="sGI-Wz-c5d" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="570" y="1083"/>
         </scene>
     </scenes>
-    <resources>
-        <image name="PostButton" width="64" height="64"/>
-    </resources>
 </document>
