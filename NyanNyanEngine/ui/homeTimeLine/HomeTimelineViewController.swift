@@ -155,7 +155,9 @@ class HomeTimelineViewController: UIViewController {
                 attributes.thumbnailData = UIImage(named: "NyanNyaSensei")?.pngData()
                 
                 self.addToSiriActivity.contentAttributeSet = attributes
-                self.userActivity = self.addToSiriActivity
+                DispatchQueue.main.async {
+                    self.userActivity = self.addToSiriActivity
+                }
             }
         }
     }
