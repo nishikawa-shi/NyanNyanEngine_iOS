@@ -13,6 +13,8 @@ import RxRelay
 protocol BaseAuthRepository: AnyObject {
     func downloadAccessToken(redirectedUrl: URL,
                              modelUpdateLogic: @escaping(() -> Void) ) -> Observable<Bool>
+    func invalidateAccessToken(modelUpdateLogic: @escaping(() -> Void) ) -> Observable<Bool>
+    
     func getRequestToken()
     func getLoggedInStatus() -> Bool
     
@@ -58,7 +60,6 @@ class AuthRepository: BaseAuthRepository {
             self.getCurrentUser()
                 .bind(to: _currentUser)
                 .disposed(by: self.disposeBag)
-            
         }
     }
     
@@ -74,6 +75,25 @@ class AuthRepository: BaseAuthRepository {
             .flatMap { $0.flatMap {Observable<URL>.just($0)} ?? Observable<URL>.empty() }
             .subscribe { [unowned self] in self._authPageUrl.accept($0.element) }
             .disposed(by: self.disposeBag)
+    }
+    
+    func invalidateAccessToken(modelUpdateLogic: @escaping (() -> Void)) -> Observable<Bool> {
+            guard let apiKey = PlistConnector.shared.getApiKey(),
+            let apiSecret = PlistConnector.shared.getApiSecret(),
+            let accessToken = UserDefaultsConnector.shared.getString(withKey: "oauth_token"),
+            let accessTokenSecret = UserDefaultsConnector.shared.getString(withKey: "oauth_token_secret"),
+            let urlRequest = ApiRequestFactory(apiKey: apiKey,
+                                               apiSecret: apiSecret,
+                                               oauthNonce: "0000",
+                                               accessTokenSecret: accessTokenSecret,
+                                               accessToken: accessToken).createInvalidateTokenRequest() else {
+                                                modelUpdateLogic()
+                                                return Observable<Bool>.empty()
+        }
+        //TODO: ローカルのアクセストークン情報を削除し、もらったクロージャをもとにモデルをアップデートする処理。
+        return self.apiClient
+            .executeHttpRequest(urlRequest: urlRequest)
+            .map { _ in true }
     }
     
     func downloadAccessToken(redirectedUrl: URL,
