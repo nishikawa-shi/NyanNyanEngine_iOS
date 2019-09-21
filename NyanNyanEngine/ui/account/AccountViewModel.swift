@@ -24,8 +24,8 @@ final class AccountViewModel: AccountViewModelInput, AccountViewModelOutput {
     private let loadingStatusRepository: LoadingStatusRepository
     private let disposeBag = DisposeBag()
     
-    let isLoading: Observable<Bool>
     var logoutExecutedAt: AnyObserver<String>? = nil
+    let isLoading: Observable<Bool>
     
     init(authRepository: BaseAuthRepository = AuthRepository.shared,
          tweetsRepository: BaseTweetsRepository = TweetsRepository.shared,
