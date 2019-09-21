@@ -14,7 +14,7 @@ class AccountViewController: UIViewController {
     
     //TODO: まともなUIのボタンができたら消す
     @IBAction func logoutButtonTapped(_ sender: Any) {
-        execLogout()
+        present(self.createLogoutActionSheet(), animated: true, completion: nil)
     }
     
     //ストーリーボードから呼ばれることが前提のクラスなので、こちらのイニシャライザは呼ばれない想定
@@ -31,7 +31,17 @@ class AccountViewController: UIViewController {
         super.init(coder: aDecoder)
     }
     
-    private func execLogout() {
-        self.input.logoutExecutedAt?.onNext("nya-on")
+    private func createLogoutActionSheet() -> UIAlertController {
+        let alert = UIAlertController(title: R.string.stringValues.logout_sheet_title(),
+                                      message: R.string.stringValues.logout_sheet_body(),
+                                      preferredStyle:  .actionSheet)
+        let logout = UIAlertAction(title: R.string.stringValues.logout_sheet_exec(), style: .destructive) { [unowned self] _ in
+            self.input.logoutExecutedAt?.onNext("nya-on")
+        }
+        let cancel = UIAlertAction(title: R.string.stringValues.logout_sheet_cancel(), style: .default)
+
+        alert.addAction(logout)
+        alert.addAction(cancel)
+        return alert
     }
 }

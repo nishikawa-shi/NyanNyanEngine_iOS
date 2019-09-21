@@ -15,6 +15,11 @@
 "default_post_original_text" = "ここに文章を書くと、下でネコ語表示されるにゃ!";
 "post_original_text" = "\nってツイートしたにゃ";
 
+"logout_sheet_title" = "";
+"logout_sheet_body" = "ログアウトしますか？";
+"logout_sheet_exec" = "ログアウトする";
+"logout_sheet_cancel" = "ログアウトしない";
+
 "nekosan_nakigoe_type1" = "にゃん";
 "nekosan_nakigoe_type2" = "にゃお";
 "nekosan_nakigoe_type3" = "にゃー";
