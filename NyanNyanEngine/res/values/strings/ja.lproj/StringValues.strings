@@ -19,6 +19,8 @@
 "logout_sheet_body" = "ログアウトしますか？";
 "logout_sheet_exec" = "ログアウトする";
 "logout_sheet_cancel" = "ログアウトしない";
+"logout_pop_succeeded" = "ログアウトしました";
+"logout_pop_failed" = "ログアウトに失敗しました";
 
 "nekosan_nakigoe_type1" = "にゃん";
 "nekosan_nakigoe_type2" = "にゃお";

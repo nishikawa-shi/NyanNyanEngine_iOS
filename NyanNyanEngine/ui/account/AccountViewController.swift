@@ -46,7 +46,7 @@ class AccountViewController: UIViewController {
         }.disposed(by: disposeBag)
         
         output.logoutSucceeded?
-            .map { return $0 ? "ログアウトしました" : "ログアウトに失敗しました" }
+            .map { return $0 ? R.string.stringValues.logout_pop_succeeded() : R.string.stringValues.logout_pop_failed() }
             .subscribe { [unowned self] in
                 guard let message = $0.element else { return }
                 self.popNoticeToast(message: message)

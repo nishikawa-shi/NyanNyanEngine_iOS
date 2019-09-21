@@ -19,6 +19,8 @@
 "logout_sheet_body" = "Do you want to logout?";
 "logout_sheet_exec" = "logout";
 "logout_sheet_cancel" = "stay logged in";
+"logout_pop_succeeded" = "logout has been succeeded XD";
+"logout_pop_failed" = "logout has been failed.. meow..";
 
 "nekosan_nakigoe_type1" = "Meow";
 "nekosan_nakigoe_type2" = "Miaow";
