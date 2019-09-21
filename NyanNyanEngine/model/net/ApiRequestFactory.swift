@@ -23,6 +23,7 @@ class ApiRequestFactory: BaseApiRequestFactory {
     
     private let requestTokenApiUrl = "https://api.twitter.com/oauth/request_token"
     private let accessTokenApiUrl = "https://api.twitter.com/oauth/access_token"
+    private let invalidateTokenApiUrl = "https://api.twitter.com/1.1/oauth/invalidate_token"
     private let homeTimelineApiUrl = "https://api.twitter.com/1.1/statuses/home_timeline.json"
     private let postTweetApiUrl = "https://api.twitter.com/1.1/statuses/update.json"
     
@@ -83,6 +84,12 @@ class ApiRequestFactory: BaseApiRequestFactory {
         
         return createSignedUrlRequest(baseUrlStr: accessTokenApiUrl,
                                       urlStr: fullPath,
+                                      requestMethod: "POST")
+    }
+    
+    func createInvalidateTokenRequest() -> URLRequest? {
+        return createSignedUrlRequest(baseUrlStr: invalidateTokenApiUrl,
+                                      urlStr: invalidateTokenApiUrl,
                                       requestMethod: "POST")
     }
     

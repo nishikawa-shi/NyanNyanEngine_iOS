@@ -9,5 +9,29 @@
 import UIKit
 
 class AccountViewController: UIViewController {
+    private let input: AccountViewModelInput
+    private let output: AccountViewModelOutput
     
+    //TODO: まともなUIのボタンができたら消す
+    @IBAction func logoutButtonTapped(_ sender: Any) {
+        execLogout()
+    }
+    
+    //ストーリーボードから呼ばれることが前提のクラスなので、こちらのイニシャライザは呼ばれない想定
+    init(viewModel: AccountViewModelInput & AccountViewModelOutput = AccountViewModel()) {
+        self.input = viewModel
+        self.output = viewModel
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        let viewModel = AccountViewModel()
+        self.input = viewModel
+        self.output = viewModel
+        super.init(coder: aDecoder)
+    }
+    
+    private func execLogout() {
+        self.input.logoutExecutedAt?.onNext("nya-on")
+    }
 }

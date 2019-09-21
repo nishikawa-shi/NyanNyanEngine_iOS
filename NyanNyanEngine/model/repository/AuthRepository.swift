@@ -13,6 +13,8 @@ import RxRelay
 protocol BaseAuthRepository: AnyObject {
     func downloadAccessToken(redirectedUrl: URL,
                              modelUpdateLogic: @escaping(() -> Void) ) -> Observable<Bool>
+    func invalidateAccessToken(modelUpdateLogic: @escaping(() -> Void) ) -> Observable<Bool>
+    
     func getRequestToken()
     func getLoggedInStatus() -> Bool
     
@@ -58,7 +60,6 @@ class AuthRepository: BaseAuthRepository {
             self.getCurrentUser()
                 .bind(to: _currentUser)
                 .disposed(by: self.disposeBag)
-            
         }
     }
     
@@ -74,6 +75,27 @@ class AuthRepository: BaseAuthRepository {
             .flatMap { $0.flatMap {Observable<URL>.just($0)} ?? Observable<URL>.empty() }
             .subscribe { [unowned self] in self._authPageUrl.accept($0.element) }
             .disposed(by: self.disposeBag)
+    }
+    
+    func invalidateAccessToken(modelUpdateLogic: @escaping (() -> Void)) -> Observable<Bool> {
+            guard let apiKey = PlistConnector.shared.getApiKey(),
+            let apiSecret = PlistConnector.shared.getApiSecret(),
+            let accessToken = UserDefaultsConnector.shared.getString(withKey: "oauth_token"),
+            let accessTokenSecret = UserDefaultsConnector.shared.getString(withKey: "oauth_token_secret"),
+            let urlRequest = ApiRequestFactory(apiKey: apiKey,
+                                               apiSecret: apiSecret,
+                                               oauthNonce: "0000",
+                                               accessTokenSecret: accessTokenSecret,
+                                               accessToken: accessToken).createInvalidateTokenRequest() else {
+                                                modelUpdateLogic()
+                                                return Observable<Bool>.empty()
+        }
+        return self.apiClient
+            .executeHttpRequest(urlRequest: urlRequest)
+            .map { [unowned self] _ in self.deleteTokens() }
+            .map { [unowned self] in self._isLoggedIn.accept(self.getLoggedInStatus()) }
+            .map (modelUpdateLogic)
+            .map { true }
     }
     
     func downloadAccessToken(redirectedUrl: URL,
@@ -118,5 +140,18 @@ class AuthRepository: BaseAuthRepository {
             guard let value = item.value else { return }
             self.userDefaultsConnector.registerString(key: item.name, value: value)
         }
+    }
+    
+    private func deleteTokens() {
+        let accountKeys = [
+            "oauth_token",
+            "oauth_token_secret",
+            "user_id",
+            "screen_name",
+        ]
+        accountKeys.forEach { [unowned self] key in
+            self.userDefaultsConnector.deleteRecord(forKey: key)
+        }
+        print("delete token completed")
     }
 }
