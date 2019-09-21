@@ -15,6 +15,7 @@ class AccountViewController: UIViewController {
     private let output: AccountViewModelOutput
     private let disposeBag = DisposeBag()
     
+    @IBOutlet weak var noticeToast: UILabel!
     //TODO: まともなUIのボタンができたら消す
     @IBAction func logoutButtonTapped(_ sender: Any) {
         present(self.createLogoutActionSheet(), animated: true, completion: nil)
@@ -47,7 +48,8 @@ class AccountViewController: UIViewController {
         output.logoutSucceeded?
             .map { return $0 ? "ログアウトしました" : "ログアウトに失敗しました" }
             .subscribe { [unowned self] in
-                //TODO: ポップを表示させる処理
+                guard let message = $0.element else { return }
+                self.popNoticeToast(message: message)
             }
             .disposed(by: disposeBag)
     }
@@ -64,5 +66,27 @@ class AccountViewController: UIViewController {
         alert.addAction(logout)
         alert.addAction(cancel)
         return alert
+    }
+    
+    private func popNoticeToast(message: String) {
+        self.noticeToast.text = message
+        
+        self.noticeToast.alpha = 0.0
+        self.noticeToast.isHidden = false
+        UIView.animate(withDuration: 0.5, animations: { [unowned self] in
+            self.noticeToast.alpha = 1.0
+        })
+        
+        DispatchQueue.main.asyncAfter(deadline: .now()+5.0) {
+            UIView.animate(withDuration: 0.5,
+                           animations: { [unowned self] in
+                            self.noticeToast.alpha = 0.0
+                           },
+                           completion: { [unowned self] _ in
+                            self.noticeToast.isHidden = true
+                            self.noticeToast.alpha = 1.0
+                            self.noticeToast.text = "にゃーおんにゃーおんにゃーおん\nにゃんにゃにゃ！"
+                           })
+        }
     }
 }
