@@ -16,6 +16,7 @@ protocol AccountViewModelInput: AnyObject {
 
 protocol AccountViewModelOutput: AnyObject {
     var isLoading: Observable<Bool> { get }
+    var logoutSucceeded: Observable<Bool>? { get }
 }
 
 final class AccountViewModel: AccountViewModelInput, AccountViewModelOutput {
@@ -26,6 +27,7 @@ final class AccountViewModel: AccountViewModelInput, AccountViewModelOutput {
     
     var logoutExecutedAt: AnyObserver<String>? = nil
     let isLoading: Observable<Bool>
+    let logoutSucceeded: Observable<Bool>?
     
     init(authRepository: BaseAuthRepository = AuthRepository.shared,
          tweetsRepository: BaseTweetsRepository = TweetsRepository.shared,
@@ -35,6 +37,7 @@ final class AccountViewModel: AccountViewModelInput, AccountViewModelOutput {
         self.loadingStatusRepository = loadingStatusRepository
         
         self.isLoading = loadingStatusRepository.isLoading
+        self.logoutSucceeded = authRepository.logoutSucceeded
 
         self.logoutExecutedAt = AnyObserver<String>() { executedAt in
             self.loadingStatusRepository.loadingStatusChangedTo.onNext(true)

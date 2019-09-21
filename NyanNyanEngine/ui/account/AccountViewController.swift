@@ -43,6 +43,13 @@ class AccountViewController: UIViewController {
             .subscribe() { [unowned self] in
                 ($0.element ?? false) ? self.activityIndicator.startAnimating() : self.activityIndicator.stopAnimating()
         }.disposed(by: disposeBag)
+        
+        output.logoutSucceeded?
+            .map { return $0 ? "ログアウトしました" : "ログアウトに失敗しました" }
+            .subscribe { [unowned self] in
+                //TODO: ポップを表示させる処理
+            }
+            .disposed(by: disposeBag)
     }
     
     private func createLogoutActionSheet() -> UIAlertController {
