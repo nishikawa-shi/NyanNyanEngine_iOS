@@ -90,11 +90,11 @@ class AuthRepository: BaseAuthRepository {
                                                 modelUpdateLogic()
                                                 return Observable<Bool>.empty()
         }
-        //TODO: ローカルのアクセストークン情報を削除し、もらったクロージャをもとにモデルをアップデートする処理。
         return self.apiClient
             .executeHttpRequest(urlRequest: urlRequest)
             .map { [unowned self] _ in self.deleteTokens() }
             .map { [unowned self] in self._isLoggedIn.accept(self.getLoggedInStatus()) }
+            .map (modelUpdateLogic)
             .map { true }
     }
     

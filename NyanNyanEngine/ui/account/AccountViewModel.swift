@@ -34,7 +34,13 @@ final class AccountViewModel: AccountViewModelInput, AccountViewModelOutput {
 
         self.logoutExecutedAt = AnyObserver<String>() { executedAt in
             self.authRepository.invalidateAccessToken() {
-                //TODO: ログイン処理に準じて、ローディングアイコン消したりだとか、ログイン状態変更のイベントを送ったりだとか。
+                self.authRepository
+                    .loginExecutedAt?
+                    .onNext("")
+                
+                self.tweetsRepository
+                    .buttonRefreshExecutedAt?
+                    .onNext() { self.loadingStatusRepository.loadingStatusChangedTo.onNext(false) }
             }.subscribe()
             .disposed(by: self.disposeBag)
         }
