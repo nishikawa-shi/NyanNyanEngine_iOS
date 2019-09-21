@@ -12,6 +12,11 @@ class AccountViewController: UIViewController {
     private let input: AccountViewModelInput
     private let output: AccountViewModelOutput
     
+    //TODO: まともなUIのボタンができたら消す
+    @IBAction func logoutButtonTapped(_ sender: Any) {
+        execLogout()
+    }
+    
     //ストーリーボードから呼ばれることが前提のクラスなので、こちらのイニシャライザは呼ばれない想定
     init(viewModel: AccountViewModelInput & AccountViewModelOutput = AccountViewModel()) {
         self.input = viewModel
