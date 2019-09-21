@@ -94,6 +94,7 @@ class AuthRepository: BaseAuthRepository {
         return self.apiClient
             .executeHttpRequest(urlRequest: urlRequest)
             .map { [unowned self] _ in self.deleteTokens() }
+            .map { [unowned self] in self._isLoggedIn.accept(self.getLoggedInStatus()) }
             .map { true }
     }
     
