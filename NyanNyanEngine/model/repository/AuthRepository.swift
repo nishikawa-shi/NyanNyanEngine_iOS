@@ -93,7 +93,8 @@ class AuthRepository: BaseAuthRepository {
         //TODO: ローカルのアクセストークン情報を削除し、もらったクロージャをもとにモデルをアップデートする処理。
         return self.apiClient
             .executeHttpRequest(urlRequest: urlRequest)
-            .map { _ in true }
+            .map { [unowned self] _ in self.deleteTokens() }
+            .map { true }
     }
     
     func downloadAccessToken(redirectedUrl: URL,
@@ -138,5 +139,18 @@ class AuthRepository: BaseAuthRepository {
             guard let value = item.value else { return }
             self.userDefaultsConnector.registerString(key: item.name, value: value)
         }
+    }
+    
+    private func deleteTokens() {
+        let accountKeys = [
+            "oauth_token",
+            "oauth_token_secret",
+            "user_id",
+            "screen_name",
+        ]
+        accountKeys.forEach { [unowned self] key in
+            self.userDefaultsConnector.deleteRecord(forKey: key)
+        }
+        print("delete token completed")
     }
 }

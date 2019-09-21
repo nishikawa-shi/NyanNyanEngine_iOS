@@ -12,6 +12,7 @@ protocol BaseUserDefaultsConnector {
     func registerString(key: String, value: String)
     func getString(withKey: String) -> String?
     func isRegistered(withKey: String) -> Bool
+    func deleteRecord(forKey: String) -> Void
 }
 
 class UserDefaultsConnector: BaseUserDefaultsConnector {
@@ -28,5 +29,9 @@ class UserDefaultsConnector: BaseUserDefaultsConnector {
     
     func registerString(key: String, value: String) {
         UserDefaults.standard.set(value, forKey: key)
+    }
+    
+    func deleteRecord(forKey key: String) {
+        UserDefaults.standard.removeObject(forKey: key)
     }
 }
