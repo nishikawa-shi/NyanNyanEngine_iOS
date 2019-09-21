@@ -23,16 +23,29 @@
                                     <action selector="logoutButtonTapped:" destination="m6f-jJ-KLa" eventType="touchUpInside" id="IEz-Mr-Gsf"/>
                                 </connections>
                             </button>
+                            <activityIndicatorView hidden="YES" opaque="NO" alpha="0.5" tag="900" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" animating="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="VRT-Yv-Y84">
+                                <rect key="frame" x="159" y="402.5" width="96" height="96"/>
+                                <color key="backgroundColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="96" id="8wA-6d-iW0"/>
+                                    <constraint firstAttribute="width" constant="96" id="PAj-8c-U0c"/>
+                                </constraints>
+                            </activityIndicatorView>
                         </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <constraints>
+                            <constraint firstItem="VRT-Yv-Y84" firstAttribute="centerY" secondItem="ADA-Fd-FPd" secondAttribute="centerY" id="AdO-Ob-OhI"/>
                             <constraint firstItem="fTl-r3-CSv" firstAttribute="centerY" secondItem="ADA-Fd-FPd" secondAttribute="centerY" id="b00-5J-6MS"/>
+                            <constraint firstItem="VRT-Yv-Y84" firstAttribute="centerX" secondItem="ADA-Fd-FPd" secondAttribute="centerX" id="brq-aJ-49z"/>
                             <constraint firstItem="fTl-r3-CSv" firstAttribute="centerX" secondItem="ADA-Fd-FPd" secondAttribute="centerX" id="zMf-du-Xth"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="ADA-Fd-FPd"/>
                     </view>
                     <navigationItem key="navigationItem" id="vS8-pW-wfX"/>
                     <simulatedTabBarMetrics key="simulatedBottomBarMetrics"/>
+                    <connections>
+                        <outlet property="activityIndicator" destination="VRT-Yv-Y84" id="aVP-UD-ClA"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dVA-Vh-KSj" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>

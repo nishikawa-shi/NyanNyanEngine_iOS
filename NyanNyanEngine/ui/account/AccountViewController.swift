@@ -7,10 +7,13 @@
 //
 
 import UIKit
+import RxCocoa
+import RxSwift
 
 class AccountViewController: UIViewController {
     private let input: AccountViewModelInput
     private let output: AccountViewModelOutput
+    private let disposeBag = DisposeBag()
     
     //TODO: まともなUIのボタンができたら消す
     @IBAction func logoutButtonTapped(_ sender: Any) {
@@ -29,6 +32,17 @@ class AccountViewController: UIViewController {
         self.input = viewModel
         self.output = viewModel
         super.init(coder: aDecoder)
+    }
+    
+    @IBOutlet private weak var activityIndicator: UIActivityIndicatorView!
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        output.isLoading
+            .subscribe() { [unowned self] in
+                ($0.element ?? false) ? self.activityIndicator.startAnimating() : self.activityIndicator.stopAnimating()
+        }.disposed(by: disposeBag)
     }
     
     private func createLogoutActionSheet() -> UIAlertController {
