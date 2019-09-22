@@ -20,6 +20,7 @@ protocol BaseAuthRepository: AnyObject {
     
     var currentUser: Observable<String> { get }
     var isLoggedIn: Observable<Bool>? { get }
+    var logoutSucceeded: Observable<Bool>? { get }
     var authPageUrl: Observable<URL?>? { get }
     
     var loginExecutedAt: AnyObserver<String>? { get }
@@ -35,6 +36,8 @@ class AuthRepository: BaseAuthRepository {
     let currentUser: Observable<String>
     var isLoggedIn: Observable<Bool>? = nil
     private let _isLoggedIn: BehaviorRelay<Bool>
+    var logoutSucceeded: Observable<Bool>? = nil
+    private let _logoutSucceeded: PublishRelay<Bool>
     var authPageUrl: Observable<URL?>? = nil
     private let _authPageUrl: BehaviorRelay<URL?>
     
@@ -52,6 +55,9 @@ class AuthRepository: BaseAuthRepository {
         //またこのためだけに全プロパティをvarにするのもキモいので、getLoggedInStatusnの中身を直書きしている。
         self._isLoggedIn = BehaviorRelay<Bool>(value: (userDefaultsConnector.getString(withKey: "screen_name") != nil))
         self.isLoggedIn = _isLoggedIn.asObservable()
+        
+        self._logoutSucceeded = PublishRelay<Bool>()
+        self.logoutSucceeded = _logoutSucceeded.asObservable()
         
         self._authPageUrl = BehaviorRelay<URL?>(value: nil)
         self.authPageUrl = _authPageUrl.asObservable()
@@ -87,13 +93,16 @@ class AuthRepository: BaseAuthRepository {
                                                oauthNonce: "0000",
                                                accessTokenSecret: accessTokenSecret,
                                                accessToken: accessToken).createInvalidateTokenRequest() else {
+                                                self._logoutSucceeded.accept(false)
                                                 modelUpdateLogic()
                                                 return Observable<Bool>.empty()
         }
         return self.apiClient
             .executeHttpRequest(urlRequest: urlRequest)
             .map { [unowned self] _ in self.deleteTokens() }
-            .map { [unowned self] in self._isLoggedIn.accept(self.getLoggedInStatus()) }
+            .map { [unowned self] in
+                self._isLoggedIn.accept(self.getLoggedInStatus())
+                self._logoutSucceeded.accept(true) }
             .map (modelUpdateLogic)
             .map { true }
     }
