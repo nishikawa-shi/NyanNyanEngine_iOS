@@ -23,6 +23,8 @@
 		672FA83E227BE17E00BAB1A7 /* AppDelegateModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 672FA83D227BE17E00BAB1A7 /* AppDelegateModel.swift */; };
 		6734D7F32279803200A19044 /* TweetSummaryCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6734D7F22279803200A19044 /* TweetSummaryCell.swift */; };
 		67392B0D227AF07900D5E77C /* AuthRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67392B0C227AF07900D5E77C /* AuthRepository.swift */; };
+		673E5CBB2337096F000E1A65 /* LogoutCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 673E5CBA2337096F000E1A65 /* LogoutCell.swift */; };
+		673E5CBD2337097B000E1A65 /* LogoutCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 673E5CBC2337097B000E1A65 /* LogoutCell.xib */; };
 		675A2E1E22E5CB5200290C14 /* TweetSummaryCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 675A2E1C22E5CB5200290C14 /* TweetSummaryCell.xib */; };
 		67666165227527FF004C886C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67666164227527FF004C886C /* AppDelegate.swift */; };
 		67666167227527FF004C886C /* HomeTimelineViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67666166227527FF004C886C /* HomeTimelineViewController.swift */; };
@@ -95,6 +97,8 @@
 		672FA83D227BE17E00BAB1A7 /* AppDelegateModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegateModel.swift; sourceTree = "<group>"; };
 		6734D7F22279803200A19044 /* TweetSummaryCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TweetSummaryCell.swift; sourceTree = "<group>"; };
 		67392B0C227AF07900D5E77C /* AuthRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthRepository.swift; sourceTree = "<group>"; };
+		673E5CBA2337096F000E1A65 /* LogoutCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogoutCell.swift; sourceTree = "<group>"; };
+		673E5CBC2337097B000E1A65 /* LogoutCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = LogoutCell.xib; sourceTree = "<group>"; };
 		675A2E1C22E5CB5200290C14 /* TweetSummaryCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TweetSummaryCell.xib; sourceTree = "<group>"; };
 		67666161227527FF004C886C /* NyanNyanEngine.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NyanNyanEngine.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		67666164227527FF004C886C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -239,6 +243,8 @@
 				6734D7F22279803200A19044 /* TweetSummaryCell.swift */,
 				676DDFAE232F381D00C65FAD /* LoadingCell.xib */,
 				67B787E422C8427400BDC612 /* LoadingCell.swift */,
+				673E5CBA2337096F000E1A65 /* LogoutCell.swift */,
+				673E5CBC2337097B000E1A65 /* LogoutCell.xib */,
 			);
 			path = view;
 			sourceTree = "<group>";
@@ -550,6 +556,7 @@
 				676DDFBB232F4C2600C65FAD /* Account.storyboard in Resources */,
 				670B66FC229ADF09006DFC73 /* GoogleService-Info-Release.plist in Resources */,
 				678E3614229A9F9200CBBCCC /* StringValues.strings in Resources */,
+				673E5CBD2337097B000E1A65 /* LogoutCell.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -723,6 +730,7 @@
 				678B183B232F766A00671444 /* AccountViewModel.swift in Sources */,
 				6767B0D322791745008913EA /* ApiClient.swift in Sources */,
 				67666165227527FF004C886C /* AppDelegate.swift in Sources */,
+				673E5CBB2337096F000E1A65 /* LogoutCell.swift in Sources */,
 				67392B0D227AF07900D5E77C /* AuthRepository.swift in Sources */,
 				6766616D227527FF004C886C /* NyanNyanEngine.xcdatamodeld in Sources */,
 				679A5E60227B1F250043D0E1 /* ApiRequestFactory.swift in Sources */,
