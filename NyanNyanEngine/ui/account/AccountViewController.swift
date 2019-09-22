@@ -101,6 +101,11 @@ class AccountViewController: UIViewController {
 
 extension AccountViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let logoutSection = 0
+        let logoutRow = 0
+        if indexPath.row == logoutRow && indexPath.section == logoutSection {
+            present(self.createLogoutActionSheet(), animated: true, completion: nil)
+        }
         tableView.deselectRow(at: indexPath, animated: true)
     }
 }
