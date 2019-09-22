@@ -59,7 +59,7 @@ class AccountViewController: UIViewController {
         let logout = UIAlertAction(title: R.string.stringValues.logout_sheet_exec(), style: .destructive) { [unowned self] _ in
             self.input.logoutExecutedAt?.onNext("nya-on")
         }
-        let cancel = UIAlertAction(title: R.string.stringValues.logout_sheet_cancel(), style: .default)
+        let cancel = UIAlertAction(title: R.string.stringValues.logout_sheet_cancel(), style: .cancel)
 
         alert.addAction(logout)
         alert.addAction(cancel)
