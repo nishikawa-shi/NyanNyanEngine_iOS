@@ -35,10 +35,12 @@ class AccountViewController: UIViewController {
         super.init(coder: aDecoder)
     }
     
+    @IBOutlet private weak var settingsList: UITableView!
     @IBOutlet private weak var activityIndicator: UIActivityIndicatorView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        configureSettingsList()
         
         output.isLoading
             .subscribe() { [unowned self] in
@@ -88,5 +90,21 @@ class AccountViewController: UIViewController {
                             self.noticeToast.text = "にゃーおんにゃーおんにゃーおん\nにゃんにゃにゃ！"
                            })
         }
+    }
+    
+    private func configureSettingsList() {
+        settingsList.register(UINib(nibName: "LogoutCell", bundle: nil), forCellReuseIdentifier: "LogoutCell")
+        settingsList.dataSource = self
+    }
+}
+
+extension AccountViewController: UITableViewDataSource {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return 1
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "LogoutCell") as! LogoutCell
+        return cell
     }
 }

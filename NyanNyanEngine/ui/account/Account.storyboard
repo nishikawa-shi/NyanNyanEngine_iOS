@@ -73,6 +73,7 @@
                     <connections>
                         <outlet property="activityIndicator" destination="VRT-Yv-Y84" id="aVP-UD-ClA"/>
                         <outlet property="noticeToast" destination="ZIw-Hk-YsC" id="ZNL-Zi-BUR"/>
+                        <outlet property="settingsList" destination="Dv0-am-ruh" id="NfD-fF-Zg8"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dVA-Vh-KSj" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
