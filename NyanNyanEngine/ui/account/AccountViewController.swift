@@ -16,10 +16,6 @@ class AccountViewController: UIViewController {
     private let disposeBag = DisposeBag()
     
     @IBOutlet weak var noticeToast: UILabel!
-    //TODO: まともなUIのボタンができたら消す
-    @IBAction func logoutButtonTapped(_ sender: Any) {
-        present(self.createLogoutActionSheet(), animated: true, completion: nil)
-    }
     
     //ストーリーボードから呼ばれることが前提のクラスなので、こちらのイニシャライザは呼ばれない想定
     init(viewModel: AccountViewModelInput & AccountViewModelOutput = AccountViewModel()) {
