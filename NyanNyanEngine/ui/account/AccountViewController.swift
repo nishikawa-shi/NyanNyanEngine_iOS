@@ -107,6 +107,29 @@ extension AccountViewController: UITableViewDelegate {
 }
 
 extension AccountViewController: UITableViewDataSource {
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat{
+        //キリが良さそうなので8の倍数にしてみた
+        return 48
+    }
+    
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let logoutSection = 0
+        
+        let title: String
+        switch section {
+        case logoutSection:
+            title = R.string.stringValues.settings_header_acount()
+            break
+        default:
+            title = ""
+        }
+
+        guard let view = UINib(nibName: "SettingsSectionHeader", bundle: nil)
+            .instantiate(withOwner: nil, options: nil).first as? SettingsSectionHeader else { return nil }
+        view.configure(title: title)
+        return view
+    }
+
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return 1
     }

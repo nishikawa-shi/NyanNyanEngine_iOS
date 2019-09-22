@@ -15,6 +15,8 @@
 "default_post_original_text" = "ここに文章を書くと、下でネコ語表示されるにゃ!";
 "post_original_text" = "\nってツイートしたにゃ";
 
+"settings_header_acount" = "アカウント";
+
 "logout_sheet_title" = "";
 "logout_sheet_body" = "ログアウトするにゃ？";
 "logout_sheet_exec" = "ログアウトする";
