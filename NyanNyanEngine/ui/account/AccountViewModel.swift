@@ -41,7 +41,7 @@ final class AccountViewModel: AccountViewModelInput, AccountViewModelOutput {
 
         self.logoutExecutedAt = AnyObserver<String>() { executedAt in
             self.loadingStatusRepository.loadingStatusChangedTo.onNext(true)
-            self.authRepository.invalidateAccessToken() {
+            self.authRepository.invalidateAccountInfo() {
                 self.authRepository
                     .loginExecutedAt?
                     .onNext("")

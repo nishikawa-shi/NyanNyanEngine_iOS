@@ -13,7 +13,7 @@ import RxRelay
 protocol BaseAuthRepository: AnyObject {
     func downloadAccessToken(redirectedUrl: URL,
                              modelUpdateLogic: @escaping(() -> Void) ) -> Observable<Bool>
-    func invalidateAccessToken(modelUpdateLogic: @escaping(() -> Void) ) -> Observable<Bool>
+    func invalidateAccountInfo(modelUpdateLogic: @escaping(() -> Void) ) -> Observable<Bool>
     
     func getRequestToken()
     func getLoggedInStatus() -> Bool
@@ -83,7 +83,7 @@ class AuthRepository: BaseAuthRepository {
             .disposed(by: self.disposeBag)
     }
     
-    func invalidateAccessToken(modelUpdateLogic: @escaping (() -> Void)) -> Observable<Bool> {
+    func invalidateAccountInfo(modelUpdateLogic: @escaping (() -> Void)) -> Observable<Bool> {
             guard let apiKey = PlistConnector.shared.getApiKey(),
             let apiSecret = PlistConnector.shared.getApiSecret(),
             let accessToken = UserDefaultsConnector.shared.getString(withKey: "oauth_token"),
@@ -99,7 +99,7 @@ class AuthRepository: BaseAuthRepository {
         }
         return self.apiClient
             .executeHttpRequest(urlRequest: urlRequest)
-            .map { [unowned self] _ in self.deleteTokens() }
+            .map { [unowned self] _ in self.deleteAccountInfo() }
             .map { [unowned self] in
                 self._isLoggedIn.accept(self.getLoggedInStatus())
                 self._logoutSucceeded.accept(true) }
@@ -185,12 +185,14 @@ class AuthRepository: BaseAuthRepository {
         }
     }
     
-    private func deleteTokens() {
+    private func deleteAccountInfo() {
         let accountKeys = [
             "oauth_token",
             "oauth_token_secret",
             "user_id",
             "screen_name",
+            "name",
+            "profile_image_url_https"
         ]
         accountKeys.forEach { [unowned self] key in
             self.userDefaultsConnector.deleteRecord(forKey: key)
