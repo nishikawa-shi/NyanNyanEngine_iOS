@@ -115,8 +115,25 @@ class AuthRepository: BaseAuthRepository {
             .map { [unowned self] in self.parseTokens(accessTokenApiResponse: $0) }
             .map { [unowned self] in self.saveTokens(accessTokenApiResponseQuery: $0 ?? [])}
             .map { [unowned self] in self._isLoggedIn.accept(self.getLoggedInStatus()) }
+            .map { [unowned self] in self.downloadUserInfo() }
             .map (modelUpdateLogic)
             .map { true }
+    }
+    
+    func downloadUserInfo() {
+        guard let apiKey = PlistConnector.shared.getApiKey(),
+            let apiSecret = PlistConnector.shared.getApiSecret(),
+            let accessToken = UserDefaultsConnector.shared.getString(withKey: "oauth_token"),
+            let accessTokenSecret = UserDefaultsConnector.shared.getString(withKey: "oauth_token_secret"),
+            let urlRequest = ApiRequestFactory(apiKey: apiKey,
+                                               apiSecret: apiSecret,
+                                               oauthNonce: "0000",
+                                               accessTokenSecret: accessTokenSecret,
+                                               accessToken: accessToken).createVerifyCredentialsRequest() else { return }
+        self.apiClient.executeHttpRequest(urlRequest: urlRequest)
+            .map { [unowned self] in self.saveUserInfo(user: self.toUser(data: $0))}
+            .subscribe()
+            .disposed(by: disposeBag)
     }
     
     func getLoggedInStatus() -> Bool {
@@ -129,6 +146,13 @@ class AuthRepository: BaseAuthRepository {
             observer.onNext(currentUser)
             return Disposables.create()
         }
+    }
+    
+    private func toUser(data: Data?) -> User? {
+        let decorder = JSONDecoder()
+        decorder.keyDecodingStrategy = .convertFromSnakeCase
+        guard let d = data else { return nil }
+        return try? decorder.decode(User.self, from: d)
     }
     
     private func toAuthTokenValue(data: Data?) -> URL? {
@@ -148,6 +172,16 @@ class AuthRepository: BaseAuthRepository {
             print(item)
             guard let value = item.value else { return }
             self.userDefaultsConnector.registerString(key: item.name, value: value)
+        }
+    }
+    
+    private func saveUserInfo(user: User?) {
+        guard let name = user?.name,
+            let profileImageUrlHttps = user?.profileImageUrlHttps else { return }
+        let records = ["name": name,
+                       "profile_image_url_https": profileImageUrlHttps]
+        records.forEach { [unowned self] in
+            self.userDefaultsConnector.registerString(key: $0.key, value: $0.value)
         }
     }
     
