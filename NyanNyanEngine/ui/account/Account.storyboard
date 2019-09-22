@@ -16,6 +16,10 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="Dv0-am-ruh">
+                                <rect key="frame" x="0.0" y="88" width="414" height="725"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                            </tableView>
                             <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ZIw-Hk-YsC" userLabel="Notice Toast">
                                 <rect key="frame" x="32" y="692.5" width="350" height="72.5"/>
                                 <color key="backgroundColor" red="0.57647058819999997" green="0.63137254899999995" blue="0.63137254899999995" alpha="1" colorSpace="calibratedRGB"/>
@@ -51,11 +55,15 @@
                         <constraints>
                             <constraint firstItem="ZIw-Hk-YsC" firstAttribute="bottom" secondItem="ADA-Fd-FPd" secondAttribute="bottom" constant="-48" id="1Qh-lU-1jk"/>
                             <constraint firstItem="ZIw-Hk-YsC" firstAttribute="height" secondItem="ADA-Fd-FPd" secondAttribute="height" multiplier="0.1" id="2Lf-is-cbL"/>
+                            <constraint firstItem="Dv0-am-ruh" firstAttribute="trailing" secondItem="ADA-Fd-FPd" secondAttribute="trailing" id="AKA-7p-5am"/>
                             <constraint firstItem="VRT-Yv-Y84" firstAttribute="centerY" secondItem="ADA-Fd-FPd" secondAttribute="centerY" id="AdO-Ob-OhI"/>
+                            <constraint firstItem="Dv0-am-ruh" firstAttribute="bottom" secondItem="ADA-Fd-FPd" secondAttribute="bottom" id="Bln-Mh-Ixu"/>
+                            <constraint firstItem="Dv0-am-ruh" firstAttribute="leading" secondItem="ADA-Fd-FPd" secondAttribute="leading" id="Vr1-Uo-1fY"/>
                             <constraint firstItem="ZIw-Hk-YsC" firstAttribute="leading" secondItem="ADA-Fd-FPd" secondAttribute="leading" constant="32" id="Zde-2d-d7T"/>
                             <constraint firstItem="fTl-r3-CSv" firstAttribute="centerY" secondItem="ADA-Fd-FPd" secondAttribute="centerY" id="b00-5J-6MS"/>
                             <constraint firstItem="VRT-Yv-Y84" firstAttribute="centerX" secondItem="ADA-Fd-FPd" secondAttribute="centerX" id="brq-aJ-49z"/>
                             <constraint firstItem="ZIw-Hk-YsC" firstAttribute="trailing" secondItem="ADA-Fd-FPd" secondAttribute="trailing" constant="-32" id="mCT-GQ-yPN"/>
+                            <constraint firstItem="Dv0-am-ruh" firstAttribute="top" secondItem="ADA-Fd-FPd" secondAttribute="top" id="yoe-m4-bkB"/>
                             <constraint firstItem="fTl-r3-CSv" firstAttribute="centerX" secondItem="ADA-Fd-FPd" secondAttribute="centerX" id="zMf-du-Xth"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="ADA-Fd-FPd"/>
