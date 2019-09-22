@@ -94,7 +94,14 @@ class AccountViewController: UIViewController {
     
     private func configureSettingsList() {
         settingsList.register(UINib(nibName: "LogoutCell", bundle: nil), forCellReuseIdentifier: "LogoutCell")
+        settingsList.delegate = self
         settingsList.dataSource = self
+    }
+}
+
+extension AccountViewController: UITableViewDelegate {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
     }
 }
 
