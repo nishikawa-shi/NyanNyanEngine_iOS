@@ -157,6 +157,7 @@ extension AccountViewController: UITableViewDataSource {
                 return cell
             case logoutRow:
                 let cell = tableView.dequeueReusableCell(withIdentifier: "LogoutCell") as! LogoutCell
+                cell.configure(account: self.account)
                 return cell
             default:
                 break
