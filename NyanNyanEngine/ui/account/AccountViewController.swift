@@ -11,6 +11,8 @@ import RxCocoa
 import RxSwift
 
 class AccountViewController: UIViewController {
+    private var account: Account?
+    
     private let input: AccountViewModelInput
     private let output: AccountViewModelOutput
     private let disposeBag = DisposeBag()
@@ -37,6 +39,11 @@ class AccountViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         configureSettingsList()
+        
+        output.currentAccount
+            .subscribe() { [unowned self] in
+                self.account = $0.element
+        }.disposed(by: disposeBag)
         
         output.isLoading
             .subscribe() { [unowned self] in
