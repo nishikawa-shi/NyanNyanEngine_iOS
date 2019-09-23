@@ -20,7 +20,7 @@ protocol HomeTimelineViewModelInput: AnyObject {
 
 protocol HomeTimelineViewModelOutput: AnyObject {
     var nyanNyanStatuses: Observable<[NyanNyan]?> { get }
-    var currentUser: Observable<String> { get }
+    var currentAccount: Observable<Account> { get }
     var isLoading: Observable<Bool> { get }
     var isInfiniteLoading: Observable<Bool> { get }
     var isLoggedIn: Observable<Bool>? { get }
@@ -39,7 +39,7 @@ final class HomeTimelineViewModel: HomeTimelineViewModelInput, HomeTimelineViewM
     var pullToRefreshExecutedAt: AnyObserver<UIRefreshControl>? = nil
     var infiniteScrollExecutedAt: AnyObserver<String>? = nil
     var cellTapExecutedOn: AnyObserver<IndexPath>? = nil
-    let currentUser: Observable<String>
+    let currentAccount: Observable<Account>
     let nyanNyanStatuses: Observable<[NyanNyan]?>
     let isLoading: Observable<Bool>
     let isInfiniteLoading: Observable<Bool>
@@ -54,7 +54,7 @@ final class HomeTimelineViewModel: HomeTimelineViewModelInput, HomeTimelineViewM
         self.authRepository = authRepository
         self.loadingStatusRepository = loadingStatusRepository
         
-        self.currentUser = authRepository.currentUser
+        self.currentAccount = authRepository.currentAccount
         self.nyanNyanStatuses = tweetsRepository.nyanNyanStatuses
         self.isLoading = loadingStatusRepository.isLoading
         self.isInfiniteLoading = loadingStatusRepository.isInfiniteLoading
@@ -71,7 +71,7 @@ final class HomeTimelineViewModel: HomeTimelineViewModelInput, HomeTimelineViewM
                 .onNext(true)
             
             self.authRepository
-                .loginExecutedAt?
+                .accountUpdatedAt?
                 .onNext(updatedAt.element ?? "")
             
             self.tweetsRepository
@@ -83,7 +83,7 @@ final class HomeTimelineViewModel: HomeTimelineViewModelInput, HomeTimelineViewM
         
         self.pullToRefreshExecutedAt = AnyObserver<UIRefreshControl>() { [unowned self] uiRefreshControl in
             self.authRepository
-                .loginExecutedAt?
+                .accountUpdatedAt?
                 .onNext("")
             
             self.tweetsRepository

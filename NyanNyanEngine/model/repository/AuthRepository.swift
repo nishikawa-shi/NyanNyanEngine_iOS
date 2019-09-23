@@ -13,17 +13,17 @@ import RxRelay
 protocol BaseAuthRepository: AnyObject {
     func downloadAccessToken(redirectedUrl: URL,
                              modelUpdateLogic: @escaping(() -> Void) ) -> Observable<Bool>
-    func invalidateAccessToken(modelUpdateLogic: @escaping(() -> Void) ) -> Observable<Bool>
+    func invalidateAccountInfo(modelUpdateLogic: @escaping(() -> Void) ) -> Observable<Bool>
     
     func getRequestToken()
     func getLoggedInStatus() -> Bool
     
-    var currentUser: Observable<String> { get }
+    var currentAccount: Observable<Account> { get }
     var isLoggedIn: Observable<Bool>? { get }
     var logoutSucceeded: Observable<Bool>? { get }
     var authPageUrl: Observable<URL?>? { get }
     
-    var loginExecutedAt: AnyObserver<String>? { get }
+    var accountUpdatedAt: AnyObserver<String>? { get }
 }
 
 class AuthRepository: BaseAuthRepository {
@@ -33,7 +33,7 @@ class AuthRepository: BaseAuthRepository {
     private let apiClient: BaseApiClient
     private let userDefaultsConnector: BaseUserDefaultsConnector
     
-    let currentUser: Observable<String>
+    let currentAccount: Observable<Account>
     var isLoggedIn: Observable<Bool>? = nil
     private let _isLoggedIn: BehaviorRelay<Bool>
     var logoutSucceeded: Observable<Bool>? = nil
@@ -41,15 +41,15 @@ class AuthRepository: BaseAuthRepository {
     var authPageUrl: Observable<URL?>? = nil
     private let _authPageUrl: BehaviorRelay<URL?>
     
-    var loginExecutedAt: AnyObserver<String>? = nil
+    var accountUpdatedAt: AnyObserver<String>? = nil
     
     private init(apiClient: BaseApiClient = ApiClient.shared,
                  userDefaultsConnector: BaseUserDefaultsConnector = UserDefaultsConnector.shared) {
         self.apiClient = apiClient
         self.userDefaultsConnector = userDefaultsConnector
         
-        let _currentUser = BehaviorRelay<String>(value: "にゃんにゃんエンジン")
-        self.currentUser = _currentUser.asObservable()
+        let _currentAccount = BehaviorRelay<Account>(value: Account())
+        self.currentAccount = _currentAccount.asObservable()
         
         //本当はself.getLoggedInStatusを呼びたいのだが、selfを使うものが、loginExecutedAtとここと、2箇所あ
         //またこのためだけに全プロパティをvarにするのもキモいので、getLoggedInStatusnの中身を直書きしている。
@@ -62,9 +62,9 @@ class AuthRepository: BaseAuthRepository {
         self._authPageUrl = BehaviorRelay<URL?>(value: nil)
         self.authPageUrl = _authPageUrl.asObservable()
         
-        self.loginExecutedAt = AnyObserver<String> { [unowned self] executedAt in
-            self.getCurrentUser()
-                .bind(to: _currentUser)
+        self.accountUpdatedAt = AnyObserver<String> { [unowned self] executedAt in
+            self.getCurrentAccount()
+                .bind(to: _currentAccount)
                 .disposed(by: self.disposeBag)
         }
     }
@@ -83,7 +83,7 @@ class AuthRepository: BaseAuthRepository {
             .disposed(by: self.disposeBag)
     }
     
-    func invalidateAccessToken(modelUpdateLogic: @escaping (() -> Void)) -> Observable<Bool> {
+    func invalidateAccountInfo(modelUpdateLogic: @escaping (() -> Void)) -> Observable<Bool> {
             guard let apiKey = PlistConnector.shared.getApiKey(),
             let apiSecret = PlistConnector.shared.getApiSecret(),
             let accessToken = UserDefaultsConnector.shared.getString(withKey: "oauth_token"),
@@ -99,7 +99,7 @@ class AuthRepository: BaseAuthRepository {
         }
         return self.apiClient
             .executeHttpRequest(urlRequest: urlRequest)
-            .map { [unowned self] _ in self.deleteTokens() }
+            .map { [unowned self] _ in self.deleteAccountInfo() }
             .map { [unowned self] in
                 self._isLoggedIn.accept(self.getLoggedInStatus())
                 self._logoutSucceeded.accept(true) }
@@ -115,20 +115,50 @@ class AuthRepository: BaseAuthRepository {
             .map { [unowned self] in self.parseTokens(accessTokenApiResponse: $0) }
             .map { [unowned self] in self.saveTokens(accessTokenApiResponseQuery: $0 ?? [])}
             .map { [unowned self] in self._isLoggedIn.accept(self.getLoggedInStatus()) }
+            .map { [unowned self] in self.downloadUserInfo() }
             .map (modelUpdateLogic)
             .map { true }
+    }
+    
+    func downloadUserInfo() {
+        guard let apiKey = PlistConnector.shared.getApiKey(),
+            let apiSecret = PlistConnector.shared.getApiSecret(),
+            let accessToken = UserDefaultsConnector.shared.getString(withKey: "oauth_token"),
+            let accessTokenSecret = UserDefaultsConnector.shared.getString(withKey: "oauth_token_secret"),
+            let urlRequest = ApiRequestFactory(apiKey: apiKey,
+                                               apiSecret: apiSecret,
+                                               oauthNonce: "0000",
+                                               accessTokenSecret: accessTokenSecret,
+                                               accessToken: accessToken).createVerifyCredentialsRequest() else { return }
+        self.apiClient.executeHttpRequest(urlRequest: urlRequest)
+            .map { [unowned self] in self.saveUserInfo(user: self.toUser(data: $0))}
+            .map { [unowned self] in self.accountUpdatedAt?.onNext("8888/12/31 23:59:59") }
+            .subscribe()
+            .disposed(by: disposeBag)
     }
     
     func getLoggedInStatus() -> Bool {
         return self.userDefaultsConnector.getString(withKey: "screen_name") != nil
     }
     
-    private func getCurrentUser() -> Observable<String> {
-        let currentUser = userDefaultsConnector.getString(withKey: "screen_name") ?? R.string.stringValues.default_timeline_name()
-        return Observable<String>.create { observer in
-            observer.onNext(currentUser)
+    private func getCurrentAccount() -> Observable<Account> {
+        let screenName = userDefaultsConnector.getString(withKey: "screen_name") ?? R.string.stringValues.default_user_name()
+        let headerName = userDefaultsConnector.getString(withKey: "screen_name") ?? R.string.stringValues.default_timeline_name()
+        let name = userDefaultsConnector.getString(withKey: "name") ?? R.string.stringValues.default_user_id()
+        let profileImageUrlHttps = userDefaultsConnector.getString(withKey: "profile_image_url_https") ?? R.string.stringValues.default_user_profile_url()
+        let user = User(name: name, screenName: screenName, profileImageUrlHttps: profileImageUrlHttps)
+        let account = Account(user: user, headerName: headerName)
+        return Observable<Account>.create { observer in
+            observer.onNext(account)
             return Disposables.create()
         }
+    }
+    
+    private func toUser(data: Data?) -> User? {
+        let decorder = JSONDecoder()
+        decorder.keyDecodingStrategy = .convertFromSnakeCase
+        guard let d = data else { return nil }
+        return try? decorder.decode(User.self, from: d)
     }
     
     private func toAuthTokenValue(data: Data?) -> URL? {
@@ -151,12 +181,24 @@ class AuthRepository: BaseAuthRepository {
         }
     }
     
-    private func deleteTokens() {
+    private func saveUserInfo(user: User?) {
+        guard let name = user?.name,
+            let profileImageUrlHttps = user?.profileImageUrlHttps else { return }
+        let records = ["name": name,
+                       "profile_image_url_https": profileImageUrlHttps]
+        records.forEach { [unowned self] in
+            self.userDefaultsConnector.registerString(key: $0.key, value: $0.value)
+        }
+    }
+    
+    private func deleteAccountInfo() {
         let accountKeys = [
             "oauth_token",
             "oauth_token_secret",
             "user_id",
             "screen_name",
+            "name",
+            "profile_image_url_https"
         ]
         accountKeys.forEach { [unowned self] key in
             self.userDefaultsConnector.deleteRecord(forKey: key)

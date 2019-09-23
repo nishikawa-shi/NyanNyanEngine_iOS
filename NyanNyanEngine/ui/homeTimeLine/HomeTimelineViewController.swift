@@ -93,7 +93,8 @@ class HomeTimelineViewController: UIViewController {
             .bind(to: tweetList.rx.items(dataSource: DataSourceFactory.shared.createTweetSummary()))
             .disposed(by: disposeBag)
         
-        output.currentUser
+        output.currentAccount
+            .map { $0.headerName }
             .bind(to: navigationBar.rx.title)
             .disposed(by: disposeBag)
         
