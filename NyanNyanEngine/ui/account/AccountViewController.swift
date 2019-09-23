@@ -109,6 +109,8 @@ extension AccountViewController: UITableViewDelegate {
         let accountSection = 0
         let logoutRow = 1
         if indexPath.row == logoutRow && indexPath.section == accountSection {
+            guard let account = account else { return }
+            if account.isDefaultAccount() { return }
             present(self.createLogoutActionSheet(), animated: true, completion: nil)
         }
         tableView.deselectRow(at: indexPath, animated: true)
@@ -157,6 +159,7 @@ extension AccountViewController: UITableViewDataSource {
                 return cell
             case logoutRow:
                 let cell = tableView.dequeueReusableCell(withIdentifier: "LogoutCell") as! LogoutCell
+                cell.configure(account: self.account)
                 return cell
             default:
                 break

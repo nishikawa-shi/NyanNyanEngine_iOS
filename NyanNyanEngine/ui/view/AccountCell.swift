@@ -20,6 +20,6 @@ class AccountCell: UITableViewCell {
             Nuke.loadImage(with: url, into: userImage)
         }
         userName.text = user.name
-        userId.text = user.screenName
+        userId.text = "@" + user.screenName
     }
 }
