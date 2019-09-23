@@ -141,11 +141,12 @@ class AuthRepository: BaseAuthRepository {
     }
     
     private func getCurrentAccount() -> Observable<Account> {
-        let screenName = userDefaultsConnector.getString(withKey: "screen_name") ?? R.string.stringValues.default_timeline_name()
+        let screenName = userDefaultsConnector.getString(withKey: "screen_name") ?? R.string.stringValues.default_user_name()
+        let headerName = userDefaultsConnector.getString(withKey: "screen_name") ?? R.string.stringValues.default_timeline_name()
         let name = userDefaultsConnector.getString(withKey: "name") ?? R.string.stringValues.default_user_id()
         let profileImageUrlHttps = userDefaultsConnector.getString(withKey: "profile_image_url_https") ?? R.string.stringValues.default_user_profile_url()
         let user = User(name: name, screenName: screenName, profileImageUrlHttps: profileImageUrlHttps)
-        let account = Account(user: user)
+        let account = Account(user: user, headerName: headerName)
         return Observable<Account>.create { observer in
             observer.onNext(account)
             return Disposables.create()

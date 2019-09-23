@@ -94,7 +94,7 @@ class HomeTimelineViewController: UIViewController {
             .disposed(by: disposeBag)
         
         output.currentAccount
-            .map { $0.user.screenName }
+            .map { $0.headerName }
             .bind(to: navigationBar.rx.title)
             .disposed(by: disposeBag)
         
