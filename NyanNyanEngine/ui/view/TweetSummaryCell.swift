@@ -23,7 +23,7 @@ class TweetSummaryCell: UITableViewCell {
                 return
             })
         userName.text = nyanNyan.userName
-        userId.text = nyanNyan.userId
+        userId.text = "@" + nyanNyan.userId
         publishedAt.text = nyanNyan.nyanedAt
         tweetBody.text = nyanNyan.isNekogo ? nyanNyan.nekogo : nyanNyan.ningengo
     }
