@@ -18,7 +18,7 @@ protocol BaseAuthRepository: AnyObject {
     func getRequestToken()
     func getLoggedInStatus() -> Bool
     
-    var currentUser: Observable<String> { get }
+    var currentAccount: Observable<Account> { get }
     var isLoggedIn: Observable<Bool>? { get }
     var logoutSucceeded: Observable<Bool>? { get }
     var authPageUrl: Observable<URL?>? { get }
@@ -33,7 +33,7 @@ class AuthRepository: BaseAuthRepository {
     private let apiClient: BaseApiClient
     private let userDefaultsConnector: BaseUserDefaultsConnector
     
-    let currentUser: Observable<String>
+    let currentAccount: Observable<Account>
     var isLoggedIn: Observable<Bool>? = nil
     private let _isLoggedIn: BehaviorRelay<Bool>
     var logoutSucceeded: Observable<Bool>? = nil
@@ -48,8 +48,8 @@ class AuthRepository: BaseAuthRepository {
         self.apiClient = apiClient
         self.userDefaultsConnector = userDefaultsConnector
         
-        let _currentUser = BehaviorRelay<String>(value: "にゃんにゃんエンジン")
-        self.currentUser = _currentUser.asObservable()
+        let _currentAccount = BehaviorRelay<Account>(value: Account())
+        self.currentAccount = _currentAccount.asObservable()
         
         //本当はself.getLoggedInStatusを呼びたいのだが、selfを使うものが、loginExecutedAtとここと、2箇所あ
         //またこのためだけに全プロパティをvarにするのもキモいので、getLoggedInStatusnの中身を直書きしている。
@@ -63,8 +63,8 @@ class AuthRepository: BaseAuthRepository {
         self.authPageUrl = _authPageUrl.asObservable()
         
         self.loginExecutedAt = AnyObserver<String> { [unowned self] executedAt in
-            self.getCurrentUser()
-                .bind(to: _currentUser)
+            self.getCurrentAccount()
+                .bind(to: _currentAccount)
                 .disposed(by: self.disposeBag)
         }
     }
@@ -140,10 +140,14 @@ class AuthRepository: BaseAuthRepository {
         return self.userDefaultsConnector.getString(withKey: "screen_name") != nil
     }
     
-    private func getCurrentUser() -> Observable<String> {
-        let currentUser = userDefaultsConnector.getString(withKey: "screen_name") ?? R.string.stringValues.default_timeline_name()
-        return Observable<String>.create { observer in
-            observer.onNext(currentUser)
+    private func getCurrentAccount() -> Observable<Account> {
+        let screenName = userDefaultsConnector.getString(withKey: "screen_name") ?? R.string.stringValues.default_timeline_name()
+        let name = userDefaultsConnector.getString(withKey: "name") ?? R.string.stringValues.default_user_id()
+        let profileImageUrlHttps = userDefaultsConnector.getString(withKey: "profile_image_url_https") ?? R.string.stringValues.default_user_profile_url()
+        let user = User(name: name, screenName: screenName, profileImageUrlHttps: profileImageUrlHttps)
+        let account = Account(user: user)
+        return Observable<Account>.create { observer in
+            observer.onNext(account)
             return Disposables.create()
         }
     }

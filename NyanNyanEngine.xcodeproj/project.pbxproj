@@ -37,6 +37,7 @@
 		67666188227527FF004C886C /* NyanNyanEngineUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67666187227527FF004C886C /* NyanNyanEngineUITests.swift */; };
 		6767B0D022791033008913EA /* TweetsRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6767B0CF22791033008913EA /* TweetsRepository.swift */; };
 		6767B0D322791745008913EA /* ApiClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6767B0D222791745008913EA /* ApiClient.swift */; };
+		676ACD1923384C040036F328 /* Account.swift in Sources */ = {isa = PBXBuildFile; fileRef = 676ACD1823384C040036F328 /* Account.swift */; };
 		676DDFAF232F381D00C65FAD /* LoadingCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 676DDFAE232F381D00C65FAD /* LoadingCell.xib */; };
 		676DDFB1232F484000C65FAD /* HomeTimeline.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 676DDFB0232F484000C65FAD /* HomeTimeline.storyboard */; };
 		676DDFB4232F49B500C65FAD /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 676DDFB3232F49B500C65FAD /* MainViewController.swift */; };
@@ -119,6 +120,7 @@
 		67666189227527FF004C886C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		6767B0CF22791033008913EA /* TweetsRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TweetsRepository.swift; sourceTree = "<group>"; };
 		6767B0D222791745008913EA /* ApiClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApiClient.swift; sourceTree = "<group>"; };
+		676ACD1823384C040036F328 /* Account.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Account.swift; sourceTree = "<group>"; };
 		676DDFAE232F381D00C65FAD /* LoadingCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = LoadingCell.xib; sourceTree = "<group>"; };
 		676DDFB0232F484000C65FAD /* HomeTimeline.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = HomeTimeline.storyboard; sourceTree = "<group>"; };
 		676DDFB3232F49B500C65FAD /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
@@ -216,6 +218,7 @@
 				6723B28122767C7F0004FB3D /* dataclass */,
 				670E397F227FB67C002318AE /* Nekosan.swift */,
 				67D86EE1227FDE9B00965816 /* TwitterDateFormatter.swift */,
+				676ACD1823384C040036F328 /* Account.swift */,
 			);
 			path = entity;
 			sourceTree = "<group>";
@@ -726,6 +729,7 @@
 				6776339E22B60F6500D9CCC3 /* NyanNyanSection.swift in Sources */,
 				67E3C4D4228E2F6900B93E1D /* PostNekogoViewController.swift in Sources */,
 				67F88C0A227C2484004DF44A /* UserDefaultsConnector.swift in Sources */,
+				676ACD1923384C040036F328 /* Account.swift in Sources */,
 				679A5E65227B3B590043D0E1 /* PlistConnector.swift in Sources */,
 				673E5CC123372256000E1A65 /* SettingsSectionHeader.swift in Sources */,
 				678E360E229A9E7600CBBCCC /* R.generated.swift in Sources */,
