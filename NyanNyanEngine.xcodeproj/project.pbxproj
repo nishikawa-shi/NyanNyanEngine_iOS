@@ -24,9 +24,9 @@
 		6734D7F32279803200A19044 /* TweetSummaryCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6734D7F22279803200A19044 /* TweetSummaryCell.swift */; };
 		67392B0D227AF07900D5E77C /* AuthRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67392B0C227AF07900D5E77C /* AuthRepository.swift */; };
 		673E5CBB2337096F000E1A65 /* LogoutCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 673E5CBA2337096F000E1A65 /* LogoutCell.swift */; };
-		673E5CBD2337097B000E1A65 /* LogoutCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 673E5CBC2337097B000E1A65 /* LogoutCell.xib */; };
 		673E5CBF23372136000E1A65 /* SettingsSectionHeader.xib in Resources */ = {isa = PBXBuildFile; fileRef = 673E5CBE23372136000E1A65 /* SettingsSectionHeader.xib */; };
 		673E5CC123372256000E1A65 /* SettingsSectionHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 673E5CC023372256000E1A65 /* SettingsSectionHeader.swift */; };
+		6754BEC123387EED009C8106 /* LogoutCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6754BEC323387EED009C8106 /* LogoutCell.xib */; };
 		675A2E1E22E5CB5200290C14 /* TweetSummaryCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 675A2E1C22E5CB5200290C14 /* TweetSummaryCell.xib */; };
 		67666165227527FF004C886C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67666164227527FF004C886C /* AppDelegate.swift */; };
 		67666167227527FF004C886C /* HomeTimelineViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67666166227527FF004C886C /* HomeTimelineViewController.swift */; };
@@ -103,9 +103,10 @@
 		6734D7F22279803200A19044 /* TweetSummaryCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TweetSummaryCell.swift; sourceTree = "<group>"; };
 		67392B0C227AF07900D5E77C /* AuthRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthRepository.swift; sourceTree = "<group>"; };
 		673E5CBA2337096F000E1A65 /* LogoutCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogoutCell.swift; sourceTree = "<group>"; };
-		673E5CBC2337097B000E1A65 /* LogoutCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = LogoutCell.xib; sourceTree = "<group>"; };
 		673E5CBE23372136000E1A65 /* SettingsSectionHeader.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SettingsSectionHeader.xib; sourceTree = "<group>"; };
 		673E5CC023372256000E1A65 /* SettingsSectionHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsSectionHeader.swift; sourceTree = "<group>"; };
+		6754BEC223387EED009C8106 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LogoutCell.xib; sourceTree = "<group>"; };
+		6754BEC523387F09009C8106 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/LogoutCell.strings; sourceTree = "<group>"; };
 		675A2E1C22E5CB5200290C14 /* TweetSummaryCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TweetSummaryCell.xib; sourceTree = "<group>"; };
 		67666161227527FF004C886C /* NyanNyanEngine.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NyanNyanEngine.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		67666164227527FF004C886C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -255,7 +256,7 @@
 				676DDFAE232F381D00C65FAD /* LoadingCell.xib */,
 				67B787E422C8427400BDC612 /* LoadingCell.swift */,
 				673E5CBA2337096F000E1A65 /* LogoutCell.swift */,
-				673E5CBC2337097B000E1A65 /* LogoutCell.xib */,
+				6754BEC323387EED009C8106 /* LogoutCell.xib */,
 				673E5CBE23372136000E1A65 /* SettingsSectionHeader.xib */,
 				673E5CC023372256000E1A65 /* SettingsSectionHeader.swift */,
 				676ACD1A233859BC0036F328 /* AccountCell.xib */,
@@ -573,7 +574,7 @@
 				670B66FC229ADF09006DFC73 /* GoogleService-Info-Release.plist in Resources */,
 				676ACD1B233859BC0036F328 /* AccountCell.xib in Resources */,
 				678E3614229A9F9200CBBCCC /* StringValues.strings in Resources */,
-				673E5CBD2337097B000E1A65 /* LogoutCell.xib in Resources */,
+				6754BEC123387EED009C8106 /* LogoutCell.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -791,6 +792,15 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
+		6754BEC323387EED009C8106 /* LogoutCell.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				6754BEC223387EED009C8106 /* Base */,
+				6754BEC523387F09009C8106 /* ja */,
+			);
+			name = LogoutCell.xib;
+			sourceTree = "<group>";
+		};
 		67666168227527FF004C886C /* Main.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
