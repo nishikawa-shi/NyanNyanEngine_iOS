@@ -39,7 +39,7 @@ final class AppDelegateModel: AppDelegateModelInput, AppDelegateModelOutput {
             self.authRepository
                 .downloadAccessToken(redirectedUrl: url) {
                     self.authRepository
-                        .loginExecutedAt?
+                        .accountUpdatedAt?
                         .onNext("")
                     
                     self.tweetsRepository

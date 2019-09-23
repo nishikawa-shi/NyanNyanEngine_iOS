@@ -23,7 +23,7 @@ protocol BaseAuthRepository: AnyObject {
     var logoutSucceeded: Observable<Bool>? { get }
     var authPageUrl: Observable<URL?>? { get }
     
-    var loginExecutedAt: AnyObserver<String>? { get }
+    var accountUpdatedAt: AnyObserver<String>? { get }
 }
 
 class AuthRepository: BaseAuthRepository {
@@ -41,7 +41,7 @@ class AuthRepository: BaseAuthRepository {
     var authPageUrl: Observable<URL?>? = nil
     private let _authPageUrl: BehaviorRelay<URL?>
     
-    var loginExecutedAt: AnyObserver<String>? = nil
+    var accountUpdatedAt: AnyObserver<String>? = nil
     
     private init(apiClient: BaseApiClient = ApiClient.shared,
                  userDefaultsConnector: BaseUserDefaultsConnector = UserDefaultsConnector.shared) {
@@ -62,7 +62,7 @@ class AuthRepository: BaseAuthRepository {
         self._authPageUrl = BehaviorRelay<URL?>(value: nil)
         self.authPageUrl = _authPageUrl.asObservable()
         
-        self.loginExecutedAt = AnyObserver<String> { [unowned self] executedAt in
+        self.accountUpdatedAt = AnyObserver<String> { [unowned self] executedAt in
             self.getCurrentAccount()
                 .bind(to: _currentAccount)
                 .disposed(by: self.disposeBag)
@@ -132,6 +132,7 @@ class AuthRepository: BaseAuthRepository {
                                                accessToken: accessToken).createVerifyCredentialsRequest() else { return }
         self.apiClient.executeHttpRequest(urlRequest: urlRequest)
             .map { [unowned self] in self.saveUserInfo(user: self.toUser(data: $0))}
+            .map { [unowned self] in self.accountUpdatedAt?.onNext("8888/12/31 23:59:59") }
             .subscribe()
             .disposed(by: disposeBag)
     }

@@ -71,7 +71,7 @@ final class HomeTimelineViewModel: HomeTimelineViewModelInput, HomeTimelineViewM
                 .onNext(true)
             
             self.authRepository
-                .loginExecutedAt?
+                .accountUpdatedAt?
                 .onNext(updatedAt.element ?? "")
             
             self.tweetsRepository
@@ -83,7 +83,7 @@ final class HomeTimelineViewModel: HomeTimelineViewModelInput, HomeTimelineViewM
         
         self.pullToRefreshExecutedAt = AnyObserver<UIRefreshControl>() { [unowned self] uiRefreshControl in
             self.authRepository
-                .loginExecutedAt?
+                .accountUpdatedAt?
                 .onNext("")
             
             self.tweetsRepository

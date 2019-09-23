@@ -46,7 +46,7 @@ final class AccountViewModel: AccountViewModelInput, AccountViewModelOutput {
             self.loadingStatusRepository.loadingStatusChangedTo.onNext(true)
             self.authRepository.invalidateAccountInfo() {
                 self.authRepository
-                    .loginExecutedAt?
+                    .accountUpdatedAt?
                     .onNext("")
                 
                 self.tweetsRepository

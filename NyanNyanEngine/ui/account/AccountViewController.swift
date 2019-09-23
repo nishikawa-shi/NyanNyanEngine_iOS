@@ -43,6 +43,7 @@ class AccountViewController: UIViewController {
         output.currentAccount
             .subscribe() { [unowned self] in
                 self.account = $0.element
+                self.settingsList.reloadData()
         }.disposed(by: disposeBag)
         
         output.isLoading
