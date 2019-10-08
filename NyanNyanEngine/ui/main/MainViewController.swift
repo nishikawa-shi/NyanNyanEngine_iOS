@@ -7,8 +7,25 @@
 //
 
 import UIKit
+import RxSwift
 
 class MainViewController: UITabBarController {
+    private let input: MainViewModelInput
+    private let output: MainViewModelOutput
+    private let disposeBag = DisposeBag()
+
+    init(viewModel: MainViewModelInput & MainViewModelOutput = MainViewModel()) {
+        self.input = viewModel
+        self.output = viewModel
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        let viewModel = MainViewModel()
+        self.input = viewModel
+        self.output = viewModel
+        super.init(coder: aDecoder)
+    }
     
     @IBOutlet weak var mainTabBar: UITabBar!
     
@@ -20,7 +37,7 @@ class MainViewController: UITabBarController {
     
     override func tabBar(_ tabBar: UITabBar, didSelect item: UITabBarItem) {
         if(self.isShowingTimelineView() && item.isTimelineItem()) {
-            print("nyao---n")
+            self.input.extraTimelineItemTap?.onNext("0000/01/01 00:00:00")
         }
     }
 }
