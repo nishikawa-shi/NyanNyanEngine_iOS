@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14810.11" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="wdH-XG-K6Z">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14868" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="wdH-XG-K6Z">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14766.13"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14824"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -13,15 +13,15 @@
             <objects>
                 <viewController storyboardIdentifier="HomeTimeline" id="O71-1C-fqh" customClass="HomeTimelineViewController" customModule="NyanNyanEngine" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="DKd-Tq-5zF">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsVerticalScrollIndicator="NO" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="96" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="d4c-NJ-Lhj">
-                                <rect key="frame" x="0.0" y="44" width="600" height="507"/>
+                                <rect key="frame" x="0.0" y="88" width="414" height="725"/>
                                 <color key="backgroundColor" red="0.99215686270000003" green="0.96470588239999999" blue="0.89019607840000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             </tableView>
                             <activityIndicatorView hidden="YES" opaque="NO" alpha="0.5" tag="900" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" animating="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="4s8-dm-c6j">
-                                <rect key="frame" x="252" y="249.5" width="96" height="96"/>
+                                <rect key="frame" x="159" y="402.5" width="96" height="96"/>
                                 <color key="backgroundColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="96" id="H8r-i8-g4f"/>
@@ -29,7 +29,7 @@
                                 </constraints>
                             </activityIndicatorView>
                             <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="P51-eC-AHd" userLabel="Tweet Succeeded Label">
-                                <rect key="frame" x="32" y="315" width="536" height="60"/>
+                                <rect key="frame" x="32" y="611.5" width="350" height="89.5"/>
                                 <color key="backgroundColor" red="0.57647058819999997" green="0.63137254899999995" blue="0.63137254899999995" alpha="1" colorSpace="calibratedRGB"/>
                                 <string key="text">にゃーおんにゃーおんにゃーおん
 にゃんにゃにゃ！</string>
@@ -44,7 +44,7 @@
                                 </userDefinedRuntimeAttributes>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="a4s-Gr-UY9">
-                                <rect key="frame" x="440" y="391" width="128" height="128"/>
+                                <rect key="frame" x="318" y="717" width="64" height="64"/>
                                 <fontDescription key="fontDescription" name=".AppleSystemUIFont" family=".AppleSystemUIFont" pointSize="18"/>
                                 <size key="titleShadowOffset" width="96" height="96"/>
                                 <state key="normal" image="PostButton"/>
@@ -84,7 +84,6 @@
                     </view>
                     <navigationItem key="navigationItem" title="Cat-san viewer" id="Ete-RH-cwZ">
                         <barButtonItem key="leftBarButtonItem" title="Login" id="I5d-jO-R26" userLabel="Auth"/>
-                        <barButtonItem key="rightBarButtonItem" systemItem="refresh" id="KYV-fz-0Rj" userLabel="Refresh"/>
                     </navigationItem>
                     <simulatedTabBarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
@@ -92,7 +91,6 @@
                         <outlet property="authButton" destination="I5d-jO-R26" id="GpE-EQ-yec"/>
                         <outlet property="navigationBar" destination="Ete-RH-cwZ" id="KvH-Kg-sSS"/>
                         <outlet property="noticeToast" destination="P51-eC-AHd" id="xbN-CB-Rp5"/>
-                        <outlet property="refreshButton" destination="KYV-fz-0Rj" id="hwj-2l-Vy3"/>
                         <outlet property="tweetList" destination="d4c-NJ-Lhj" id="Lil-qQ-Z6p"/>
                     </connections>
                 </viewController>
