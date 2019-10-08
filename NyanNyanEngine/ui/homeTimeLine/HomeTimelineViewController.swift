@@ -63,7 +63,7 @@ class HomeTimelineViewController: UIViewController {
             .bind(to: input.cellTapExecutedOn!)
             .disposed(by: disposeBag)
         
-        let prefetchRatio = 0.95
+        let prefetchRatio = 0.85
         let prefetchOffset: CGFloat = tweetList.frame.size.height
         tweetList.rx.contentOffset
             .filter {
