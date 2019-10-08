@@ -36,7 +36,6 @@ class HomeTimelineViewController: UIViewController {
     
     @IBOutlet private weak var navigationBar: UINavigationItem!
     @IBOutlet private weak var authButton: UIBarButtonItem!
-    @IBOutlet private weak var refreshButton: UIBarButtonItem!
     @IBOutlet private weak var tweetList: UITableView!
     @IBOutlet private weak var noticeToast: UILabel!
     @IBOutlet private weak var activityIndicator: UIActivityIndicatorView!
@@ -50,13 +49,6 @@ class HomeTimelineViewController: UIViewController {
             .throttle(DispatchTimeInterval.seconds(3), latest: false, scheduler: ConcurrentMainScheduler.instance)
             .map { "0000/01/01 00:00:00" }
             .bind(to: input.authExecutedAt!)
-            .disposed(by: disposeBag)
-        
-        refreshButton.rx.tap
-            .map { [unowned self] in self.scrollTweetListToTop() }
-            .throttle(DispatchTimeInterval.seconds(3), latest: false, scheduler: ConcurrentMainScheduler.instance)
-            .map { "9999/12/31 23:59:59" }
-            .bind(to: input.buttonRefreshExecutedAt!)
             .disposed(by: disposeBag)
         
         tweetList.rx.itemSelected
@@ -91,6 +83,10 @@ class HomeTimelineViewController: UIViewController {
         Observable.combineLatest(tweetObservable, loadingObservable)
             .map { return [$0, $1] }
             .bind(to: tweetList.rx.items(dataSource: DataSourceFactory.shared.createTweetSummary()))
+            .disposed(by: disposeBag)
+        
+        output.listScrollUpExecuted
+            .subscribe { [unowned self] _ in self.scrollTweetListToTop() }
             .disposed(by: disposeBag)
         
         output.currentAccount
@@ -164,6 +160,9 @@ class HomeTimelineViewController: UIViewController {
     }
     
     private func scrollTweetListToTop() {
+        if (self.tweetList.numberOfSections <= 0) {
+            return
+        }
         if (self.tweetList.numberOfRows(inSection: 0) <= 0) {
             return
         }
