@@ -20,6 +20,7 @@ protocol HomeTimelineViewModelInput: AnyObject {
 
 protocol HomeTimelineViewModelOutput: AnyObject {
     var nyanNyanStatuses: Observable<[NyanNyan]?> { get }
+    var listScrollUpExecuted: Observable<Bool> { get }
     var currentAccount: Observable<Account> { get }
     var isLoading: Observable<Bool> { get }
     var isInfiniteLoading: Observable<Bool> { get }
@@ -41,6 +42,7 @@ final class HomeTimelineViewModel: HomeTimelineViewModelInput, HomeTimelineViewM
     var cellTapExecutedOn: AnyObserver<IndexPath>? = nil
     let currentAccount: Observable<Account>
     let nyanNyanStatuses: Observable<[NyanNyan]?>
+    let listScrollUpExecuted: Observable<Bool>
     let isLoading: Observable<Bool>
     let isInfiniteLoading: Observable<Bool>
     let isLoggedIn: Observable<Bool>?
@@ -56,6 +58,7 @@ final class HomeTimelineViewModel: HomeTimelineViewModelInput, HomeTimelineViewM
         
         self.currentAccount = authRepository.currentAccount
         self.nyanNyanStatuses = tweetsRepository.nyanNyanStatuses
+        self.listScrollUpExecuted = tweetsRepository.listScrollUpExecuted
         self.isLoading = loadingStatusRepository.isLoading
         self.isInfiniteLoading = loadingStatusRepository.isInfiniteLoading
         self.isLoggedIn = authRepository.isLoggedIn

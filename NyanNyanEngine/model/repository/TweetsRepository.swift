@@ -13,6 +13,7 @@ import RxRelay
 protocol BaseTweetsRepository: AnyObject {
     var nyanNyanStatuses: Observable<[NyanNyan]?> { get }
     var postedStatus: Observable<Status?> { get }
+    var listScrollUpExecuted: Observable<Bool>{ get }
     var buttonRefreshExecutedAt: AnyObserver<(() -> Void)>? { get }
     var pullToRefreshExecutedAt: AnyObserver<UIRefreshControl?>? { get }
     var infiniteScrollExecutedAt: AnyObserver<(() -> Void)>? { get }
@@ -31,6 +32,7 @@ class TweetsRepository: BaseTweetsRepository {
     
     let nyanNyanStatuses: Observable<[NyanNyan]?>
     let postedStatus: Observable<Status?>
+    let listScrollUpExecuted: Observable<Bool>
     var buttonRefreshExecutedAt: AnyObserver<(() -> Void)>? = nil
     var pullToRefreshExecutedAt: AnyObserver<UIRefreshControl?>? = nil
     var infiniteScrollExecutedAt: AnyObserver<(() -> Void)>? = nil
@@ -48,7 +50,11 @@ class TweetsRepository: BaseTweetsRepository {
         let _postedStatus = PublishRelay<Status?>()
         self.postedStatus = _postedStatus.asObservable()
         
+        let _listScrollUpExecuted = PublishRelay<Bool>()
+        self.listScrollUpExecuted = _listScrollUpExecuted.asObservable()
+        
         self.buttonRefreshExecutedAt = AnyObserver<(() -> Void)> { [unowned self] stopActivityIndicator in
+            _listScrollUpExecuted.accept(true)
             self.getHomeTimeLine()
                 .map { [unowned self] in
                     stopActivityIndicator.element?()
