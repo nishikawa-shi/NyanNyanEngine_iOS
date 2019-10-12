@@ -134,6 +134,7 @@ class HomeTimelineViewController: UIViewController {
     private func configureTweetList() {
         tweetList.register(UINib(nibName: "TweetSummaryCell", bundle: nil), forCellReuseIdentifier: "TweetSummaryCell")
         tweetList.register(UINib(nibName: "LoadingCell", bundle: nil), forCellReuseIdentifier: "LoadingCell")
+        tweetList.tableFooterView = UIView()
         tweetList.refreshControl = UIRefreshControl()
         tweetList.refreshControl?.addTarget(self, action: #selector(self.refresh(sender:)), for: .valueChanged)
         tweetList.rowHeight = UITableView.automaticDimension

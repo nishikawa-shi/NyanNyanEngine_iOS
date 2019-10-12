@@ -99,6 +99,7 @@ class AccountViewController: UIViewController {
     private func configureSettingsList() {
         settingsList.register(UINib(nibName: "AccountCell", bundle: nil), forCellReuseIdentifier: "AccountCell")
         settingsList.register(UINib(nibName: "LogoutCell", bundle: nil), forCellReuseIdentifier: "LogoutCell")
+        settingsList.tableFooterView = UIView()
         settingsList.delegate = self
         settingsList.dataSource = self
     }
