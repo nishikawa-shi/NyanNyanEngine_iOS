@@ -50,6 +50,7 @@ private extension UITabBarController {
 
 private extension UITabBarItem {
     func isTimelineItem() -> Bool {
-        return self.title == "Timeline"
+        //storyboardから、タイムライン用UITabBarItemに1という値をハードコーディングしたのでこっちもそれに合わせた
+        return self.tag == 1
     }
 }
