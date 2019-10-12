@@ -66,7 +66,7 @@ class PostNekogoViewController: UIViewController {
             .disposed(by: disposeBag)
         
         output.isLoading
-            .subscribe() { [unowned self] in
+            .subscribe { [unowned self] in
                 ($0.element ?? false) ? self.activityIndicator.startAnimating() : self.activityIndicator.stopAnimating()
         }
         .disposed(by: disposeBag)

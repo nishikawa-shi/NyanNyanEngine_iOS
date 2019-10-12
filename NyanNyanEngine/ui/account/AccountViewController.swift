@@ -41,14 +41,14 @@ class AccountViewController: UIViewController {
         configureSettingsList()
         
         output.currentAccount
-            .subscribe() { [unowned self] in
+            .subscribe { [unowned self] in
                 self.account = $0.element
                 self.settingsList.reloadData()
         }
         .disposed(by: disposeBag)
         
         output.isLoading
-            .subscribe() { [unowned self] in
+            .subscribe { [unowned self] in
                 ($0.element ?? false) ? self.activityIndicator.startAnimating() : self.activityIndicator.stopAnimating()
         }
         .disposed(by: disposeBag)
