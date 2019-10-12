@@ -1,0 +1,12 @@
+
+/* Class = "UIButton"; normalTitle = "Tweet as cat"; ObjectID = "Do1-Z9-0Bp"; */
+"Do1-Z9-0Bp.normalTitle" = "ネコ語でツイートする";
+
+/* Class = "UINavigationItem"; title = "MeowMeowEngine"; ObjectID = "Zkv-PT-4B7"; */
+"Zkv-PT-4B7.title" = "にゃんにゃんエンジン";
+
+/* Class = "UITextView"; text = "Meeeow, write tweet here."; ObjectID = "aIq-Fm-p9v"; */
+"aIq-Fm-p9v.text" = "Meeeow, write tweet here.";
+
+/* Class = "UILabel"; text = "meowmeowmeow"; ObjectID = "ezY-nF-tl2"; */
+"ezY-nF-tl2.text" = "meowmeowmeow";

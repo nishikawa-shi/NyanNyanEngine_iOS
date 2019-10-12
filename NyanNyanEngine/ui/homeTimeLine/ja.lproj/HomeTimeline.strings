@@ -1,0 +1,12 @@
+
+/* Class = "UINavigationItem"; title = "Cat-san viewer"; ObjectID = "Ete-RH-cwZ"; */
+"Ete-RH-cwZ.title" = "ネコさんビューアー";
+
+/* Class = "UIBarButtonItem"; title = "Login"; ObjectID = "I5d-jO-R26"; */
+"I5d-jO-R26.title" = "ログイン";
+
+/* Class = "UILabel"; text = "にゃーおんにゃーおんにゃーおん\nにゃんにゃにゃ！"; ObjectID = "P51-eC-AHd"; */
+"P51-eC-AHd.text" = "にゃーおんにゃーおんにゃーおん\nにゃんにゃにゃ！";
+
+/* Class = "UITabBarItem"; title = "Timeline"; ObjectID = "iem-zX-dSd"; */
+"iem-zX-dSd.title" = "ネコさんビューアー";

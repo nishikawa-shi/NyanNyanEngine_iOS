@@ -18,8 +18,6 @@
 
 "settings_header_acount" = "アカウント";
 
-"logout_sheet_title" = "";
-"logout_sheet_body" = "ログアウトするにゃ？";
 "logout_sheet_exec" = "ログアウトする";
 "logout_sheet_cancel" = "ログアウトしない";
 "logout_pop_succeeded" = "ログアウトしたにゃ♫";

@@ -61,8 +61,8 @@ class AccountViewController: UIViewController {
     }
     
     private func createLogoutActionSheet() -> UIAlertController {
-        let alert = UIAlertController(title: R.string.stringValues.logout_sheet_title(),
-                                      message: R.string.stringValues.logout_sheet_body(),
+        let alert = UIAlertController(title: nil,
+                                      message: nil,
                                       preferredStyle:  .actionSheet)
         let logout = UIAlertAction(title: R.string.stringValues.logout_sheet_exec(), style: .destructive) { [unowned self] _ in
             self.input.logoutExecutedAt?.onNext("nya-on")
@@ -99,6 +99,7 @@ class AccountViewController: UIViewController {
     private func configureSettingsList() {
         settingsList.register(UINib(nibName: "AccountCell", bundle: nil), forCellReuseIdentifier: "AccountCell")
         settingsList.register(UINib(nibName: "LogoutCell", bundle: nil), forCellReuseIdentifier: "LogoutCell")
+        settingsList.tableFooterView = UIView()
         settingsList.delegate = self
         settingsList.dataSource = self
     }
