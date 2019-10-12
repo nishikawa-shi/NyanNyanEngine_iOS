@@ -84,7 +84,7 @@ class AuthRepository: BaseAuthRepository {
     }
     
     func invalidateAccountInfo(modelUpdateLogic: @escaping (() -> Void)) -> Observable<Bool> {
-            guard let apiKey = PlistConnector.shared.getApiKey(),
+        guard let apiKey = PlistConnector.shared.getApiKey(),
             let apiSecret = PlistConnector.shared.getApiSecret(),
             let accessToken = UserDefaultsConnector.shared.getString(withKey: "oauth_token"),
             let accessTokenSecret = UserDefaultsConnector.shared.getString(withKey: "oauth_token_secret"),

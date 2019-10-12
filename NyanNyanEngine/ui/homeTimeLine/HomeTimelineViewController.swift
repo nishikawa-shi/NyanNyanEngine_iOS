@@ -97,7 +97,8 @@ class HomeTimelineViewController: UIViewController {
         output.isLoading
             .subscribe() { [unowned self] in
                 ($0.element ?? false) ? self.activityIndicator.startAnimating() : self.activityIndicator.stopAnimating()
-            }.disposed(by: disposeBag)
+        }
+        .disposed(by: disposeBag)
         
         output.isLoggedIn?
             .map { !$0 }
@@ -115,14 +116,15 @@ class HomeTimelineViewController: UIViewController {
                 self.present(sFSafariViewController,
                              animated: true,
                              completion: nil)
-            }.disposed(by: disposeBag)
+        }
+        .disposed(by: disposeBag)
         
         output.postSucceeded
             .subscribe { [unowned self] in
                 guard let text = $0.element as? String else { return }
                 self.popNoticeToast(message: text)
-            }
-            .disposed(by: disposeBag)
+        }
+        .disposed(by: disposeBag)
         
         input.buttonRefreshExecutedAt?.onNext("2019/04/30 12:12:12")
     }

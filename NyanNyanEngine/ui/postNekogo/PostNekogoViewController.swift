@@ -68,7 +68,8 @@ class PostNekogoViewController: UIViewController {
         output.isLoading
             .subscribe() { [unowned self] in
                 ($0.element ?? false) ? self.activityIndicator.startAnimating() : self.activityIndicator.stopAnimating()
-            }.disposed(by: disposeBag)
+        }
+        .disposed(by: disposeBag)
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {

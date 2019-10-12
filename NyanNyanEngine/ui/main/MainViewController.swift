@@ -13,7 +13,7 @@ class MainViewController: UITabBarController {
     private let input: MainViewModelInput
     private let output: MainViewModelOutput
     private let disposeBag = DisposeBag()
-
+    
     init(viewModel: MainViewModelInput & MainViewModelOutput = MainViewModel()) {
         self.input = viewModel
         self.output = viewModel

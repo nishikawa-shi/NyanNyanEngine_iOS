@@ -41,7 +41,7 @@ final class AccountViewModel: AccountViewModelInput, AccountViewModelOutput {
         self.currentAccount = authRepository.currentAccount
         self.isLoading = loadingStatusRepository.isLoading
         self.logoutSucceeded = authRepository.logoutSucceeded
-
+        
         self.logoutExecutedAt = AnyObserver<String>() { executedAt in
             self.loadingStatusRepository.loadingStatusChangedTo.onNext(true)
             self.authRepository.invalidateAccountInfo() {
@@ -52,7 +52,8 @@ final class AccountViewModel: AccountViewModelInput, AccountViewModelOutput {
                 self.tweetsRepository
                     .buttonRefreshExecutedAt?
                     .onNext() { self.loadingStatusRepository.loadingStatusChangedTo.onNext(false) }
-            }.subscribe()
+            }
+            .subscribe()
             .disposed(by: self.disposeBag)
         }
     }
