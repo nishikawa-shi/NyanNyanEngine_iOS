@@ -41,12 +41,9 @@
 		676ACD1B233859BC0036F328 /* AccountCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 676ACD1A233859BC0036F328 /* AccountCell.xib */; };
 		676ACD1D23385B6E0036F328 /* AccountCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 676ACD1C23385B6E0036F328 /* AccountCell.swift */; };
 		676DDFAF232F381D00C65FAD /* LoadingCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 676DDFAE232F381D00C65FAD /* LoadingCell.xib */; };
-		676DDFB1232F484000C65FAD /* HomeTimeline.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 676DDFB0232F484000C65FAD /* HomeTimeline.storyboard */; };
 		676DDFB4232F49B500C65FAD /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 676DDFB3232F49B500C65FAD /* MainViewController.swift */; };
 		676DDFB9232F4C0600C65FAD /* AccountViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 676DDFB8232F4C0600C65FAD /* AccountViewController.swift */; };
-		676DDFBB232F4C2600C65FAD /* Account.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 676DDFBA232F4C2600C65FAD /* Account.storyboard */; };
 		6776339E22B60F6500D9CCC3 /* NyanNyanSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6776339D22B60F6500D9CCC3 /* NyanNyanSection.swift */; };
-		677D5BF522E2F250007381E6 /* PostNekogo.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 677D5BF422E2F250007381E6 /* PostNekogo.storyboard */; };
 		677F5D7C234CD533003296F8 /* MainViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 677F5D7B234CD533003296F8 /* MainViewModel.swift */; };
 		678B183B232F766A00671444 /* AccountViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 678B183A232F766A00671444 /* AccountViewModel.swift */; };
 		678E360E229A9E7600CBBCCC /* R.generated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 678E360D229A9E7600CBBCCC /* R.generated.swift */; };
@@ -61,6 +58,9 @@
 		67D86EE2227FDE9B00965816 /* TwitterDateFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67D86EE1227FDE9B00965816 /* TwitterDateFormatter.swift */; };
 		67D86EE4227FE20E00965816 /* DateFormatterTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67D86EE3227FE20E00965816 /* DateFormatterTest.swift */; };
 		67E3C4D4228E2F6900B93E1D /* PostNekogoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67E3C4D3228E2F6900B93E1D /* PostNekogoViewController.swift */; };
+		67F7C6002351E6F10017BAF3 /* Account.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 67F7C6022351E6F10017BAF3 /* Account.storyboard */; };
+		67F7C6052351E7120017BAF3 /* HomeTimeline.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 67F7C6072351E7120017BAF3 /* HomeTimeline.storyboard */; };
+		67F7C60A2351E7650017BAF3 /* PostNekogo.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 67F7C60C2351E7650017BAF3 /* PostNekogo.storyboard */; };
 		67F88C0A227C2484004DF44A /* UserDefaultsConnector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67F88C09227C2484004DF44A /* UserDefaultsConnector.swift */; };
 		A3EF89A62D1B991E9600FCFA /* Pods_NyanNyanEngine.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9151EC8B3866FB493C75F6A9 /* Pods_NyanNyanEngine.framework */; };
 /* End PBXBuildFile section */
@@ -128,12 +128,9 @@
 		676ACD1A233859BC0036F328 /* AccountCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AccountCell.xib; sourceTree = "<group>"; };
 		676ACD1C23385B6E0036F328 /* AccountCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountCell.swift; sourceTree = "<group>"; };
 		676DDFAE232F381D00C65FAD /* LoadingCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = LoadingCell.xib; sourceTree = "<group>"; };
-		676DDFB0232F484000C65FAD /* HomeTimeline.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = HomeTimeline.storyboard; sourceTree = "<group>"; };
 		676DDFB3232F49B500C65FAD /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
 		676DDFB8232F4C0600C65FAD /* AccountViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountViewController.swift; sourceTree = "<group>"; };
-		676DDFBA232F4C2600C65FAD /* Account.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Account.storyboard; sourceTree = "<group>"; };
 		6776339D22B60F6500D9CCC3 /* NyanNyanSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NyanNyanSection.swift; sourceTree = "<group>"; };
-		677D5BF422E2F250007381E6 /* PostNekogo.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = PostNekogo.storyboard; sourceTree = "<group>"; };
 		677F5D7B234CD533003296F8 /* MainViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewModel.swift; sourceTree = "<group>"; };
 		678B183A232F766A00671444 /* AccountViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountViewModel.swift; sourceTree = "<group>"; };
 		678E360D229A9E7600CBBCCC /* R.generated.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = R.generated.swift; sourceTree = SOURCE_ROOT; };
@@ -151,6 +148,12 @@
 		67D86EE1227FDE9B00965816 /* TwitterDateFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TwitterDateFormatter.swift; sourceTree = "<group>"; };
 		67D86EE3227FE20E00965816 /* DateFormatterTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateFormatterTest.swift; sourceTree = "<group>"; };
 		67E3C4D3228E2F6900B93E1D /* PostNekogoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostNekogoViewController.swift; sourceTree = "<group>"; };
+		67F7C6012351E6F10017BAF3 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Account.storyboard; sourceTree = "<group>"; };
+		67F7C6042351E6FB0017BAF3 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/Account.strings; sourceTree = "<group>"; };
+		67F7C6062351E7120017BAF3 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/HomeTimeline.storyboard; sourceTree = "<group>"; };
+		67F7C6092351E7160017BAF3 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/HomeTimeline.strings; sourceTree = "<group>"; };
+		67F7C60B2351E7650017BAF3 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/PostNekogo.storyboard; sourceTree = "<group>"; };
+		67F7C60E2351E7730017BAF3 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/PostNekogo.strings; sourceTree = "<group>"; };
 		67F88C09227C2484004DF44A /* UserDefaultsConnector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaultsConnector.swift; sourceTree = "<group>"; };
 		6D8A98757771D333C6941F1B /* Pods-NyanNyanEngineTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NyanNyanEngineTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-NyanNyanEngineTests/Pods-NyanNyanEngineTests.release.xcconfig"; sourceTree = "<group>"; };
 		6F7E9C80946FAE4B36BBC437 /* Pods-NyanNyanEngine.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NyanNyanEngine.release.xcconfig"; path = "Pods/Target Support Files/Pods-NyanNyanEngine/Pods-NyanNyanEngine.release.xcconfig"; sourceTree = "<group>"; };
@@ -368,7 +371,7 @@
 			children = (
 				67666166227527FF004C886C /* HomeTimelineViewController.swift */,
 				6723B2912277DFD60004FB3D /* HomeTimelineViewModel.swift */,
-				676DDFB0232F484000C65FAD /* HomeTimeline.storyboard */,
+				67F7C6072351E7120017BAF3 /* HomeTimeline.storyboard */,
 			);
 			path = homeTimeLine;
 			sourceTree = "<group>";
@@ -386,7 +389,7 @@
 			isa = PBXGroup;
 			children = (
 				676DDFB8232F4C0600C65FAD /* AccountViewController.swift */,
-				676DDFBA232F4C2600C65FAD /* Account.storyboard */,
+				67F7C6022351E6F10017BAF3 /* Account.storyboard */,
 				678B183A232F766A00671444 /* AccountViewModel.swift */,
 			);
 			path = account;
@@ -430,7 +433,7 @@
 			children = (
 				67E3C4D3228E2F6900B93E1D /* PostNekogoViewController.swift */,
 				67A1AAA1228FF0B700BF640A /* PostNekogoViewModel.swift */,
-				677D5BF422E2F250007381E6 /* PostNekogo.storyboard */,
+				67F7C60C2351E7650017BAF3 /* PostNekogo.storyboard */,
 			);
 			path = postNekogo;
 			sourceTree = "<group>";
@@ -564,15 +567,15 @@
 			files = (
 				67666172227527FF004C886C /* LaunchScreen.storyboard in Resources */,
 				675A2E1E22E5CB5200290C14 /* TweetSummaryCell.xib in Resources */,
-				676DDFB1232F484000C65FAD /* HomeTimeline.storyboard in Resources */,
-				677D5BF522E2F250007381E6 /* PostNekogo.storyboard in Resources */,
+				67F7C6052351E7120017BAF3 /* HomeTimeline.storyboard in Resources */,
+				67F7C60A2351E7650017BAF3 /* PostNekogo.storyboard in Resources */,
 				678E361F229AD6EE00CBBCCC /* InfoPlist.strings in Resources */,
 				679A5E67227B3E960043D0E1 /* ApiKeys.plist in Resources */,
 				676DDFAF232F381D00C65FAD /* LoadingCell.xib in Resources */,
 				672C882A2283A54B00312408 /* GoogleService-Info.plist in Resources */,
 				6766616F227527FF004C886C /* Assets.xcassets in Resources */,
 				6766616A227527FF004C886C /* Main.storyboard in Resources */,
-				676DDFBB232F4C2600C65FAD /* Account.storyboard in Resources */,
+				67F7C6002351E6F10017BAF3 /* Account.storyboard in Resources */,
 				673E5CBF23372136000E1A65 /* SettingsSectionHeader.xib in Resources */,
 				670B66FC229ADF09006DFC73 /* GoogleService-Info-Release.plist in Resources */,
 				676ACD1B233859BC0036F328 /* AccountCell.xib in Resources */,
@@ -838,6 +841,33 @@
 				678E3620229AD6EE00CBBCCC /* ja */,
 			);
 			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		67F7C6022351E6F10017BAF3 /* Account.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				67F7C6012351E6F10017BAF3 /* Base */,
+				67F7C6042351E6FB0017BAF3 /* ja */,
+			);
+			name = Account.storyboard;
+			sourceTree = "<group>";
+		};
+		67F7C6072351E7120017BAF3 /* HomeTimeline.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				67F7C6062351E7120017BAF3 /* Base */,
+				67F7C6092351E7160017BAF3 /* ja */,
+			);
+			name = HomeTimeline.storyboard;
+			sourceTree = "<group>";
+		};
+		67F7C60C2351E7650017BAF3 /* PostNekogo.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				67F7C60B2351E7650017BAF3 /* Base */,
+				67F7C60E2351E7730017BAF3 /* ja */,
+			);
+			name = PostNekogo.storyboard;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
