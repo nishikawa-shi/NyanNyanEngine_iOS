@@ -71,11 +71,11 @@
             </objects>
             <point key="canvasLocation" x="1047.8260869565217" y="55.580357142857139"/>
         </scene>
-        <!--Account-->
+        <!--Navigation Controller-->
         <scene sceneID="ilL-Z2-JsQ">
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="dpd-cs-Gzp" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Account" image="outline_account_circle_black_36pt_1x" selectedImage="outline_account_circle_black_36pt_1x" id="RVe-Fc-u26"/>
+                    <tabBarItem key="tabBarItem" title="" image="outline_account_circle_black_36pt_1x" selectedImage="outline_account_circle_black_36pt_1x" id="RVe-Fc-u26"/>
                     <toolbarItems/>
                     <simulatedTabBarMetrics key="simulatedBottomBarMetrics"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="FD4-pU-DE2">
