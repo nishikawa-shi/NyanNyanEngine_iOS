@@ -11,7 +11,7 @@
 "default_user_profile_url" = "https://nyannyanengine.firebaseapp.com/assets/nyannya_sensei.png";
 "default_user_posted_at" = "1 min";
 "default_user_text" = "MewNyanMew🐟";
-"default_user_nekogo" = "Login with your Twitter♪\nYour timeline will be into Cat Lang.";
+"default_user_nekogo" = "Login from the button above ♪\nYour twitter will be into Cat Lang.";
 
 "default_post_original_text" = "This text is translated into cat lang. below, meeow.";
 "post_original_text" = "\n is your cry, meeow.";
