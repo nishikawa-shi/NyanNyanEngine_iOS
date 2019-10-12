@@ -8,7 +8,7 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--Account View Controller-->
+        <!--Account-->
         <scene sceneID="CkR-L3-AEg">
             <objects>
                 <viewController storyboardIdentifier="Account" id="m6f-jJ-KLa" customClass="AccountViewController" customModule="NyanNyanEngine" customModuleProvider="target" sceneMemberID="viewController">
@@ -58,7 +58,7 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="ADA-Fd-FPd"/>
                     </view>
-                    <navigationItem key="navigationItem" id="vS8-pW-wfX"/>
+                    <navigationItem key="navigationItem" title="Account" id="vS8-pW-wfX"/>
                     <simulatedTabBarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
                         <outlet property="activityIndicator" destination="VRT-Yv-Y84" id="aVP-UD-ClA"/>
