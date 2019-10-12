@@ -18,8 +18,6 @@
 
 "settings_header_acount" = "Account";
 
-"logout_sheet_title" = "";
-"logout_sheet_body" = "Do you want to logout?";
 "logout_sheet_exec" = "logout";
 "logout_sheet_cancel" = "stay logged in";
 "logout_pop_succeeded" = "logout has been succeeded XD";
