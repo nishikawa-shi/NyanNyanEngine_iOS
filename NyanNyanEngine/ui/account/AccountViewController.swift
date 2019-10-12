@@ -83,7 +83,7 @@ class AccountViewController: UIViewController {
             self.noticeToast.alpha = 1.0
         })
         
-        DispatchQueue.main.asyncAfter(deadline: .now()+5.0) {
+        DispatchQueue.main.asyncAfter(deadline: .now()+1.0) {
             UIView.animate(withDuration: 0.5,
                            animations: { [unowned self] in
                             self.noticeToast.alpha = 0.0
