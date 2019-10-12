@@ -110,7 +110,7 @@
         <scene sceneID="9LY-c3-bI1">
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="wdH-XG-K6Z" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Timeline" image="list.bullet" selectedImage="list.bullet" id="iem-zX-dSd"/>
+                    <tabBarItem key="tabBarItem" title="Timeline" image="outline_list_black_36pt_1x" selectedImage="outline_list_black_36pt_1x" id="iem-zX-dSd"/>
                     <toolbarItems/>
                     <simulatedTabBarMetrics key="simulatedBottomBarMetrics"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="wjH-q9-JxT">
@@ -129,6 +129,6 @@
     </scenes>
     <resources>
         <image name="PostButton" width="64" height="64"/>
-        <image name="list.bullet" width="17" height="13"/>
+        <image name="outline_list_black_36pt_1x" width="36" height="36"/>
     </resources>
 </document>
