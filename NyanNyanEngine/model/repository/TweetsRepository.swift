@@ -69,9 +69,9 @@ class TweetsRepository: BaseTweetsRepository {
                     }
                     
                     return statusValueResponse
-                }
-                .bind(to: _statuses)
-                .disposed(by: self.disposeBag)
+            }
+            .bind(to: _statuses)
+            .disposed(by: self.disposeBag)
         }
         
         self.pullToRefreshExecutedAt = AnyObserver<UIRefreshControl?> { [unowned self] uiRefreshControl in
@@ -90,9 +90,9 @@ class TweetsRepository: BaseTweetsRepository {
                     self.updateMin(statuses: statusValueResponse)
                     
                     return statusValueResponse
-                }
-                .bind(to: _statuses)
-                .disposed(by: self.disposeBag)
+            }
+            .bind(to: _statuses)
+            .disposed(by: self.disposeBag)
         }
         
         self.infiniteScrollExecutedAt = AnyObserver<(() -> Void)> { stopActivityIndicator in
@@ -106,10 +106,10 @@ class TweetsRepository: BaseTweetsRepository {
                         additive.removeFirst()
                     }
                     return additive
-                }
-                .map { currentStatuses + ($0 ?? []) }
-                .bind(to: _statuses)
-                .disposed(by: self.disposeBag)
+            }
+            .map { currentStatuses + ($0 ?? []) }
+            .bind(to: _statuses)
+            .disposed(by: self.disposeBag)
         }
         
         self.nekogoToggleExecutedAt = AnyObserver<IndexPath> {
@@ -127,9 +127,9 @@ class TweetsRepository: BaseTweetsRepository {
                     //モジュール性が若干下がるので、構成を見直した方が良いかもしれない・・・
                     LoadingStatusRepository.shared.loadingStatusChangedTo.onNext(false)
                     return $0 ?? Status(id: 2828, text: "にゃにゃーーーおん", createdAt: "99日前", user: User(name: "エラー猫さん", screenName: "neko_error", profileImageUrlHttps: nil))
-                }
-                .bind(to: _postedStatus)
-                .disposed(by: self.disposeBag)
+            }
+            .bind(to: _postedStatus)
+            .disposed(by: self.disposeBag)
         }
     }
     

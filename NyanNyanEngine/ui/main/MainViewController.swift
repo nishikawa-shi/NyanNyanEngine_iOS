@@ -13,7 +13,7 @@ class MainViewController: UITabBarController {
     private let input: MainViewModelInput
     private let output: MainViewModelOutput
     private let disposeBag = DisposeBag()
-
+    
     init(viewModel: MainViewModelInput & MainViewModelOutput = MainViewModel()) {
         self.input = viewModel
         self.output = viewModel
@@ -50,6 +50,7 @@ private extension UITabBarController {
 
 private extension UITabBarItem {
     func isTimelineItem() -> Bool {
-        return self.title == "Timeline"
+        //storyboardから、タイムライン用UITabBarItemに1という値をハードコーディングしたのでこっちもそれに合わせた
+        return self.tag == 1
     }
 }

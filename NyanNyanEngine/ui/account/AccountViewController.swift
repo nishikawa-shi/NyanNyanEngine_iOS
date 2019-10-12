@@ -41,23 +41,25 @@ class AccountViewController: UIViewController {
         configureSettingsList()
         
         output.currentAccount
-            .subscribe() { [unowned self] in
+            .subscribe { [unowned self] in
                 self.account = $0.element
                 self.settingsList.reloadData()
-        }.disposed(by: disposeBag)
+        }
+        .disposed(by: disposeBag)
         
         output.isLoading
-            .subscribe() { [unowned self] in
+            .subscribe { [unowned self] in
                 ($0.element ?? false) ? self.activityIndicator.startAnimating() : self.activityIndicator.stopAnimating()
-        }.disposed(by: disposeBag)
+        }
+        .disposed(by: disposeBag)
         
         output.logoutSucceeded?
             .map { return $0 ? R.string.stringValues.logout_pop_succeeded() : R.string.stringValues.logout_pop_failed() }
             .subscribe { [unowned self] in
                 guard let message = $0.element else { return }
                 self.popNoticeToast(message: message)
-            }
-            .disposed(by: disposeBag)
+        }
+        .disposed(by: disposeBag)
     }
     
     private func createLogoutActionSheet() -> UIAlertController {
@@ -68,7 +70,7 @@ class AccountViewController: UIViewController {
             self.input.logoutExecutedAt?.onNext("nya-on")
         }
         let cancel = UIAlertAction(title: R.string.stringValues.logout_sheet_cancel(), style: .cancel)
-
+        
         alert.addAction(logout)
         alert.addAction(cancel)
         return alert
@@ -87,12 +89,12 @@ class AccountViewController: UIViewController {
             UIView.animate(withDuration: 0.5,
                            animations: { [unowned self] in
                             self.noticeToast.alpha = 0.0
-                           },
+                },
                            completion: { [unowned self] _ in
                             self.noticeToast.isHidden = true
                             self.noticeToast.alpha = 1.0
                             self.noticeToast.text = "にゃーおんにゃーおんにゃーおん\nにゃんにゃにゃ！"
-                           })
+            })
         }
     }
     
@@ -119,7 +121,7 @@ extension AccountViewController: UITableViewDelegate {
 }
 
 extension AccountViewController: UITableViewDataSource {
-
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return 2
     }

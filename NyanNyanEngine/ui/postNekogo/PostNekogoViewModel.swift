@@ -70,7 +70,8 @@ final class PostNekogoViewModel: PostNekogoViewModelInput, PostNekogoViewModelOu
             self.tweetsRepository
                 .buttonRefreshExecutedAt?
                 .onNext() { self.loadingStatusRepository.loadingStatusChangedTo.onNext(false) }
-            }.disposed(by: self.disposeBag)
+        }
+        .disposed(by: self.disposeBag)
     }
     
     private func isInputedValidText(inputedText: String) -> Bool {
