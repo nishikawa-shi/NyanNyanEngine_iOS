@@ -34,10 +34,6 @@ class LoadingStatusRepository: BaseLoadingStatusRepository {
         
         self.loadingStatusChangedTo = AnyObserver<Bool> { newStatus in
             _isLoading.accept(newStatus.element ?? false)
-            Observable<Bool>
-                .create { _ in Disposables.create()}
-                .bind(to: _isLoading)
-                .dispose()
         }
         
         self.infiniteLoadingStatusChangedTo = AnyObserver<Bool> { newStatus in
