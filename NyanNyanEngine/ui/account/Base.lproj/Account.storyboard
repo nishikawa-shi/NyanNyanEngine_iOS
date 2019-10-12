@@ -8,7 +8,7 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--Account View Controller-->
+        <!--Account-->
         <scene sceneID="CkR-L3-AEg">
             <objects>
                 <viewController storyboardIdentifier="Account" id="m6f-jJ-KLa" customClass="AccountViewController" customModule="NyanNyanEngine" customModuleProvider="target" sceneMemberID="viewController">
@@ -35,9 +35,8 @@
                                     <userDefinedRuntimeAttribute type="boolean" keyPath="clipsToBounds" value="YES"/>
                                 </userDefinedRuntimeAttributes>
                             </label>
-                            <activityIndicatorView hidden="YES" opaque="NO" alpha="0.5" tag="900" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" animating="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="VRT-Yv-Y84">
+                            <activityIndicatorView hidden="YES" opaque="NO" tag="900" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" animating="YES" style="large" translatesAutoresizingMaskIntoConstraints="NO" id="VRT-Yv-Y84">
                                 <rect key="frame" x="159" y="402.5" width="96" height="96"/>
-                                <color key="backgroundColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="96" id="8wA-6d-iW0"/>
                                     <constraint firstAttribute="width" constant="96" id="PAj-8c-U0c"/>
@@ -59,7 +58,7 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="ADA-Fd-FPd"/>
                     </view>
-                    <navigationItem key="navigationItem" id="vS8-pW-wfX"/>
+                    <navigationItem key="navigationItem" title="Account" id="vS8-pW-wfX"/>
                     <simulatedTabBarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
                         <outlet property="activityIndicator" destination="VRT-Yv-Y84" id="aVP-UD-ClA"/>
@@ -71,11 +70,11 @@
             </objects>
             <point key="canvasLocation" x="1047.8260869565217" y="55.580357142857139"/>
         </scene>
-        <!--Account-->
+        <!--Navigation Controller-->
         <scene sceneID="ilL-Z2-JsQ">
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="dpd-cs-Gzp" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Account" image="person" selectedImage="person" id="RVe-Fc-u26"/>
+                    <tabBarItem key="tabBarItem" title="" image="outline_account_circle_black_36pt_1x" selectedImage="outline_account_circle_black_36pt_1x" id="RVe-Fc-u26"/>
                     <toolbarItems/>
                     <simulatedTabBarMetrics key="simulatedBottomBarMetrics"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="FD4-pU-DE2">
@@ -93,6 +92,6 @@
         </scene>
     </scenes>
     <resources>
-        <image name="person" width="15" height="16"/>
+        <image name="outline_account_circle_black_36pt_1x" width="36" height="36"/>
     </resources>
 </document>

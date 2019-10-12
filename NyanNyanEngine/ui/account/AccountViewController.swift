@@ -83,7 +83,7 @@ class AccountViewController: UIViewController {
             self.noticeToast.alpha = 1.0
         })
         
-        DispatchQueue.main.asyncAfter(deadline: .now()+5.0) {
+        DispatchQueue.main.asyncAfter(deadline: .now()+1.0) {
             UIView.animate(withDuration: 0.5,
                            animations: { [unowned self] in
                             self.noticeToast.alpha = 0.0
@@ -119,28 +119,6 @@ extension AccountViewController: UITableViewDelegate {
 }
 
 extension AccountViewController: UITableViewDataSource {
-    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat{
-        //キリが良さそうなので8の倍数にしてみた
-        return 48
-    }
-    
-    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        let accountSection = 0
-        
-        let title: String
-        switch section {
-        case accountSection:
-            title = R.string.stringValues.settings_header_acount()
-            break
-        default:
-            title = ""
-        }
-
-        guard let view = UINib(nibName: "SettingsSectionHeader", bundle: nil)
-            .instantiate(withOwner: nil, options: nil).first as? SettingsSectionHeader else { return nil }
-        view.configure(title: title)
-        return view
-    }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return 2

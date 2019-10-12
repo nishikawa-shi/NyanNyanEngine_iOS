@@ -1,6 +1,5 @@
-
-/* Class = "UITabBarItem"; title = "Account"; ObjectID = "RVe-Fc-u26"; */
-"RVe-Fc-u26.title" = "アカウント";
-
 /* Class = "UILabel"; text = "にゃーおんにゃーおんにゃーおん\nにゃんにゃにゃ！"; ObjectID = "ZIw-Hk-YsC"; */
 "ZIw-Hk-YsC.text" = "にゃーおんにゃーおんにゃーおん\nにゃんにゃにゃ！";
+
+/* Class = "UINavigationItem"; title = "Account"; ObjectID = "vS8-pW-wfX"; */
+"vS8-pW-wfX.title" = "アカウント";
