@@ -62,10 +62,10 @@ class AccountViewController: UIViewController {
         .disposed(by: disposeBag)
     }
     
-    private func createLogoutActionSheet() -> UIAlertController {
+    private func createLogoutActionSheet(sourceView: UIView?) -> UIAlertController {
         let alert = UIAlertController(title: nil,
                                       message: nil,
-                                      preferredStyle:  .actionSheet)
+                                      preferredStyle: .actionSheet)
         let logout = UIAlertAction(title: R.string.stringValues.logout_sheet_exec(), style: .destructive) { [unowned self] _ in
             self.input.logoutExecutedAt?.onNext("nya-on")
         }
@@ -73,6 +73,10 @@ class AccountViewController: UIViewController {
         
         alert.addAction(logout)
         alert.addAction(cancel)
+
+        if let popoverController = alert.popoverPresentationController {
+            popoverController.sourceView = sourceView
+        }
         return alert
     }
     
@@ -114,7 +118,7 @@ extension AccountViewController: UITableViewDelegate {
         if indexPath.row == logoutRow && indexPath.section == accountSection {
             guard let account = account else { return }
             if account.isDefaultAccount() { return }
-            present(self.createLogoutActionSheet(), animated: true, completion: nil)
+            present(self.createLogoutActionSheet(sourceView: tableView.cellForRow(at: indexPath)), animated: true, completion: nil)
         }
         tableView.deselectRow(at: indexPath, animated: true)
     }
