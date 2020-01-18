@@ -32,4 +32,4 @@ steps:
     xcWorkspacePath: 'NyanNyanEngine.xcworkspace'
     xcodeVersion: 'default'
     destinationPlatformOption: 'iOS'
-    destinationDevices: 'iPhone Xs Max'
+    destinationSimulators: 'iPhone 11 Pro Max'
