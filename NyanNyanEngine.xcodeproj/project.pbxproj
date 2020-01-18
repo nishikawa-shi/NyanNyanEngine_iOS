@@ -999,7 +999,7 @@
 				BUNDLE_ID_SUFFIX = .debug;
 				CODE_SIGN_ENTITLEMENTS = NyanNyanEngine/NyanNyanEngine.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 16;
+				CURRENT_PROJECT_VERSION = 17;
 				DEVELOPMENT_TEAM = K85M397W48;
 				INFOPLIST_FILE = NyanNyanEngine/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -1022,7 +1022,7 @@
 				BUNDLE_ID_SUFFIX = "";
 				CODE_SIGN_ENTITLEMENTS = NyanNyanEngine/NyanNyanEngine.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 16;
+				CURRENT_PROJECT_VERSION = 17;
 				DEVELOPMENT_TEAM = K85M397W48;
 				INFOPLIST_FILE = NyanNyanEngine/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
