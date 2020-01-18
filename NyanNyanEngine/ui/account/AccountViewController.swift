@@ -73,10 +73,8 @@ class AccountViewController: UIViewController {
         
         alert.addAction(logout)
         alert.addAction(cancel)
-
-        if let popoverController = alert.popoverPresentationController {
-            popoverController.sourceView = sourceView
-        }
+        
+        alert.popoverPresentationController?.sourceView = sourceView
         return alert
     }
     
