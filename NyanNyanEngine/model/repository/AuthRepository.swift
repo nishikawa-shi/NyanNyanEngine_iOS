@@ -142,15 +142,41 @@ class AuthRepository: BaseAuthRepository {
     }
     
     private func getCurrentAccount() -> Observable<Account> {
-        let screenName = userDefaultsConnector.getString(withKey: "screen_name") ?? R.string.stringValues.default_user_id()
-        let headerName = userDefaultsConnector.getString(withKey: "screen_name") ?? R.string.stringValues.default_timeline_name()
-        let name = userDefaultsConnector.getString(withKey: "name") ?? R.string.stringValues.default_user_name()
-        let profileImageUrlHttps = userDefaultsConnector.getString(withKey: "profile_image_url_https") ?? R.string.stringValues.default_user_profile_url()
+        let defaultUser = User(name: R.string.stringValues.default_user_name(),
+                               screenName: R.string.stringValues.default_user_id(),
+                               profileImageUrlHttps: R.string.stringValues.default_user_profile_url())
+        let defaultObservable = Observable<Account>.create {
+            $0.onNext(Account(user: defaultUser,
+                              headerName: R.string.stringValues.default_timeline_name()))
+            return Disposables.create()
+        }
+        
+        if !self.getLoggedInStatus() {
+            return defaultObservable
+        }
+        if !isAllAccountInfoFetched() {
+            self.downloadUserInfo()
+        }
+        guard let screenName = userDefaultsConnector.getString(withKey: "screen_name"),
+            let headerName = userDefaultsConnector.getString(withKey: "screen_name"),
+            let name = userDefaultsConnector.getString(withKey: "name"),
+            let profileImageUrlHttps = userDefaultsConnector.getString(withKey: "profile_image_url_https") else {
+                return defaultObservable
+        }
         let user = User(name: name, screenName: screenName, profileImageUrlHttps: profileImageUrlHttps)
         let account = Account(user: user, headerName: headerName)
         return Observable<Account>.create { observer in
             observer.onNext(account)
             return Disposables.create()
+        }
+    }
+    
+    private func isAllAccountInfoFetched() -> Bool {
+        let requiredKeys = ["screen_name",
+                            "name",
+                            "profile_image_url_https"]
+        return requiredKeys.reduce(true) { [unowned self] (current: Bool, additive: String) -> Bool in
+            return current && (self.userDefaultsConnector.getString(withKey: additive) != nil)
         }
     }
     
