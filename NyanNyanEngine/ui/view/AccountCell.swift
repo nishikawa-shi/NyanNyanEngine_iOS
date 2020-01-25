@@ -16,7 +16,7 @@ class AccountCell: UITableViewCell {
     
     func configure(account: Account?) {
         let user = account?.user ?? Account().user
-        if let urlStr = user.profileImageUrlHttps, let url = URL(string: urlStr) {
+        if let urlStr = user.getFineImageUrl(), let url = URL(string: urlStr) {
             Nuke.loadImage(with: url, into: userImage)
         }
         userName.text = user.name

@@ -196,7 +196,7 @@ class TweetsRepository: BaseTweetsRepository {
     private func toNyanNyan(rawTweets: [Status]?) -> [NyanNyan] {
         return rawTweets?.map {
             NyanNyan(id: $0.id,
-                     profileUrl: $0.user.profileImageUrlHttps,
+                     profileUrl: $0.user.getFineImageUrl(),
                      userName: $0.user.name,
                      userId: $0.user.screenName,
                      nyanedAt: TwitterDateFormatter().getNyanNyanTimeStamp(apiTimeStamp: $0.createdAt),
