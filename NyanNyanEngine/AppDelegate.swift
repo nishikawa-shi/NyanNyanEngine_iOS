@@ -43,6 +43,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 return true
         }
         FirebaseApp.configure(options: fileopts)
+        Auth.auth().signInAnonymously { res, err in
+            print(res?.user.uid)
+        }
         return true
     }
 
