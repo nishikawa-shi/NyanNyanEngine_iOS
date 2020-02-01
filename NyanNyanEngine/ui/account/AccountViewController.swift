@@ -12,6 +12,7 @@ import RxSwift
 
 class AccountViewController: UIViewController {
     private var account: Account?
+    private var nyanNyanUser: NyanNyanUser?
     
     private let input: AccountViewModelInput
     private let output: AccountViewModelOutput
@@ -46,6 +47,12 @@ class AccountViewController: UIViewController {
                 self.settingsList.reloadData()
         }
         .disposed(by: disposeBag)
+        
+        output.currentNyanNyanAccount
+            .subscribe { [unowned self] in
+                self.nyanNyanUser = $0.element
+                self.settingsList.reloadData()
+        }.disposed(by: disposeBag)
         
         output.isLoading
             .subscribe { [unowned self] in
@@ -102,6 +109,7 @@ class AccountViewController: UIViewController {
     
     private func configureSettingsList() {
         settingsList.register(UINib(nibName: "AccountCell", bundle: nil), forCellReuseIdentifier: "AccountCell")
+        settingsList.register(UINib(nibName: "AccountAttributeCell", bundle: nil), forCellReuseIdentifier: "AccountAttributeCell")
         settingsList.register(UINib(nibName: "LogoutCell", bundle: nil), forCellReuseIdentifier: "LogoutCell")
         settingsList.tableFooterView = UIView()
         settingsList.delegate = self
@@ -111,9 +119,10 @@ class AccountViewController: UIViewController {
 
 extension AccountViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let accountSection = 0
-        let logoutRow = 1
-        if indexPath.row == logoutRow && indexPath.section == accountSection {
+        let logoutSection = 1
+        let logoutRow = 0
+        
+        if indexPath.section == logoutSection && indexPath.row == logoutRow {
             guard let account = account else { return }
             if account.isDefaultAccount() { return }
             present(self.createLogoutActionSheet(sourceView: tableView.cellForRow(at: indexPath)), animated: true, completion: nil)
@@ -123,23 +132,50 @@ extension AccountViewController: UITableViewDelegate {
 }
 
 extension AccountViewController: UITableViewDataSource {
-    
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func numberOfSections(in tableView: UITableView) -> Int {
         return 2
     }
     
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        let infoSection = 0
+        let logoutSection = 1
+        
+        switch section {
+        case infoSection:
+            return 2
+        case logoutSection:
+            return 1
+        default:
+            return 0
+        }
+    }
+    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let accountSection = 0
-        let accountRow = 0
-        let logoutRow = 1
+        let infoSection = 0
+        let twitterRow = 0
+        let nekoPointRaw = 1
+        
+        let logoutSection = 1
+        let logoutRow = 0
         
         switch indexPath.section {
-        case accountSection:
+        case infoSection:
             switch indexPath.row {
-            case accountRow:
+            case twitterRow:
                 let cell = tableView.dequeueReusableCell(withIdentifier: "AccountCell") as! AccountCell
                 cell.configure(account: self.account)
                 return cell
+            case nekoPointRaw:
+                let cell = tableView.dequeueReusableCell(withIdentifier: "AccountAttributeCell") as! AccountAttributeCell
+                cell.configure(type: .nekosanPoint, nyanNyanUser: self.nyanNyanUser)
+                return cell
+            default:
+                break
+            }
+            break
+            
+        case logoutSection:
+            switch indexPath.row {
             case logoutRow:
                 let cell = tableView.dequeueReusableCell(withIdentifier: "LogoutCell") as! LogoutCell
                 cell.configure(account: self.account)
@@ -147,7 +183,6 @@ extension AccountViewController: UITableViewDataSource {
             default:
                 break
             }
-            break
         default:
             break
         }
