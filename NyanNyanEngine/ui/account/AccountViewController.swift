@@ -112,7 +112,8 @@ class AccountViewController: UIViewController {
 extension AccountViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let accountSection = 0
-        let logoutRow = 1
+        let nekoPointRaw = 1
+        let logoutRow = 2
         if indexPath.row == logoutRow && indexPath.section == accountSection {
             guard let account = account else { return }
             if account.isDefaultAccount() { return }
@@ -125,13 +126,14 @@ extension AccountViewController: UITableViewDelegate {
 extension AccountViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 2
+        return 3
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let accountSection = 0
         let accountRow = 0
-        let logoutRow = 1
+        let nekoPointRaw = 1
+        let logoutRow = 2
         
         switch indexPath.section {
         case accountSection:
@@ -139,6 +141,13 @@ extension AccountViewController: UITableViewDataSource {
             case accountRow:
                 let cell = tableView.dequeueReusableCell(withIdentifier: "AccountCell") as! AccountCell
                 cell.configure(account: self.account)
+                return cell
+            case nekoPointRaw:
+                let cell = UITableViewCell()
+                self.output.currentNyanNyanAccount.subscribe {
+                    guard let nyanNyanPoint = $0.element?.nyanNyanPoint else { return }
+                    cell.textLabel?.text = String(nyanNyanPoint)
+                }.disposed(by: disposeBag)
                 return cell
             case logoutRow:
                 let cell = tableView.dequeueReusableCell(withIdentifier: "LogoutCell") as! LogoutCell

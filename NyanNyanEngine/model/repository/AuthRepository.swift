@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import CryptoSwift
 import RxSwift
 import RxRelay
 
@@ -20,6 +21,7 @@ protocol BaseAuthRepository: AnyObject {
     func getLoggedInStatus() -> Bool
     
     var currentAccount: Observable<Account> { get }
+    var currentNyanNyanAccount: Observable<NyanNyanUser> { get }
     var isLoggedIn: Observable<Bool>? { get }
     var logoutSucceeded: Observable<Bool>? { get }
     var authPageUrl: Observable<URL?>? { get }
@@ -36,6 +38,7 @@ class AuthRepository: BaseAuthRepository {
     private let userDefaultsConnector: BaseUserDefaultsConnector
     
     let currentAccount: Observable<Account>
+    let currentNyanNyanAccount: Observable<NyanNyanUser>
     var isLoggedIn: Observable<Bool>? = nil
     private let _isLoggedIn: BehaviorRelay<Bool>
     var logoutSucceeded: Observable<Bool>? = nil
@@ -55,6 +58,9 @@ class AuthRepository: BaseAuthRepository {
         let _currentAccount = BehaviorRelay<Account>(value: Account())
         self.currentAccount = _currentAccount.asObservable()
         
+        let _currentNyanNyanAccount = BehaviorRelay<NyanNyanUser>(value: NyanNyanUser())
+        self.currentNyanNyanAccount = _currentNyanNyanAccount.asObservable()
+        
         //本当はself.getLoggedInStatusを呼びたいのだが、selfを使うものが、loginExecutedAtとここと、2箇所あ
         //またこのためだけに全プロパティをvarにするのもキモいので、getLoggedInStatusnの中身を直書きしている。
         self._isLoggedIn = BehaviorRelay<Bool>(value: (userDefaultsConnector.getString(withKey: "screen_name") != nil))
@@ -69,6 +75,10 @@ class AuthRepository: BaseAuthRepository {
         self.accountUpdatedAt = AnyObserver<String> { [unowned self] executedAt in
             self.getCurrentAccount()
                 .bind(to: _currentAccount)
+                .disposed(by: self.disposeBag)
+            
+            self.getCurrentNyanNyanAccount()
+                .bind(to: _currentNyanNyanAccount)
                 .disposed(by: self.disposeBag)
         }
     }
@@ -181,6 +191,23 @@ class AuthRepository: BaseAuthRepository {
             observer.onNext(account)
             return Disposables.create()
         }
+    }
+    
+    private func getCurrentNyanNyanAccount() -> Observable<NyanNyanUser> {
+        let defaultNyanNyanUser = NyanNyanUser(firestoreUserRecord: ["np": 9999, "tc": 0])
+        let defaultObservable = Observable<NyanNyanUser>.create {
+            $0.onNext(defaultNyanNyanUser)
+            return Disposables.create()
+        }
+        if !self.getLoggedInStatus() {
+            return defaultObservable
+        }
+        
+        guard let sealedTwitterId = self.userDefaultsConnector.getString(withKey: "user_id")?.md5() else {
+            return Observable<NyanNyanUser>.empty()
+        }
+        return self.firebaseClient.readDatabase(dbName: "users", key: sealedTwitterId)
+            .map { NyanNyanUser(firestoreUserRecord: $0) }
     }
     
     private func isAllAccountInfoFetched() -> Bool {
