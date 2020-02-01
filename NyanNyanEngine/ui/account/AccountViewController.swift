@@ -111,10 +111,10 @@ class AccountViewController: UIViewController {
 
 extension AccountViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let accountSection = 0
-        let nekoPointRaw = 1
-        let logoutRow = 2
-        if indexPath.row == logoutRow && indexPath.section == accountSection {
+        let logoutSection = 1
+        let logoutRow = 0
+        
+        if indexPath.section == logoutSection && indexPath.row == logoutRow {
             guard let account = account else { return }
             if account.isDefaultAccount() { return }
             present(self.createLogoutActionSheet(sourceView: tableView.cellForRow(at: indexPath)), animated: true, completion: nil)
@@ -124,21 +124,36 @@ extension AccountViewController: UITableViewDelegate {
 }
 
 extension AccountViewController: UITableViewDataSource {
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return 2
+    }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 3
+        let infoSection = 0
+        let logoutSection = 1
+        
+        switch section {
+        case infoSection:
+            return 2
+        case logoutSection:
+            return 1
+        default:
+            return 0
+        }
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let accountSection = 0
-        let accountRow = 0
+        let infoSection = 0
+        let twitterRow = 0
         let nekoPointRaw = 1
-        let logoutRow = 2
+        
+        let logoutSection = 1
+        let logoutRow = 0
         
         switch indexPath.section {
-        case accountSection:
+        case infoSection:
             switch indexPath.row {
-            case accountRow:
+            case twitterRow:
                 let cell = tableView.dequeueReusableCell(withIdentifier: "AccountCell") as! AccountCell
                 cell.configure(account: self.account)
                 return cell
@@ -157,6 +172,16 @@ extension AccountViewController: UITableViewDataSource {
                 break
             }
             break
+            
+        case logoutSection:
+            switch indexPath.row {
+            case logoutRow:
+                let cell = tableView.dequeueReusableCell(withIdentifier: "LogoutCell") as! LogoutCell
+                cell.configure(account: self.account)
+                return cell
+            default:
+                break
+            }
         default:
             break
         }
