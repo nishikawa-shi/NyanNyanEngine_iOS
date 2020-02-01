@@ -43,6 +43,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 return true
         }
         FirebaseApp.configure(options: fileopts)
+        self.appDelegateModel.authExecutedAt?.onNext("app launched!")
         return true
     }
 
