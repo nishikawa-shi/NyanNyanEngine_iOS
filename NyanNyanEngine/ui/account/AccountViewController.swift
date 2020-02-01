@@ -12,6 +12,7 @@ import RxSwift
 
 class AccountViewController: UIViewController {
     private var account: Account?
+    private var nyanNyanUser: NyanNyanUser?
     
     private let input: AccountViewModelInput
     private let output: AccountViewModelOutput
@@ -46,6 +47,12 @@ class AccountViewController: UIViewController {
                 self.settingsList.reloadData()
         }
         .disposed(by: disposeBag)
+        
+        output.currentNyanNyanAccount
+            .subscribe { [unowned self] in
+                self.nyanNyanUser = $0.element
+                self.settingsList.reloadData()
+        }.disposed(by: disposeBag)
         
         output.isLoading
             .subscribe { [unowned self] in
@@ -102,6 +109,7 @@ class AccountViewController: UIViewController {
     
     private func configureSettingsList() {
         settingsList.register(UINib(nibName: "AccountCell", bundle: nil), forCellReuseIdentifier: "AccountCell")
+        settingsList.register(UINib(nibName: "AccountAttributeCell", bundle: nil), forCellReuseIdentifier: "AccountAttributeCell")
         settingsList.register(UINib(nibName: "LogoutCell", bundle: nil), forCellReuseIdentifier: "LogoutCell")
         settingsList.tableFooterView = UIView()
         settingsList.delegate = self
@@ -158,15 +166,8 @@ extension AccountViewController: UITableViewDataSource {
                 cell.configure(account: self.account)
                 return cell
             case nekoPointRaw:
-                let cell = UITableViewCell()
-                self.output.currentNyanNyanAccount.subscribe {
-                    guard let nyanNyanPoint = $0.element?.nyanNyanPoint else { return }
-                    cell.textLabel?.text = String(nyanNyanPoint)
-                }.disposed(by: disposeBag)
-                return cell
-            case logoutRow:
-                let cell = tableView.dequeueReusableCell(withIdentifier: "LogoutCell") as! LogoutCell
-                cell.configure(account: self.account)
+                let cell = tableView.dequeueReusableCell(withIdentifier: "AccountAttributeCell") as! AccountAttributeCell
+                cell.configure(type: .nekosanPoint, nyanNyanUser: self.nyanNyanUser)
                 return cell
             default:
                 break

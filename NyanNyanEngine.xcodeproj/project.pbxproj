@@ -48,6 +48,8 @@
 		678B183B232F766A00671444 /* AccountViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 678B183A232F766A00671444 /* AccountViewModel.swift */; };
 		678C6B3E23E531BF00B5F8E9 /* FirebaseClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 678C6B3D23E531BF00B5F8E9 /* FirebaseClient.swift */; };
 		678C6B4423E5764000B5F8E9 /* NyanNyanUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 678C6B4323E5764000B5F8E9 /* NyanNyanUser.swift */; };
+		678C6B4D23E59CFE00B5F8E9 /* AccountAttributeCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 678C6B4B23E59CFE00B5F8E9 /* AccountAttributeCell.swift */; };
+		678C6B4E23E59CFE00B5F8E9 /* AccountAttributeCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 678C6B4C23E59CFE00B5F8E9 /* AccountAttributeCell.xib */; };
 		678E360E229A9E7600CBBCCC /* R.generated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 678E360D229A9E7600CBBCCC /* R.generated.swift */; };
 		678E3614229A9F9200CBBCCC /* StringValues.strings in Resources */ = {isa = PBXBuildFile; fileRef = 678E3616229A9F9200CBBCCC /* StringValues.strings */; };
 		678E361F229AD6EE00CBBCCC /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 678E3621229AD6EE00CBBCCC /* InfoPlist.strings */; };
@@ -137,6 +139,8 @@
 		678B183A232F766A00671444 /* AccountViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountViewModel.swift; sourceTree = "<group>"; };
 		678C6B3D23E531BF00B5F8E9 /* FirebaseClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseClient.swift; sourceTree = "<group>"; };
 		678C6B4323E5764000B5F8E9 /* NyanNyanUser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NyanNyanUser.swift; sourceTree = "<group>"; };
+		678C6B4B23E59CFE00B5F8E9 /* AccountAttributeCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountAttributeCell.swift; sourceTree = "<group>"; };
+		678C6B4C23E59CFE00B5F8E9 /* AccountAttributeCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AccountAttributeCell.xib; sourceTree = "<group>"; };
 		678E360D229A9E7600CBBCCC /* R.generated.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = R.generated.swift; sourceTree = SOURCE_ROOT; };
 		678E3615229A9F9200CBBCCC /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/StringValues.strings; sourceTree = "<group>"; };
 		678E3617229A9FC700CBBCCC /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/Main.strings; sourceTree = "<group>"; };
@@ -271,6 +275,8 @@
 				673E5CC023372256000E1A65 /* SettingsSectionHeader.swift */,
 				676ACD1A233859BC0036F328 /* AccountCell.xib */,
 				676ACD1C23385B6E0036F328 /* AccountCell.swift */,
+				678C6B4B23E59CFE00B5F8E9 /* AccountAttributeCell.swift */,
+				678C6B4C23E59CFE00B5F8E9 /* AccountAttributeCell.xib */,
 			);
 			path = view;
 			sourceTree = "<group>";
@@ -582,6 +588,7 @@
 				67666172227527FF004C886C /* LaunchScreen.storyboard in Resources */,
 				675A2E1E22E5CB5200290C14 /* TweetSummaryCell.xib in Resources */,
 				67F7C6052351E7120017BAF3 /* HomeTimeline.storyboard in Resources */,
+				678C6B4E23E59CFE00B5F8E9 /* AccountAttributeCell.xib in Resources */,
 				67F7C60A2351E7650017BAF3 /* PostNekogo.storyboard in Resources */,
 				678E361F229AD6EE00CBBCCC /* InfoPlist.strings in Resources */,
 				679A5E67227B3E960043D0E1 /* ApiKeys.plist in Resources */,
@@ -777,6 +784,7 @@
 				67392B0D227AF07900D5E77C /* AuthRepository.swift in Sources */,
 				6766616D227527FF004C886C /* NyanNyanEngine.xcdatamodeld in Sources */,
 				679A5E60227B1F250043D0E1 /* ApiRequestFactory.swift in Sources */,
+				678C6B4D23E59CFE00B5F8E9 /* AccountAttributeCell.swift in Sources */,
 				677F5D7C234CD533003296F8 /* MainViewModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
