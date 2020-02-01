@@ -13,6 +13,7 @@ import RxRelay
 protocol BaseAuthRepository: AnyObject {
     func downloadAccessToken(redirectedUrl: URL,
                              modelUpdateLogic: @escaping(() -> Void) ) -> Observable<Bool>
+    func authAppUser()
     func invalidateAccountInfo(modelUpdateLogic: @escaping(() -> Void) ) -> Observable<Bool>
     
     func getRequestToken()
@@ -31,6 +32,7 @@ class AuthRepository: BaseAuthRepository {
     
     private let disposeBag = DisposeBag()
     private let apiClient: BaseApiClient
+    private let firebaseClient: BaseFirebaseClient
     private let userDefaultsConnector: BaseUserDefaultsConnector
     
     let currentAccount: Observable<Account>
@@ -44,8 +46,10 @@ class AuthRepository: BaseAuthRepository {
     var accountUpdatedAt: AnyObserver<String>? = nil
     
     private init(apiClient: BaseApiClient = ApiClient.shared,
+                 firebaseClient: BaseFirebaseClient = FirebaseClient.shared,
                  userDefaultsConnector: BaseUserDefaultsConnector = UserDefaultsConnector.shared) {
         self.apiClient = apiClient
+        self.firebaseClient = firebaseClient
         self.userDefaultsConnector = userDefaultsConnector
         
         let _currentAccount = BehaviorRelay<Account>(value: Account())
@@ -105,6 +109,14 @@ class AuthRepository: BaseAuthRepository {
                 self._logoutSucceeded.accept(true) }
             .map (modelUpdateLogic)
             .map { true }
+    }
+    
+    func authAppUser() {
+        self.firebaseClient.authAnonymously()
+            .subscribe { [unowned self] event in
+                guard let appUserId = event.element else { return }
+                self.userDefaultsConnector.registerString(key: "app_user_id", value: appUserId)
+        }.disposed(by: disposeBag)
     }
     
     func downloadAccessToken(redirectedUrl: URL,

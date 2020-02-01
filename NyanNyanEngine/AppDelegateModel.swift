@@ -10,6 +10,7 @@ import Foundation
 import RxSwift
 
 protocol AppDelegateModelInput: AnyObject {
+    var authExecutedAt: AnyObserver<String>? { get }
     var loginExecutedAt: AnyObserver<URL>? { get }
 }
 
@@ -24,6 +25,7 @@ final class AppDelegateModel: AppDelegateModelInput, AppDelegateModelOutput {
     
     private let disposeBag = DisposeBag()
     
+    var authExecutedAt: AnyObserver<String>? = nil
     var loginExecutedAt: AnyObserver<URL>? = nil
     
     init(authRepository: BaseAuthRepository = AuthRepository.shared,
@@ -32,6 +34,10 @@ final class AppDelegateModel: AppDelegateModelInput, AppDelegateModelOutput {
         self.authRepository = authRepository
         self.tweetsRepository = tweetsRepository
         self.loadingStatusRepository = loadingStatusRepository
+        
+        self.authExecutedAt = AnyObserver<String> { [unowned self] _ in
+            self.authRepository.authAppUser()
+        }
         
         self.loginExecutedAt = AnyObserver<URL>() { [unowned self] redirectedUrl in
             self.loadingStatusRepository.loadingStatusChangedTo.onNext(true)
