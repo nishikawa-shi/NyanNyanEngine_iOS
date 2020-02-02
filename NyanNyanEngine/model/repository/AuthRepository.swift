@@ -38,6 +38,7 @@ class AuthRepository: BaseAuthRepository {
     private let userDefaultsConnector: BaseUserDefaultsConnector
     
     let currentAccount: Observable<Account>
+    private let _currentAccount: BehaviorRelay<Account>
     let currentNyanNyanAccount: Observable<NyanNyanUser>
     private let _currentNyanNyanAccount: BehaviorRelay<NyanNyanUser>
     var isLoggedIn: Observable<Bool>? = nil
@@ -56,7 +57,7 @@ class AuthRepository: BaseAuthRepository {
         self.firebaseClient = firebaseClient
         self.userDefaultsConnector = userDefaultsConnector
         
-        let _currentAccount = BehaviorRelay<Account>(value: Account())
+        self._currentAccount = BehaviorRelay<Account>(value: Account())
         self.currentAccount = _currentAccount.asObservable()
         
         self._currentNyanNyanAccount = BehaviorRelay<NyanNyanUser>(value: NyanNyanUser())
@@ -75,7 +76,7 @@ class AuthRepository: BaseAuthRepository {
         
         self.accountUpdatedAt = AnyObserver<String> { [unowned self] executedAt in
             self.getCurrentAccount()
-                .bind(to: _currentAccount)
+                .bind(to: self._currentAccount)
                 .disposed(by: self.disposeBag)
             
             self.getCurrentNyanNyanAccount()
@@ -178,7 +179,7 @@ class AuthRepository: BaseAuthRepository {
             return defaultObservable
         }
         if !isAllAccountInfoFetched() {
-            self.downloadUserInfo()
+            self.updateAccount()
         }
         guard let screenName = userDefaultsConnector.getString(withKey: "screen_name"),
             let headerName = userDefaultsConnector.getString(withKey: "screen_name"),
@@ -192,6 +193,27 @@ class AuthRepository: BaseAuthRepository {
             observer.onNext(account)
             return Disposables.create()
         }
+    }
+    
+    private func updateAccount() {
+        guard let apiKey = PlistConnector.shared.getApiKey(),
+            let apiSecret = PlistConnector.shared.getApiSecret(),
+            let accessToken = UserDefaultsConnector.shared.getString(withKey: "oauth_token"),
+            let accessTokenSecret = UserDefaultsConnector.shared.getString(withKey: "oauth_token_secret"),
+            let urlRequest = ApiRequestFactory(apiKey: apiKey,
+                                               apiSecret: apiSecret,
+                                               oauthNonce: "0000",
+                                               accessTokenSecret: accessTokenSecret,
+                                               accessToken: accessToken).createVerifyCredentialsRequest() else { return }
+        guard let headerName = userDefaultsConnector.getString(withKey: "screen_name") else { return }
+        self.apiClient.executeHttpRequest(urlRequest: urlRequest)
+            .map { [unowned self] in
+                guard let user = self.toUser(data: $0) else { return }
+                self.saveUserInfo(user: user)
+                self._currentAccount.accept(Account(user: user, headerName: headerName))
+            }
+            .subscribe()
+            .disposed(by: disposeBag)
     }
     
     private func getCurrentNyanNyanAccount() -> Observable<NyanNyanUser> {
