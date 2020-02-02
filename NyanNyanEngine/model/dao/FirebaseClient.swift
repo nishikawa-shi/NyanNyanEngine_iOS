@@ -12,7 +12,10 @@ import RxSwift
 
 protocol BaseFirebaseClient: AnyObject {
     func authAnonymously() -> Observable<String>
-    func readDatabase(dbName: String, key: String) -> Observable<[String: Any]?>
+    func createData(dbName: String, key: String, data: [String: Any])
+    func readDatabase(dbName: String,
+                      key: String,
+                      completionHandler: @escaping ((DocumentSnapshot?, Error?)->Void)) -> Observable<[String: Any]?>
 }
 
 class FirebaseClient: BaseFirebaseClient {
@@ -29,10 +32,18 @@ class FirebaseClient: BaseFirebaseClient {
         }
     }
     
-    func readDatabase(dbName: String, key: String) -> Observable<[String: Any]?>{
+    func createData(dbName: String, key: String, data: [String: Any]) {
+        let db = Firestore.firestore()
+        db.collection(dbName).document(key).setData(data)
+    }
+    
+    func readDatabase(dbName: String,
+                      key: String,
+                      completionHandler: @escaping ((DocumentSnapshot?, Error?)->Void)) -> Observable<[String: Any]?>{
         let db = Firestore.firestore()
         return Observable<[String: Any]?>.create { observer in
             db.collection(dbName).document(key).getDocument { document, error in
+                completionHandler(document, error)
                 observer.onNext(document?.data())
             }
             return Disposables.create()

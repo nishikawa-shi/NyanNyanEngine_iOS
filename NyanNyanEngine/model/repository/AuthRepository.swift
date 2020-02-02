@@ -39,6 +39,7 @@ class AuthRepository: BaseAuthRepository {
     
     let currentAccount: Observable<Account>
     let currentNyanNyanAccount: Observable<NyanNyanUser>
+    private let _currentNyanNyanAccount: BehaviorRelay<NyanNyanUser>
     var isLoggedIn: Observable<Bool>? = nil
     private let _isLoggedIn: BehaviorRelay<Bool>
     var logoutSucceeded: Observable<Bool>? = nil
@@ -58,7 +59,7 @@ class AuthRepository: BaseAuthRepository {
         let _currentAccount = BehaviorRelay<Account>(value: Account())
         self.currentAccount = _currentAccount.asObservable()
         
-        let _currentNyanNyanAccount = BehaviorRelay<NyanNyanUser>(value: NyanNyanUser())
+        self._currentNyanNyanAccount = BehaviorRelay<NyanNyanUser>(value: NyanNyanUser())
         self.currentNyanNyanAccount = _currentNyanNyanAccount.asObservable()
         
         //本当はself.getLoggedInStatusを呼びたいのだが、selfを使うものが、loginExecutedAtとここと、2箇所あ
@@ -78,7 +79,7 @@ class AuthRepository: BaseAuthRepository {
                 .disposed(by: self.disposeBag)
             
             self.getCurrentNyanNyanAccount()
-                .bind(to: _currentNyanNyanAccount)
+                .bind(to: self._currentNyanNyanAccount)
                 .disposed(by: self.disposeBag)
         }
     }
@@ -206,8 +207,18 @@ class AuthRepository: BaseAuthRepository {
         guard let sealedTwitterId = self.userDefaultsConnector.getString(withKey: "user_id")?.md5() else {
             return Observable<NyanNyanUser>.empty()
         }
-        return self.firebaseClient.readDatabase(dbName: "users", key: sealedTwitterId)
-            .map { NyanNyanUser(firestoreUserRecord: $0) }
+        return self.firebaseClient.readDatabase(dbName: "users", key: sealedTwitterId) { res, error in
+            if (res?.data() == nil) && (error == nil) {
+                self.createNyanNyanAccount()
+            }
+        }.map { NyanNyanUser(firestoreUserRecord: $0) }
+    }
+    
+    private func createNyanNyanAccount() {
+        guard let sealedTwitterId = self.userDefaultsConnector.getString(withKey: "user_id")?.md5() else {
+            return
+        }
+        self.firebaseClient.createData(dbName: "users", key: sealedTwitterId, data: ["np": 0, "tc": 0])
     }
     
     private func isAllAccountInfoFetched() -> Bool {
