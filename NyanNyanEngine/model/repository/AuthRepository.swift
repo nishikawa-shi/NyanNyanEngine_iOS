@@ -169,12 +169,20 @@ class AuthRepository: BaseAuthRepository {
     
     func updateNyanNyanAccount(postedStatus: Status) {
         guard let sealedTwitterId = self.userDefaultsConnector.getString(withKey: "user_id")?.md5() else { return }
-        FirebaseClient.shared.incrementData(dbName: "users",
-                                            documentName: sealedTwitterId,
-                                            key: "np",
-                                            increaseValue: 30) { [unowned self] _ in
-                                                self.updateNyanNyanAccount()
-        }
+        self.firebaseClient.readDatabase(dbName: "config",
+                                         key: "np_multiplier",
+                                         completionHandler:{_, _ in})
+            .subscribe { res in
+                let multiplier = (res.element??["v"] as? Int) ?? 1
+                let tweetNekosanPoint = 6
+                let nekosanPoint = tweetNekosanPoint * multiplier
+                FirebaseClient.shared.incrementData(dbName: "users",
+                                                    documentName: sealedTwitterId,
+                                                    key: "np",
+                                                    increaseValue: nekosanPoint) { [unowned self] _ in
+                                                        self.updateNyanNyanAccount()
+                }
+        }.disposed(by: disposeBag)
     }
     
     private func getCurrentAccount() -> Observable<Account> {
