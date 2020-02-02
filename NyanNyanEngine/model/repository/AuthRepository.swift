@@ -20,6 +20,8 @@ protocol BaseAuthRepository: AnyObject {
     func getRequestToken()
     func getLoggedInStatus() -> Bool
     
+    func updateNyanNyanAccount(postedStatus: Status)
+    
     var currentAccount: Observable<Account> { get }
     var currentNyanNyanAccount: Observable<NyanNyanUser> { get }
     var isLoggedIn: Observable<Bool>? { get }
@@ -165,6 +167,16 @@ class AuthRepository: BaseAuthRepository {
         return self.userDefaultsConnector.getString(withKey: "screen_name") != nil
     }
     
+    func updateNyanNyanAccount(postedStatus: Status) {
+        guard let sealedTwitterId = self.userDefaultsConnector.getString(withKey: "user_id")?.md5() else { return }
+        FirebaseClient.shared.incrementData(dbName: "users",
+                                            documentName: sealedTwitterId,
+                                            key: "np",
+                                            increaseValue: 30) { [unowned self] _ in
+                                                self.updateNyanNyanAccount()
+        }
+    }
+    
     private func getCurrentAccount() -> Observable<Account> {
         let defaultUser = User(name: R.string.stringValues.default_user_name(),
                                screenName: R.string.stringValues.default_user_id(),
@@ -234,6 +246,16 @@ class AuthRepository: BaseAuthRepository {
                 self.createNyanNyanAccount()
             }
         }.map { NyanNyanUser(firestoreUserRecord: $0) }
+    }
+    
+    private func updateNyanNyanAccount() {
+        guard let sealedTwitterId = self.userDefaultsConnector.getString(withKey: "user_id")?.md5() else {
+            return
+        }
+        self.firebaseClient.readDatabase(dbName: "users", key: sealedTwitterId, completionHandler: {_, _ in})
+            .map {return NyanNyanUser(firestoreUserRecord: $0)}
+            .bind(to: self._currentNyanNyanAccount)
+            .disposed(by: disposeBag)
     }
     
     private func createNyanNyanAccount() {

@@ -49,4 +49,11 @@ class FirebaseClient: BaseFirebaseClient {
             return Disposables.create()
         }
     }
+    
+    func incrementData(dbName: String, documentName: String, key: String, increaseValue: Int, complition: ((Error?) -> Void)?) {
+        let db = Firestore.firestore()
+        db.collection(dbName).document(documentName).updateData(
+            [key: FieldValue.increment(Int64(increaseValue))],
+            completion: complition)
+    }
 }
