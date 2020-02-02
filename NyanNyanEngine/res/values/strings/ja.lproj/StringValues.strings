@@ -15,11 +15,13 @@
 
 "default_post_original_text" = "ここに文章を書くと、下でネコ語表示されるにゃ!";
 
-"post_point_original_text" = " ぽいんと♪♪ \n";
+"post_point_original_text" = " ぽいんと😺💰 \n\n";
 "post_original_text" = "\nってツイートしたにゃ";
 
 "settings_header_acount" = "アカウント";
 "settings_title_nekosan_point" = "ネコさんぽいんと";
+"settings_lowest_rank" = "幼にゃんにゃ";
+"settings_teacher_rank" = "エンジェルにゃんにゃ";
 
 "logout_sheet_exec" = "ログアウトする";
 "logout_sheet_cancel" = "ログアウトしない";

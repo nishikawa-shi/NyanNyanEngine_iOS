@@ -11,6 +11,7 @@ import UIKit
 class AccountAttributeCell: UITableViewCell {
     enum AccountAttrributeCellType {
         case nekosanPoint
+        case nekosanRank
     }
 
     @IBOutlet weak var titleLabel: UILabel!
@@ -18,9 +19,19 @@ class AccountAttributeCell: UITableViewCell {
     
     func configure(type: AccountAttrributeCellType,
                    nyanNyanUser: NyanNyanUser?) {
-        self.titleLabel.text = R.string.stringValues.settings_title_nekosan_point()
-        if let nyanNyanPoint = nyanNyanUser?.nyanNyanPoint {
-            self.valueLabel.text = String(nyanNyanPoint)
+        switch type {
+        case .nekosanPoint:
+            self.titleLabel.text = R.string.stringValues.settings_title_nekosan_point()
+            if let nyanNyanPoint = nyanNyanUser?.nyanNyanPoint {
+                self.valueLabel.text = String(nyanNyanPoint)
+            }
+            break
+        case .nekosanRank:
+            self.titleLabel.text = "ネコさんランク"
+            self.valueLabel.text =  nyanNyanUser?.rankName
+            break
+        default:
+            break
         }
     }
 }

@@ -15,11 +15,13 @@
 
 "default_post_original_text" = "This text is translated into cat lang. below, meeow.";
 
-"post_point_original_text" = " point 😺💰 \n";
+"post_point_original_text" = " point 😺💰 \n\n";
 "post_original_text" = "\n is your cry, meeow.";
 
 "settings_header_acount" = "Account";
 "settings_title_nekosan_point" = "Meow point";
+"settings_lowest_rank" = "Baby Nyan-nya";
+"settings_teacher_rank" = "Angel Nyan-nya";
 
 "logout_sheet_exec" = "logout";
 "logout_sheet_cancel" = "stay logged in";

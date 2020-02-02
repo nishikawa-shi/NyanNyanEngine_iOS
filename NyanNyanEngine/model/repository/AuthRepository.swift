@@ -176,7 +176,7 @@ class AuthRepository: BaseAuthRepository {
         .subscribe { res in
             let multiplier = (res.element??["v"] as? Int) ?? 1
             completion(multiplier)
-        }
+        }.disposed(by: disposeBag)
     }
     
     func updateNyanNyanAccount(postedStatus: Status) {
@@ -249,7 +249,9 @@ class AuthRepository: BaseAuthRepository {
     }
     
     private func getCurrentNyanNyanAccount() -> Observable<NyanNyanUser> {
-        let defaultNyanNyanUser = NyanNyanUser(firestoreUserRecord: ["np": 9999, "tc": 0])
+        let defaultNyanNyanUser = NyanNyanUser(firestoreUserRecord: ["np": 99999, "tc": 0],
+                                               firestoreDegreeRecords: ["0": ["nam": R.string.stringValues.settings_teacher_rank(),
+                                                                              "pt": 0]])
         let defaultObservable = Observable<NyanNyanUser>.create {
             $0.onNext(defaultNyanNyanUser)
             return Disposables.create()
@@ -261,19 +263,29 @@ class AuthRepository: BaseAuthRepository {
         guard let sealedTwitterId = self.userDefaultsConnector.getString(withKey: "user_id")?.md5() else {
             return Observable<NyanNyanUser>.empty()
         }
-        return self.firebaseClient.readDatabase(dbName: "users", key: sealedTwitterId) { res, error in
-            if (res?.data() == nil) && (error == nil) {
-                self.createNyanNyanAccount()
-            }
-        }.map { NyanNyanUser(firestoreUserRecord: $0) }
+        
+        return Observable.combineLatest(
+            self.firebaseClient.readDatabase(dbName: "users", key: sealedTwitterId, completionHandler: { res, error in
+                if (res?.data() == nil) && (error == nil) {
+                    self.createNyanNyanAccount()
+                }
+            }),
+            self.firebaseClient.readDatabase(dbName: "config", key: "np_rank", completionHandler: {_, _ in}))
+            .map { users, rankConfig in
+                NyanNyanUser(firestoreUserRecord: users,
+                             firestoreDegreeRecords: rankConfig)
+        }
     }
     
     private func updateNyanNyanAccount() {
         guard let sealedTwitterId = self.userDefaultsConnector.getString(withKey: "user_id")?.md5() else {
             return
         }
-        self.firebaseClient.readDatabase(dbName: "users", key: sealedTwitterId, completionHandler: {_, _ in})
-            .map {return NyanNyanUser(firestoreUserRecord: $0)}
+        Observable.combineLatest(
+            self.firebaseClient.readDatabase(dbName: "users", key: sealedTwitterId, completionHandler: {_, _ in}),
+            self.firebaseClient.readDatabase(dbName: "config", key: "np_rank", completionHandler: {_, _ in})
+        )
+            .map {return NyanNyanUser(firestoreUserRecord: $0, firestoreDegreeRecords: $1)}
             .bind(to: self._currentNyanNyanAccount)
             .disposed(by: disposeBag)
     }
