@@ -174,7 +174,7 @@ class AuthRepository: BaseAuthRepository {
                                          completionHandler:{_, _ in})
             .subscribe { res in
                 let multiplier = (res.element??["v"] as? Int) ?? 1
-                let tweetNekosanPoint = 6
+                let tweetNekosanPoint = NekosanRank.getNekosanPoint(nekogoStr: postedStatus.text)
                 let nekosanPoint = tweetNekosanPoint * multiplier
                 FirebaseClient.shared.incrementData(dbName: "users",
                                                     documentName: sealedTwitterId,
