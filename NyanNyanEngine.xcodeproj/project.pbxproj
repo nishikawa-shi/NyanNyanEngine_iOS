@@ -27,6 +27,8 @@
 		673E5CBF23372136000E1A65 /* SettingsSectionHeader.xib in Resources */ = {isa = PBXBuildFile; fileRef = 673E5CBE23372136000E1A65 /* SettingsSectionHeader.xib */; };
 		673E5CC123372256000E1A65 /* SettingsSectionHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 673E5CC023372256000E1A65 /* SettingsSectionHeader.swift */; };
 		674E170E23E6840100EC6FDB /* NekosanRank.swift in Sources */ = {isa = PBXBuildFile; fileRef = 674E170D23E6840100EC6FDB /* NekosanRank.swift */; };
+		674E171023E69B0800EC6FDB /* NyanNyanDegree.swift in Sources */ = {isa = PBXBuildFile; fileRef = 674E170F23E69B0800EC6FDB /* NyanNyanDegree.swift */; };
+		674E171223E7022400EC6FDB /* NyanNyanDegree+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 674E171123E7022400EC6FDB /* NyanNyanDegree+Extension.swift */; };
 		6754BEC123387EED009C8106 /* LogoutCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6754BEC323387EED009C8106 /* LogoutCell.xib */; };
 		675A2E1E22E5CB5200290C14 /* TweetSummaryCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 675A2E1C22E5CB5200290C14 /* TweetSummaryCell.xib */; };
 		67666165227527FF004C886C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67666164227527FF004C886C /* AppDelegate.swift */; };
@@ -112,6 +114,8 @@
 		673E5CBE23372136000E1A65 /* SettingsSectionHeader.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SettingsSectionHeader.xib; sourceTree = "<group>"; };
 		673E5CC023372256000E1A65 /* SettingsSectionHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsSectionHeader.swift; sourceTree = "<group>"; };
 		674E170D23E6840100EC6FDB /* NekosanRank.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NekosanRank.swift; sourceTree = "<group>"; };
+		674E170F23E69B0800EC6FDB /* NyanNyanDegree.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NyanNyanDegree.swift; sourceTree = "<group>"; };
+		674E171123E7022400EC6FDB /* NyanNyanDegree+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NyanNyanDegree+Extension.swift"; sourceTree = "<group>"; };
 		6754BEC223387EED009C8106 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LogoutCell.xib; sourceTree = "<group>"; };
 		6754BEC523387F09009C8106 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/LogoutCell.strings; sourceTree = "<group>"; };
 		675A2E1C22E5CB5200290C14 /* TweetSummaryCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TweetSummaryCell.xib; sourceTree = "<group>"; };
@@ -413,6 +417,8 @@
 			isa = PBXGroup;
 			children = (
 				678C6B4323E5764000B5F8E9 /* NyanNyanUser.swift */,
+				674E170F23E69B0800EC6FDB /* NyanNyanDegree.swift */,
+				674E171123E7022400EC6FDB /* NyanNyanDegree+Extension.swift */,
 			);
 			path = firestore;
 			sourceTree = "<group>";
@@ -778,12 +784,14 @@
 				6723B28A2276926B0004FB3D /* User.swift in Sources */,
 				67D86EE0227FC5DB00965816 /* NyanNyan.swift in Sources */,
 				672FA83E227BE17E00BAB1A7 /* AppDelegateModel.swift in Sources */,
+				674E171023E69B0800EC6FDB /* NyanNyanDegree.swift in Sources */,
 				670E3979227E4738002318AE /* LoadingStatusRepository.swift in Sources */,
 				678B183B232F766A00671444 /* AccountViewModel.swift in Sources */,
 				676ACD1D23385B6E0036F328 /* AccountCell.swift in Sources */,
 				6767B0D322791745008913EA /* ApiClient.swift in Sources */,
 				67666165227527FF004C886C /* AppDelegate.swift in Sources */,
 				678C6B3E23E531BF00B5F8E9 /* FirebaseClient.swift in Sources */,
+				674E171223E7022400EC6FDB /* NyanNyanDegree+Extension.swift in Sources */,
 				673E5CBB2337096F000E1A65 /* LogoutCell.swift in Sources */,
 				67392B0D227AF07900D5E77C /* AuthRepository.swift in Sources */,
 				6766616D227527FF004C886C /* NyanNyanEngine.xcdatamodeld in Sources */,

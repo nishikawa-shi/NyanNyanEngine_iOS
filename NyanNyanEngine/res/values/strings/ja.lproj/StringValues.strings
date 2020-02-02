@@ -20,6 +20,8 @@
 
 "settings_header_acount" = "アカウント";
 "settings_title_nekosan_point" = "ネコさんぽいんと";
+"settings_lowest_rank" = "幼にゃんにゃ";
+"settings_teacher_rank" = "エンジェルにゃんにゃ";
 
 "logout_sheet_exec" = "ログアウトする";
 "logout_sheet_cancel" = "ログアウトしない";
