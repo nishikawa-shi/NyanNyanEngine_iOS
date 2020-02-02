@@ -16,6 +16,7 @@ protocol HomeTimelineViewModelInput: AnyObject {
     var pullToRefreshExecutedAt: AnyObserver<UIRefreshControl>? { get }
     var infiniteScrollExecutedAt: AnyObserver<String>? { get }
     var cellTapExecutedOn: AnyObserver<IndexPath>? { get }
+    func useMultiplierValue(completion: @escaping ((Int)->Void))
 }
 
 protocol HomeTimelineViewModelOutput: AnyObject {
@@ -126,5 +127,9 @@ final class HomeTimelineViewModel: HomeTimelineViewModelInput, HomeTimelineViewM
         self.authExecutedAt = AnyObserver<String>() { [unowned self] authedAt in
             self.authRepository.getRequestToken()
         }
+    }
+    
+    func useMultiplierValue(completion: @escaping ((Int) -> Void)) {
+        self.authRepository.useMultiplierValue(completion: completion)
     }
 }

@@ -14,6 +14,8 @@
 "default_user_nekogo" = "左上のボタンからログインするにゃあ♪\nあなたのTwitterをネコ語化だにゃ";
 
 "default_post_original_text" = "ここに文章を書くと、下でネコ語表示されるにゃ!";
+
+"post_point_original_text" = " ぽいんと♪♪ \n";
 "post_original_text" = "\nってツイートしたにゃ";
 
 "settings_header_acount" = "アカウント";

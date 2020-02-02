@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14868" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="wdH-XG-K6Z">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15702" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="wdH-XG-K6Z">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14824"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15704"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -27,10 +27,12 @@
                                     <constraint firstAttribute="height" constant="96" id="wjI-Hf-v46"/>
                                 </constraints>
                             </activityIndicatorView>
-                            <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="P51-eC-AHd" userLabel="Tweet Succeeded Label">
-                                <rect key="frame" x="32" y="611.5" width="350" height="89.5"/>
+                            <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="4" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="P51-eC-AHd" userLabel="Tweet Succeeded Label">
+                                <rect key="frame" x="32" y="566.5" width="350" height="134.5"/>
                                 <color key="backgroundColor" red="0.57647058819999997" green="0.63137254899999995" blue="0.63137254899999995" alpha="1" colorSpace="calibratedRGB"/>
-                                <string key="text">にゃーおんにゃーおんにゃーおん
+                                <string key="text">500 ぽいんと♪♪
+
+にゃーおんにゃーおんにゃーおん
 にゃんにゃにゃ！</string>
                                 <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                 <color key="textColor" red="0.0" green="0.16862745100000001" blue="0.21176470589999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -76,7 +78,7 @@
                             <constraint firstItem="x5u-6j-Ask" firstAttribute="trailing" secondItem="a4s-Gr-UY9" secondAttribute="trailing" constant="32" id="dFF-Mq-opb"/>
                             <constraint firstItem="d4c-NJ-Lhj" firstAttribute="top" secondItem="x5u-6j-Ask" secondAttribute="top" id="h1h-UH-ht9"/>
                             <constraint firstItem="x5u-6j-Ask" firstAttribute="bottom" secondItem="a4s-Gr-UY9" secondAttribute="bottom" constant="32" id="oNu-pj-9a4"/>
-                            <constraint firstItem="P51-eC-AHd" firstAttribute="height" secondItem="DKd-Tq-5zF" secondAttribute="height" multiplier="0.1" id="rbh-6i-nae"/>
+                            <constraint firstItem="P51-eC-AHd" firstAttribute="height" secondItem="DKd-Tq-5zF" secondAttribute="height" multiplier="0.15" id="rbh-6i-nae"/>
                             <constraint firstItem="4s8-dm-c6j" firstAttribute="centerY" secondItem="x5u-6j-Ask" secondAttribute="centerY" id="xfp-jK-Ggx"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="x5u-6j-Ask"/>

@@ -122,7 +122,13 @@ class HomeTimelineViewController: UIViewController {
         output.postSucceeded
             .subscribe { [unowned self] in
                 guard let text = $0.element as? String else { return }
-                self.popNoticeToast(message: text)
+                self.input.useMultiplierValue { multiplier in
+                    let pointStr = String(NekosanRank.getNekosanPoint(nekogoStr: text) * multiplier)
+                    let newMessage = [pointStr,
+                                      R.string.stringValues.post_point_original_text(),
+                                      text].joined()
+                    self.popNoticeToast(message: newMessage)
+                }
         }
         .disposed(by: disposeBag)
         

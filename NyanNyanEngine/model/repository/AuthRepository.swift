@@ -22,6 +22,8 @@ protocol BaseAuthRepository: AnyObject {
     
     func updateNyanNyanAccount(postedStatus: Status)
     
+    func useMultiplierValue(completion: @escaping ((Int) -> Void))
+    
     var currentAccount: Observable<Account> { get }
     var currentNyanNyanAccount: Observable<NyanNyanUser> { get }
     var isLoggedIn: Observable<Bool>? { get }
@@ -167,14 +169,32 @@ class AuthRepository: BaseAuthRepository {
         return self.userDefaultsConnector.getString(withKey: "screen_name") != nil
     }
     
+    func useMultiplierValue(completion: @escaping ((Int) -> Void)) {
+        self.firebaseClient.readDatabase(dbName: "config",
+                                         key: "np_multiplier",
+                                         completionHandler:{_, _ in})
+        .subscribe { res in
+            let multiplier = (res.element??["v"] as? Int) ?? 1
+            completion(multiplier)
+        }
+    }
+    
     func updateNyanNyanAccount(postedStatus: Status) {
         guard let sealedTwitterId = self.userDefaultsConnector.getString(withKey: "user_id")?.md5() else { return }
-        FirebaseClient.shared.incrementData(dbName: "users",
-                                            documentName: sealedTwitterId,
-                                            key: "np",
-                                            increaseValue: 30) { [unowned self] _ in
-                                                self.updateNyanNyanAccount()
-        }
+        self.firebaseClient.readDatabase(dbName: "config",
+                                         key: "np_multiplier",
+                                         completionHandler:{_, _ in})
+            .subscribe { res in
+                let multiplier = (res.element??["v"] as? Int) ?? 1
+                let tweetNekosanPoint = NekosanRank.getNekosanPoint(nekogoStr: postedStatus.text)
+                let nekosanPoint = tweetNekosanPoint * multiplier
+                FirebaseClient.shared.incrementData(dbName: "users",
+                                                    documentName: sealedTwitterId,
+                                                    key: "np",
+                                                    increaseValue: nekosanPoint) { [unowned self] _ in
+                                                        self.updateNyanNyanAccount()
+                }
+        }.disposed(by: disposeBag)
     }
     
     private func getCurrentAccount() -> Observable<Account> {
