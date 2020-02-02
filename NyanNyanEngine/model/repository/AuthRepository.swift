@@ -176,7 +176,7 @@ class AuthRepository: BaseAuthRepository {
         .subscribe { res in
             let multiplier = (res.element??["v"] as? Int) ?? 1
             completion(multiplier)
-        }
+        }.disposed(by: disposeBag)
     }
     
     func updateNyanNyanAccount(postedStatus: Status) {
