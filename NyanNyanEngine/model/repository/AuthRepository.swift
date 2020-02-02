@@ -22,6 +22,8 @@ protocol BaseAuthRepository: AnyObject {
     
     func updateNyanNyanAccount(postedStatus: Status)
     
+    func useMultiplierValue(completion: @escaping ((Int) -> Void))
+    
     var currentAccount: Observable<Account> { get }
     var currentNyanNyanAccount: Observable<NyanNyanUser> { get }
     var isLoggedIn: Observable<Bool>? { get }
@@ -165,6 +167,16 @@ class AuthRepository: BaseAuthRepository {
     
     func getLoggedInStatus() -> Bool {
         return self.userDefaultsConnector.getString(withKey: "screen_name") != nil
+    }
+    
+    func useMultiplierValue(completion: @escaping ((Int) -> Void)) {
+        self.firebaseClient.readDatabase(dbName: "config",
+                                         key: "np_multiplier",
+                                         completionHandler:{_, _ in})
+        .subscribe { res in
+            let multiplier = (res.element??["v"] as? Int) ?? 1
+            completion(multiplier)
+        }
     }
     
     func updateNyanNyanAccount(postedStatus: Status) {
