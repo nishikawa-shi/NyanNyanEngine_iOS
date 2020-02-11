@@ -21,7 +21,7 @@ protocol BaseFirebaseClient: AnyObject {
 class FirebaseClient: BaseFirebaseClient {
     static let shared = FirebaseClient()
     private init() { }
-
+    
     func authAnonymously() -> Observable<String>{
         return Observable<String>.create { observer in
             Auth.auth().signInAnonymously { res, err in
