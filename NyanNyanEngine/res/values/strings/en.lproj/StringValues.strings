@@ -39,6 +39,8 @@
 "nekosan_nakigoe_type9" = "Nyan";
 "nekosan_nakigoe_type99" = "Purr";
 
+"nekosan_rank_collection_name" = "np_rank_en";
+
 "time_suffix_min" = "min";
 "time_suffix_hour" = "h";
 "time_suffix_day" = "day";
