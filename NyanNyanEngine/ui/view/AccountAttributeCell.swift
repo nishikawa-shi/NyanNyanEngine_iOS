@@ -14,7 +14,7 @@ class AccountAttributeCell: UITableViewCell {
         case nekosanRank
         case nekosanNext
     }
-
+    
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var valueLabel: UILabel!
     

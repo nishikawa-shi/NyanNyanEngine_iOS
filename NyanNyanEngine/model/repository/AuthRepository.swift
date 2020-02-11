@@ -173,9 +173,9 @@ class AuthRepository: BaseAuthRepository {
         self.firebaseClient.readDatabase(dbName: "config",
                                          key: "np_multiplier",
                                          completionHandler:{_, _ in})
-        .subscribe { res in
-            let multiplier = (res.element??["v"] as? Int) ?? 1
-            completion(multiplier)
+            .subscribe { res in
+                let multiplier = (res.element??["v"] as? Int) ?? 1
+                completion(multiplier)
         }.disposed(by: disposeBag)
     }
     
@@ -243,9 +243,9 @@ class AuthRepository: BaseAuthRepository {
                 guard let user = self.toUser(data: $0) else { return }
                 self.saveUserInfo(user: user)
                 self._currentAccount.accept(Account(user: user, headerName: headerName))
-            }
-            .subscribe()
-            .disposed(by: disposeBag)
+        }
+        .subscribe()
+        .disposed(by: disposeBag)
     }
     
     private func getCurrentNyanNyanAccount() -> Observable<NyanNyanUser> {

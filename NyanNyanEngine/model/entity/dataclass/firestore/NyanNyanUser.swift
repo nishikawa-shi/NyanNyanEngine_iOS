@@ -33,7 +33,7 @@ struct NyanNyanUser {
         }
         return nil
     }
-
+    
     init(firestoreUserRecord: [String: Any]? = nil,
          firestoreDegreeRecords: [String: Any]? = nil) {
         self.nyanNyanPoint = (firestoreUserRecord?["np"] as? Int) ?? 0
