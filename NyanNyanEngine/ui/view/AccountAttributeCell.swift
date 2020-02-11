@@ -12,6 +12,7 @@ class AccountAttributeCell: UITableViewCell {
     enum AccountAttrributeCellType {
         case nekosanPoint
         case nekosanRank
+        case nekosanNext
     }
 
     @IBOutlet weak var titleLabel: UILabel!
@@ -29,6 +30,14 @@ class AccountAttributeCell: UITableViewCell {
         case .nekosanRank:
             self.titleLabel.text = "ネコさんランク"
             self.valueLabel.text =  nyanNyanUser?.rankName
+            break
+        case .nekosanNext:
+            self.titleLabel.text = "次のランクまで"
+            guard let nextRankPoint = nyanNyanUser?.nextRankPoint else {
+                self.valueLabel.text = "-"
+                break
+            }
+            self.valueLabel.text = String(nextRankPoint)
             break
         default:
             break

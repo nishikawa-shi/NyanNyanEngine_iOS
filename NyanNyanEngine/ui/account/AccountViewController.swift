@@ -142,7 +142,7 @@ extension AccountViewController: UITableViewDataSource {
         
         switch section {
         case infoSection:
-            return 3
+            return 4
         case logoutSection:
             return 1
         default:
@@ -155,6 +155,7 @@ extension AccountViewController: UITableViewDataSource {
         let twitterRow = 0
         let nekoPointRaw = 1
         let nekoRankRaw = 2
+        let nekoNextRaw = 3
         
         let logoutSection = 1
         let logoutRow = 0
@@ -173,6 +174,10 @@ extension AccountViewController: UITableViewDataSource {
             case nekoRankRaw:
                 let cell = tableView.dequeueReusableCell(withIdentifier: "AccountAttributeCell") as! AccountAttributeCell
                 cell.configure(type: .nekosanRank, nyanNyanUser: self.nyanNyanUser)
+                return cell
+            case nekoNextRaw:
+                let cell = tableView.dequeueReusableCell(withIdentifier: "AccountAttributeCell") as! AccountAttributeCell
+                cell.configure(type: .nekosanNext, nyanNyanUser: self.nyanNyanUser)
                 return cell
             default:
                 break
