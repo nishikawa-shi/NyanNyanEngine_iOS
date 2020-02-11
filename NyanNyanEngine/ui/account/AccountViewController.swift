@@ -158,6 +158,14 @@ extension AccountViewController: UITableViewDataSource {
         }
     }
     
+    func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
+        let infoSection = 0
+        if (indexPath.section == infoSection) {
+            return nil
+        }
+        return indexPath
+    }
+    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let infoSection = 0
         let twitterRow = 0
