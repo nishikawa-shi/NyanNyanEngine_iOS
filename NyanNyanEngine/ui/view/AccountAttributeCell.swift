@@ -21,15 +21,15 @@ class AccountAttributeCell: UITableViewCell {
     func configure(type: AccountAttrributeCellType,
                    nyanNyanUser: NyanNyanUser?) {
         switch type {
+        case .nekosanRank:
+            self.titleLabel.text = "ネコさんランク"
+            self.valueLabel.text =  nyanNyanUser?.rankName
+            break
         case .nekosanPoint:
             self.titleLabel.text = R.string.stringValues.settings_title_nekosan_point()
             if let nyanNyanPoint = nyanNyanUser?.nyanNyanPoint {
                 self.valueLabel.text = String(nyanNyanPoint)
             }
-            break
-        case .nekosanRank:
-            self.titleLabel.text = "ネコさんランク"
-            self.valueLabel.text =  nyanNyanUser?.rankName
             break
         case .nekosanNext:
             self.titleLabel.text = "次のランクまで"

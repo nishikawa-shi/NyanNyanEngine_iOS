@@ -153,8 +153,8 @@ extension AccountViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let infoSection = 0
         let twitterRow = 0
-        let nekoPointRaw = 1
-        let nekoRankRaw = 2
+        let nekoRankRaw = 1
+        let nekoPointRaw = 2
         let nekoNextRaw = 3
         
         let logoutSection = 1
@@ -167,13 +167,13 @@ extension AccountViewController: UITableViewDataSource {
                 let cell = tableView.dequeueReusableCell(withIdentifier: "AccountCell") as! AccountCell
                 cell.configure(account: self.account)
                 return cell
-            case nekoPointRaw:
-                let cell = tableView.dequeueReusableCell(withIdentifier: "AccountAttributeCell") as! AccountAttributeCell
-                cell.configure(type: .nekosanPoint, nyanNyanUser: self.nyanNyanUser)
-                return cell
             case nekoRankRaw:
                 let cell = tableView.dequeueReusableCell(withIdentifier: "AccountAttributeCell") as! AccountAttributeCell
                 cell.configure(type: .nekosanRank, nyanNyanUser: self.nyanNyanUser)
+                return cell
+            case nekoPointRaw:
+                let cell = tableView.dequeueReusableCell(withIdentifier: "AccountAttributeCell") as! AccountAttributeCell
+                cell.configure(type: .nekosanPoint, nyanNyanUser: self.nyanNyanUser)
                 return cell
             case nekoNextRaw:
                 let cell = tableView.dequeueReusableCell(withIdentifier: "AccountAttributeCell") as! AccountAttributeCell
