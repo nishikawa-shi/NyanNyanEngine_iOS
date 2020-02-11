@@ -136,6 +136,14 @@ extension AccountViewController: UITableViewDataSource {
         return 2
     }
     
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        let infoSection = 0
+        if (section == infoSection) {
+            return .leastNormalMagnitude
+        }
+        return 40
+    }
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         let infoSection = 0
         let logoutSection = 1
