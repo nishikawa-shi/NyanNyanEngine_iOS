@@ -22,7 +22,7 @@ class AccountAttributeCell: UITableViewCell {
                    nyanNyanUser: NyanNyanUser?) {
         switch type {
         case .nekosanRank:
-            self.titleLabel.text = "ネコさんランク"
+            self.titleLabel.text = R.string.stringValues.settings_title_nekosan_rank()
             self.valueLabel.text =  nyanNyanUser?.rankName
             break
         case .nekosanPoint:
@@ -32,7 +32,7 @@ class AccountAttributeCell: UITableViewCell {
             }
             break
         case .nekosanNext:
-            self.titleLabel.text = "次のランクまで"
+            self.titleLabel.text = R.string.stringValues.settings_title_nekosan_next()
             guard let nextRankPoint = nyanNyanUser?.nextRankPoint else {
                 self.valueLabel.text = "-"
                 break

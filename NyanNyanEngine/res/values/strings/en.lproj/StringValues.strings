@@ -19,7 +19,9 @@
 "post_original_text" = "\n is your cry, meeow.";
 
 "settings_header_acount" = "Account";
+"settings_title_nekosan_rank" = "Meow rank";
 "settings_title_nekosan_point" = "Meow point";
+"settings_title_nekosan_next" = "To next rank";
 "settings_lowest_rank" = "Baby Nyan-nya";
 "settings_teacher_rank" = "Angel Nyan-nya";
 
