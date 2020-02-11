@@ -19,7 +19,9 @@
 "post_original_text" = "\nってツイートしたにゃ";
 
 "settings_header_acount" = "アカウント";
+"settings_title_nekosan_rank" = "ネコさんランク";
 "settings_title_nekosan_point" = "ネコさんぽいんと";
+"settings_title_nekosan_next" = "次のランクまで";
 "settings_lowest_rank" = "幼にゃんにゃ";
 "settings_teacher_rank" = "エンジェルにゃんにゃ";
 
@@ -38,6 +40,8 @@
 "nekosan_nakigoe_type8" = "にゃーおん";
 "nekosan_nakigoe_type9" = "にゃあ";
 "nekosan_nakigoe_type99" = "ごろごろ";
+
+"nekosan_rank_collection_name" = "np_rank_ja";
 
 "time_suffix_min" = "分前";
 "time_suffix_hour" = "時間前";

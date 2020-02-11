@@ -270,7 +270,9 @@ class AuthRepository: BaseAuthRepository {
                     self.createNyanNyanAccount()
                 }
             }),
-            self.firebaseClient.readDatabase(dbName: "config", key: "np_rank", completionHandler: {_, _ in}))
+            self.firebaseClient.readDatabase(dbName: "config",
+                                             key: R.string.stringValues.nekosan_rank_collection_name(),
+                                             completionHandler: {_, _ in}))
             .map { users, rankConfig in
                 NyanNyanUser(firestoreUserRecord: users,
                              firestoreDegreeRecords: rankConfig)
@@ -283,7 +285,9 @@ class AuthRepository: BaseAuthRepository {
         }
         Observable.combineLatest(
             self.firebaseClient.readDatabase(dbName: "users", key: sealedTwitterId, completionHandler: {_, _ in}),
-            self.firebaseClient.readDatabase(dbName: "config", key: "np_rank", completionHandler: {_, _ in})
+            self.firebaseClient.readDatabase(dbName: "config",
+                                             key: R.string.stringValues.nekosan_rank_collection_name(),
+                                             completionHandler: {_, _ in})
         )
             .map {return NyanNyanUser(firestoreUserRecord: $0, firestoreDegreeRecords: $1)}
             .bind(to: self._currentNyanNyanAccount)

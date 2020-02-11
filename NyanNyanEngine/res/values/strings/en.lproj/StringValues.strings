@@ -19,7 +19,9 @@
 "post_original_text" = "\n is your cry, meeow.";
 
 "settings_header_acount" = "Account";
+"settings_title_nekosan_rank" = "Meow rank";
 "settings_title_nekosan_point" = "Meow point";
+"settings_title_nekosan_next" = "To next rank";
 "settings_lowest_rank" = "Baby Nyan-nya";
 "settings_teacher_rank" = "Angel Nyan-nya";
 
@@ -38,6 +40,8 @@
 "nekosan_nakigoe_type8" = "Myau";
 "nekosan_nakigoe_type9" = "Nyan";
 "nekosan_nakigoe_type99" = "Purr";
+
+"nekosan_rank_collection_name" = "np_rank_en";
 
 "time_suffix_min" = "min";
 "time_suffix_hour" = "h";
