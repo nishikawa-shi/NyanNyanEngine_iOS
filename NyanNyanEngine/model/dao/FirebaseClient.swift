@@ -12,7 +12,9 @@ import RxSwift
 
 protocol BaseFirebaseClient: AnyObject {
     func authAnonymously() -> Observable<String>
-    func createData(dbName: String, key: String, data: [String: Any])
+    func createData(dbName: String, key: String,
+                    data: [String: Any],
+                    completionHandler: @escaping ((Error?)->Void))
     func readDatabase(dbName: String,
                       key: String,
                       completionHandler: @escaping ((DocumentSnapshot?, Error?)->Void)) -> Observable<[String: Any]?>
@@ -32,9 +34,12 @@ class FirebaseClient: BaseFirebaseClient {
         }
     }
     
-    func createData(dbName: String, key: String, data: [String: Any]) {
+    func createData(dbName: String,
+                    key: String,
+                    data: [String: Any],
+                    completionHandler: @escaping ((Error?)->Void)) {
         let db = Firestore.firestore()
-        db.collection(dbName).document(key).setData(data)
+        db.collection(dbName).document(key).setData(data, completion: completionHandler)
     }
     
     func readDatabase(dbName: String,
