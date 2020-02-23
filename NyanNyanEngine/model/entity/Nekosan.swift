@@ -40,7 +40,7 @@ struct Nekosan {
             ].joined(separator: "|")
         let nekogoBodyPattern = ["(", nekogoRange, ")"].joined()
         
-        let nekosanPrefixPattern = "(😊|🙁|🐤|🐟|🏆|🌈|🎊|:\\)|XD)"
+        let nekosanPrefixPattern = "(😊|🙁|🐤|🐳|🐟|🏆|🌈|🎊|:\\)|XD)"
         
         let nekogoHashTagRange = [R.string.stringValues.settings_title_hashtag_engine(),
                                   R.string.stringValues.settings_title_hashtag_nadenade()]
