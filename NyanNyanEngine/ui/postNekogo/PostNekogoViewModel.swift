@@ -18,7 +18,7 @@ protocol PostNekogoViewModelInput: AnyObject {
 protocol PostNekogoViewModelOutput: AnyObject {
     var nekogoText: Observable<String?> { get }
     var allowTweet: Observable<Bool> { get }
-    var postSucceeded: Observable<Status?> { get }
+    var postSucceeded: Observable<String?> { get }
     var isLoading: Observable<Bool> { get }
 }
 
@@ -33,7 +33,7 @@ final class PostNekogoViewModel: PostNekogoViewModelInput, PostNekogoViewModelOu
     
     var nekogoText: Observable<String?>
     let allowTweet: Observable<Bool>
-    let postSucceeded: Observable<Status?>
+    let postSucceeded: Observable<String?>
     let isLoading: Observable<Bool>
     
     init(tweetsRepository: BaseTweetsRepository = TweetsRepository.shared,

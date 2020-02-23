@@ -65,7 +65,7 @@ final class HomeTimelineViewModel: HomeTimelineViewModelInput, HomeTimelineViewM
         self.isLoggedIn = authRepository.isLoggedIn
         self.authPageUrl = authRepository.authPageUrl
         self.postSucceeded = tweetsRepository.postedStatus.map {
-            guard let text = $0?.text else { return nil }
+            guard let text = $0 else { return nil }
             return [text, R.string.stringValues.post_original_text()].joined()
         }
         
