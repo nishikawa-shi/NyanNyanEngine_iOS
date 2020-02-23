@@ -182,7 +182,6 @@ class AuthRepository: BaseAuthRepository {
     func updateNyanNyanAccount(postedStatus: Status) {
         guard let sealedTwitterId = self.userDefaultsConnector.getString(withKey: "user_id")?.md5() else { return }
         
-        
         self.firebaseClient.readDatabase(dbName: "users", key: sealedTwitterId, completionHandler: { res, error in
             // 何らかの原因で、ネコさんアカウントができる前に投稿できてしまう現象があるらしいので、アカウント存在チェックをしている。
             if (res?.data() == nil) && (error == nil) {
