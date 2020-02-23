@@ -184,7 +184,7 @@ class AuthRepository: BaseAuthRepository {
         
         
         self.firebaseClient.readDatabase(dbName: "users", key: sealedTwitterId, completionHandler: { res, error in
-//          何らかの原因で、ネコさんアカウントができる前に投稿できてしまう現象があるらしいので、アカウント存在チェックをしている。
+            // 何らかの原因で、ネコさんアカウントができる前に投稿できてしまう現象があるらしいので、アカウント存在チェックをしている。
             if (res?.data() == nil) && (error == nil) {
                 self.createNyanNyanAccount() { _ in
                     self.firebaseClient.readDatabase(dbName: "config",
