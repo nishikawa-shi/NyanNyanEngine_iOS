@@ -28,6 +28,8 @@
 		673E5CC123372256000E1A65 /* SettingsSectionHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 673E5CC023372256000E1A65 /* SettingsSectionHeader.swift */; };
 		6744D36124027DF6003FFC0D /* SwitchConfigCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6744D35F24027DF6003FFC0D /* SwitchConfigCell.swift */; };
 		6744D36224027DF6003FFC0D /* SwitchConfigCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6744D36024027DF6003FFC0D /* SwitchConfigCell.xib */; };
+		6744D364240287F5003FFC0D /* LocalSettingsRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6744D363240287F5003FFC0D /* LocalSettingsRepository.swift */; };
+		6744D36624028876003FFC0D /* HashTag.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6744D36524028876003FFC0D /* HashTag.swift */; };
 		674E170E23E6840100EC6FDB /* NekosanRank.swift in Sources */ = {isa = PBXBuildFile; fileRef = 674E170D23E6840100EC6FDB /* NekosanRank.swift */; };
 		674E171023E69B0800EC6FDB /* NyanNyanDegree.swift in Sources */ = {isa = PBXBuildFile; fileRef = 674E170F23E69B0800EC6FDB /* NyanNyanDegree.swift */; };
 		674E171223E7022400EC6FDB /* NyanNyanDegree+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 674E171123E7022400EC6FDB /* NyanNyanDegree+Extension.swift */; };
@@ -121,6 +123,8 @@
 		673E5CC023372256000E1A65 /* SettingsSectionHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsSectionHeader.swift; sourceTree = "<group>"; };
 		6744D35F24027DF6003FFC0D /* SwitchConfigCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwitchConfigCell.swift; sourceTree = "<group>"; };
 		6744D36024027DF6003FFC0D /* SwitchConfigCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SwitchConfigCell.xib; sourceTree = "<group>"; };
+		6744D363240287F5003FFC0D /* LocalSettingsRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalSettingsRepository.swift; sourceTree = "<group>"; };
+		6744D36524028876003FFC0D /* HashTag.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HashTag.swift; sourceTree = "<group>"; };
 		674E170D23E6840100EC6FDB /* NekosanRank.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NekosanRank.swift; sourceTree = "<group>"; };
 		674E170F23E69B0800EC6FDB /* NyanNyanDegree.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NyanNyanDegree.swift; sourceTree = "<group>"; };
 		674E171123E7022400EC6FDB /* NyanNyanDegree+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NyanNyanDegree+Extension.swift"; sourceTree = "<group>"; };
@@ -267,6 +271,7 @@
 				6723B28222767C8B0004FB3D /* api */,
 				67D86EDF227FC5DB00965816 /* NyanNyan.swift */,
 				6776339D22B60F6500D9CCC3 /* NyanNyanSection.swift */,
+				6744D36524028876003FFC0D /* HashTag.swift */,
 			);
 			path = dataclass;
 			sourceTree = "<group>";
@@ -384,6 +389,7 @@
 				6767B0CF22791033008913EA /* TweetsRepository.swift */,
 				67392B0C227AF07900D5E77C /* AuthRepository.swift */,
 				670E3978227E4738002318AE /* LoadingStatusRepository.swift */,
+				6744D363240287F5003FFC0D /* LocalSettingsRepository.swift */,
 			);
 			path = repository;
 			sourceTree = "<group>";
@@ -804,9 +810,11 @@
 				6734D7F32279803200A19044 /* TweetSummaryCell.swift in Sources */,
 				6776339E22B60F6500D9CCC3 /* NyanNyanSection.swift in Sources */,
 				6752A9E024021F990014769D /* ConfigTransitionCell.swift in Sources */,
+				6744D364240287F5003FFC0D /* LocalSettingsRepository.swift in Sources */,
 				67E3C4D4228E2F6900B93E1D /* PostNekogoViewController.swift in Sources */,
 				67F88C0A227C2484004DF44A /* UserDefaultsConnector.swift in Sources */,
 				676ACD1923384C040036F328 /* Account.swift in Sources */,
+				6744D36624028876003FFC0D /* HashTag.swift in Sources */,
 				679A5E65227B3B590043D0E1 /* PlistConnector.swift in Sources */,
 				673E5CC123372256000E1A65 /* SettingsSectionHeader.swift in Sources */,
 				678E360E229A9E7600CBBCCC /* R.generated.swift in Sources */,
