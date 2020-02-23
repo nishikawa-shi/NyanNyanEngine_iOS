@@ -181,20 +181,46 @@ class AuthRepository: BaseAuthRepository {
     
     func updateNyanNyanAccount(postedStatus: Status) {
         guard let sealedTwitterId = self.userDefaultsConnector.getString(withKey: "user_id")?.md5() else { return }
-        self.firebaseClient.readDatabase(dbName: "config",
-                                         key: "np_multiplier",
-                                         completionHandler:{_, _ in})
-            .subscribe { res in
-                let multiplier = (res.element??["v"] as? Int) ?? 1
-                let tweetNekosanPoint = NekosanRank.getNekosanPoint(nekogoStr: postedStatus.text)
-                let nekosanPoint = tweetNekosanPoint * multiplier
-                FirebaseClient.shared.incrementData(dbName: "users",
-                                                    documentName: sealedTwitterId,
-                                                    key: "np",
-                                                    increaseValue: nekosanPoint) { [unowned self] _ in
-                                                        self.updateNyanNyanAccount()
+        
+        
+        self.firebaseClient.readDatabase(dbName: "users", key: sealedTwitterId, completionHandler: { res, error in
+//          何らかの原因で、ネコさんアカウントができる前に投稿できてしまう現象があるらしいので、アカウント存在チェックをしている。
+            if (res?.data() == nil) && (error == nil) {
+                self.createNyanNyanAccount() { _ in
+                    self.firebaseClient.readDatabase(dbName: "config",
+                                                     key: "np_multiplier",
+                                                     completionHandler:{_, _ in})
+                        .subscribe { res in
+                            let multiplier = (res.element??["v"] as? Int) ?? 1
+                            let tweetNekosanPoint = NekosanRank.getNekosanPoint(nekogoStr: postedStatus.text)
+                            let nekosanPoint = tweetNekosanPoint * multiplier
+                            FirebaseClient.shared.incrementData(dbName: "users",
+                                                                documentName: sealedTwitterId,
+                                                                key: "np",
+                                                                increaseValue: nekosanPoint) { [unowned self] _ in
+                                                                    self.updateNyanNyanAccount()
+                            }
+                    }.disposed(by: self.disposeBag)
                 }
-        }.disposed(by: disposeBag)
+                return
+            }
+            self.firebaseClient.readDatabase(dbName: "config",
+                                             key: "np_multiplier",
+                                             completionHandler:{_, _ in})
+                .subscribe { res in
+                    let multiplier = (res.element??["v"] as? Int) ?? 1
+                    let tweetNekosanPoint = NekosanRank.getNekosanPoint(nekogoStr: postedStatus.text)
+                    let nekosanPoint = tweetNekosanPoint * multiplier
+                    FirebaseClient.shared.incrementData(dbName: "users",
+                                                        documentName: sealedTwitterId,
+                                                        key: "np",
+                                                        increaseValue: nekosanPoint) { [unowned self] _ in
+                                                            self.updateNyanNyanAccount()
+                    }
+            }.disposed(by: self.disposeBag)
+            
+        }).subscribe()
+            .disposed(by: disposeBag)
     }
     
     private func getCurrentAccount() -> Observable<Account> {
@@ -267,7 +293,7 @@ class AuthRepository: BaseAuthRepository {
         return Observable.combineLatest(
             self.firebaseClient.readDatabase(dbName: "users", key: sealedTwitterId, completionHandler: { res, error in
                 if (res?.data() == nil) && (error == nil) {
-                    self.createNyanNyanAccount()
+                    self.createNyanNyanAccount() {_ in}
                 }
             }),
             self.firebaseClient.readDatabase(dbName: "config",
@@ -294,11 +320,13 @@ class AuthRepository: BaseAuthRepository {
             .disposed(by: disposeBag)
     }
     
-    private func createNyanNyanAccount() {
+    private func createNyanNyanAccount(completionHandler: @escaping ((Error?)->Void)) {
         guard let sealedTwitterId = self.userDefaultsConnector.getString(withKey: "user_id")?.md5() else {
             return
         }
-        self.firebaseClient.createData(dbName: "users", key: sealedTwitterId, data: ["np": 0, "tc": 0])
+        self.firebaseClient.createData(dbName: "users", key: sealedTwitterId,
+                                       data: ["np": 0, "tc": 0],
+                                       completionHandler: completionHandler)
     }
     
     private func isAllAccountInfoFetched() -> Bool {
