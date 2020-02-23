@@ -68,7 +68,7 @@ class AccountViewController: UIViewController {
         }
         .disposed(by: disposeBag)
     }
-    
+        
     private func createLogoutActionSheet(sourceView: UIView?) -> UIAlertController {
         let alert = UIAlertController(title: nil,
                                       message: nil,
@@ -111,6 +111,7 @@ class AccountViewController: UIViewController {
         settingsList.register(UINib(nibName: "AccountCell", bundle: nil), forCellReuseIdentifier: "AccountCell")
         settingsList.register(UINib(nibName: "AccountAttributeCell", bundle: nil), forCellReuseIdentifier: "AccountAttributeCell")
         settingsList.register(UINib(nibName: "LogoutCell", bundle: nil), forCellReuseIdentifier: "LogoutCell")
+        settingsList.register(UINib(nibName: "ConfigTransitionCell", bundle: nil), forCellReuseIdentifier: "ConfigTransitionCell")
         settingsList.tableFooterView = UIView()
         settingsList.delegate = self
         settingsList.dataSource = self
@@ -119,13 +120,18 @@ class AccountViewController: UIViewController {
 
 extension AccountViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let logoutSection = 1
+        let tweetSection = 1
+        let hashTagRow = 0
+        
+        let logoutSection = 2
         let logoutRow = 0
         
         if indexPath.section == logoutSection && indexPath.row == logoutRow {
             guard let account = account else { return }
             if account.isDefaultAccount() { return }
             present(self.createLogoutActionSheet(sourceView: tableView.cellForRow(at: indexPath)), animated: true, completion: nil)
+        } else if indexPath.section == tweetSection && indexPath.row == hashTagRow {
+            performSegue(withIdentifier: "AccountToHashTag", sender: nil)
         }
         tableView.deselectRow(at: indexPath, animated: true)
     }
@@ -133,7 +139,7 @@ extension AccountViewController: UITableViewDelegate {
 
 extension AccountViewController: UITableViewDataSource {
     func numberOfSections(in tableView: UITableView) -> Int {
-        return 2
+        return 3
     }
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
@@ -146,11 +152,14 @@ extension AccountViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         let infoSection = 0
-        let logoutSection = 1
+        let tweetSection = 1
+        let logoutSection = 2
         
         switch section {
         case infoSection:
             return 4
+        case tweetSection:
+            return 1
         case logoutSection:
             return 1
         default:
@@ -173,7 +182,10 @@ extension AccountViewController: UITableViewDataSource {
         let nekoPointRaw = 2
         let nekoNextRaw = 3
         
-        let logoutSection = 1
+        let tweetSection = 1
+        let hashTagRow = 0
+        
+        let logoutSection = 2
         let logoutRow = 0
         
         switch indexPath.section {
@@ -194,6 +206,17 @@ extension AccountViewController: UITableViewDataSource {
             case nekoNextRaw:
                 let cell = tableView.dequeueReusableCell(withIdentifier: "AccountAttributeCell") as! AccountAttributeCell
                 cell.configure(type: .nekosanNext, nyanNyanUser: self.nyanNyanUser)
+                return cell
+            default:
+                break
+            }
+            break
+        
+        case tweetSection:
+            switch indexPath.row {
+            case hashTagRow:
+                let cell = tableView.dequeueReusableCell(withIdentifier: "ConfigTransitionCell") as! ConfigTransitionCell
+                cell.configure(type: .hashTag)
                 return cell
             default:
                 break
