@@ -68,7 +68,7 @@ class AccountViewController: UIViewController {
         }
         .disposed(by: disposeBag)
     }
-    
+        
     private func createLogoutActionSheet(sourceView: UIView?) -> UIAlertController {
         let alert = UIAlertController(title: nil,
                                       message: nil,
@@ -120,6 +120,9 @@ class AccountViewController: UIViewController {
 
 extension AccountViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let tweetSection = 1
+        let hashTagRow = 0
+        
         let logoutSection = 2
         let logoutRow = 0
         
@@ -127,6 +130,8 @@ extension AccountViewController: UITableViewDelegate {
             guard let account = account else { return }
             if account.isDefaultAccount() { return }
             present(self.createLogoutActionSheet(sourceView: tableView.cellForRow(at: indexPath)), animated: true, completion: nil)
+        } else if indexPath.section == tweetSection && indexPath.row == hashTagRow {
+            performSegue(withIdentifier: "AccountToHashTag", sender: nil)
         }
         tableView.deselectRow(at: indexPath, animated: true)
     }

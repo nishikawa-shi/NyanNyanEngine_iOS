@@ -64,11 +64,22 @@
                         <outlet property="activityIndicator" destination="VRT-Yv-Y84" id="aVP-UD-ClA"/>
                         <outlet property="noticeToast" destination="ZIw-Hk-YsC" id="ZNL-Zi-BUR"/>
                         <outlet property="settingsList" destination="Dv0-am-ruh" id="NfD-fF-Zg8"/>
+                        <segue destination="igE-4t-fRo" kind="show" identifier="AccountToHashTag" id="UY6-hm-BJB"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dVA-Vh-KSj" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1047.8260869565217" y="55.580357142857139"/>
+        </scene>
+        <!--HashTagSetting-->
+        <scene sceneID="RIs-JF-8wx">
+            <objects>
+                <viewControllerPlaceholder storyboardName="HashTagSetting" id="igE-4t-fRo" sceneMemberID="viewController">
+                    <navigationItem key="navigationItem" id="l6g-D6-sda"/>
+                </viewControllerPlaceholder>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="jA0-Pt-qF5" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1736" y="56"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="ilL-Z2-JsQ">
