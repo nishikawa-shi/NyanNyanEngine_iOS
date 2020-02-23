@@ -26,6 +26,8 @@
 		673E5CBB2337096F000E1A65 /* LogoutCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 673E5CBA2337096F000E1A65 /* LogoutCell.swift */; };
 		673E5CBF23372136000E1A65 /* SettingsSectionHeader.xib in Resources */ = {isa = PBXBuildFile; fileRef = 673E5CBE23372136000E1A65 /* SettingsSectionHeader.xib */; };
 		673E5CC123372256000E1A65 /* SettingsSectionHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 673E5CC023372256000E1A65 /* SettingsSectionHeader.swift */; };
+		6744D36124027DF6003FFC0D /* SwitchConfigCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6744D35F24027DF6003FFC0D /* SwitchConfigCell.swift */; };
+		6744D36224027DF6003FFC0D /* SwitchConfigCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6744D36024027DF6003FFC0D /* SwitchConfigCell.xib */; };
 		674E170E23E6840100EC6FDB /* NekosanRank.swift in Sources */ = {isa = PBXBuildFile; fileRef = 674E170D23E6840100EC6FDB /* NekosanRank.swift */; };
 		674E171023E69B0800EC6FDB /* NyanNyanDegree.swift in Sources */ = {isa = PBXBuildFile; fileRef = 674E170F23E69B0800EC6FDB /* NyanNyanDegree.swift */; };
 		674E171223E7022400EC6FDB /* NyanNyanDegree+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 674E171123E7022400EC6FDB /* NyanNyanDegree+Extension.swift */; };
@@ -117,6 +119,8 @@
 		673E5CBA2337096F000E1A65 /* LogoutCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogoutCell.swift; sourceTree = "<group>"; };
 		673E5CBE23372136000E1A65 /* SettingsSectionHeader.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SettingsSectionHeader.xib; sourceTree = "<group>"; };
 		673E5CC023372256000E1A65 /* SettingsSectionHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsSectionHeader.swift; sourceTree = "<group>"; };
+		6744D35F24027DF6003FFC0D /* SwitchConfigCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwitchConfigCell.swift; sourceTree = "<group>"; };
+		6744D36024027DF6003FFC0D /* SwitchConfigCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SwitchConfigCell.xib; sourceTree = "<group>"; };
 		674E170D23E6840100EC6FDB /* NekosanRank.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NekosanRank.swift; sourceTree = "<group>"; };
 		674E170F23E69B0800EC6FDB /* NyanNyanDegree.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NyanNyanDegree.swift; sourceTree = "<group>"; };
 		674E171123E7022400EC6FDB /* NyanNyanDegree+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NyanNyanDegree+Extension.swift"; sourceTree = "<group>"; };
@@ -294,6 +298,8 @@
 				678C6B4C23E59CFE00B5F8E9 /* AccountAttributeCell.xib */,
 				6752A9DE24021F990014769D /* ConfigTransitionCell.swift */,
 				6752A9DF24021F990014769D /* ConfigTransitionCell.xib */,
+				6744D35F24027DF6003FFC0D /* SwitchConfigCell.swift */,
+				6744D36024027DF6003FFC0D /* SwitchConfigCell.xib */,
 			);
 			path = view;
 			sourceTree = "<group>";
@@ -615,6 +621,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				67666172227527FF004C886C /* LaunchScreen.storyboard in Resources */,
+				6744D36224027DF6003FFC0D /* SwitchConfigCell.xib in Resources */,
 				675A2E1E22E5CB5200290C14 /* TweetSummaryCell.xib in Resources */,
 				67F7C6052351E7120017BAF3 /* HomeTimeline.storyboard in Resources */,
 				678C6B4E23E59CFE00B5F8E9 /* AccountAttributeCell.xib in Resources */,
@@ -818,6 +825,7 @@
 				674E171223E7022400EC6FDB /* NyanNyanDegree+Extension.swift in Sources */,
 				673E5CBB2337096F000E1A65 /* LogoutCell.swift in Sources */,
 				67392B0D227AF07900D5E77C /* AuthRepository.swift in Sources */,
+				6744D36124027DF6003FFC0D /* SwitchConfigCell.swift in Sources */,
 				6766616D227527FF004C886C /* NyanNyanEngine.xcdatamodeld in Sources */,
 				679A5E60227B1F250043D0E1 /* ApiRequestFactory.swift in Sources */,
 				678C6B4D23E59CFE00B5F8E9 /* AccountAttributeCell.swift in Sources */,
