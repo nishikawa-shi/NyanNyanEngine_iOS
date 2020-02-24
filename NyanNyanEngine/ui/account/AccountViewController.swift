@@ -68,7 +68,7 @@ class AccountViewController: UIViewController {
         }
         .disposed(by: disposeBag)
     }
-        
+    
     private func createLogoutActionSheet(sourceView: UIView?) -> UIAlertController {
         let alert = UIAlertController(title: nil,
                                       message: nil,
@@ -211,7 +211,7 @@ extension AccountViewController: UITableViewDataSource {
                 break
             }
             break
-        
+            
         case tweetSection:
             switch indexPath.row {
             case hashTagRow:
