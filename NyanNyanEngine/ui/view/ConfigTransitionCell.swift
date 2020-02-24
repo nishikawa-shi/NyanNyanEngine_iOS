@@ -13,7 +13,7 @@ class ConfigTransitionCell: UITableViewCell {
     enum ConfigTransitionCellType {
         case hashTag
     }
-
+    
     func configure(type: ConfigTransitionCellType) {
         switch type {
         case .hashTag:
