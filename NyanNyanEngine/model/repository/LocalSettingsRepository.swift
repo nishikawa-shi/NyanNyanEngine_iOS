@@ -21,6 +21,15 @@ class LocalSettingsRepository {
                 return false
             }
         }
+        
+        func getTweetText() -> String {
+            switch self {
+            case .hashTagEngine:
+                return R.string.stringValues.settings_title_hashtag_engine()
+            case .hashTagNadeNade:
+                return R.string.stringValues.settings_title_hashtag_nadenade()
+            }
+        }
     }
     
     static let shared = LocalSettingsRepository()

@@ -40,9 +40,13 @@ struct Nekosan {
             ].joined(separator: "|")
         let nekogoBodyPattern = ["(", nekogoRange, ")"].joined()
         
-        let nekosanPrefixPattern = "(😊|🙁|🐤|🐟|🏆|🌈|🎊|:\\)|XD)"
-        let pattern = ["^", nekogoBodyPattern, "{1,3}", nekosanPrefixPattern, "?", "$"].joined()
+        let nekosanPrefixPattern = "(😊|🙁|🐤|🐳|🐟|🏆|🌈|🎊|:\\)|XD)"
         
+        let nekogoHashTagRange = [R.string.stringValues.settings_title_hashtag_engine(),
+                                  R.string.stringValues.settings_title_hashtag_nadenade()]
+        let nekogoHashTagPattern = nekogoHashTagRange.map { _ in "(\\s?#.{1,15})?" }.joined()
+        
+        let pattern = ["^", nekogoBodyPattern, "{1,3}", nekosanPrefixPattern, "?", nekogoHashTagPattern, "$"].joined()
         guard let regex = try? NSRegularExpression(pattern: pattern) else { return false }
         return (regex.matches(in: sourceStr,
                               range: NSRange(location: 0, length:sourceStr.count))

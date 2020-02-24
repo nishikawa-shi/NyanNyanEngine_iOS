@@ -12,7 +12,7 @@ import RxRelay
 
 protocol BaseTweetsRepository: AnyObject {
     var nyanNyanStatuses: Observable<[NyanNyan]?> { get }
-    var postedStatus: Observable<Status?> { get }
+    var postedStatus: Observable<String?> { get }
     var listScrollUpExecuted: Observable<Bool>{ get }
     var buttonRefreshExecutedAt: AnyObserver<(() -> Void)>? { get }
     var pullToRefreshExecutedAt: AnyObserver<UIRefreshControl?>? { get }
@@ -31,7 +31,7 @@ class TweetsRepository: BaseTweetsRepository {
     private var currentMinId = Int.max
     
     let nyanNyanStatuses: Observable<[NyanNyan]?>
-    let postedStatus: Observable<Status?>
+    let postedStatus: Observable<String?>
     let listScrollUpExecuted: Observable<Bool>
     var buttonRefreshExecutedAt: AnyObserver<(() -> Void)>? = nil
     var pullToRefreshExecutedAt: AnyObserver<UIRefreshControl?>? = nil
@@ -47,7 +47,7 @@ class TweetsRepository: BaseTweetsRepository {
         let _statuses = BehaviorRelay<[NyanNyan]?>(value: nil)
         self.nyanNyanStatuses = _statuses.asObservable()
         
-        let _postedStatus = PublishRelay<Status?>()
+        let _postedStatus = PublishRelay<String?>()
         self.postedStatus = _postedStatus.asObservable()
         
         let _listScrollUpExecuted = PublishRelay<Bool>()
@@ -121,7 +121,11 @@ class TweetsRepository: BaseTweetsRepository {
         
         self.postExecutedAs = AnyObserver<String?> {
             guard let nekosanTextBody = $0.element as? String else { return }
-            self.postTweets(nekosanText: nekosanTextBody)
+            let decoratedBody = LocalSettingsRepository.HashTagTypes.allCases
+                .filter{LocalSettingsRepository.shared.getHashTagSetting(type: $0).isEnabled}
+                .map { $0.getTweetText() }
+                .reduce(nekosanTextBody) { [$0, $1].joined(separator: " ") }
+            self.postTweets(nekosanText: decoratedBody)
                 .map {
                     let postedStatus = $0 ?? Status(id: 2828,
                                                     text: "にゃにゃーーーおん",
@@ -133,7 +137,7 @@ class TweetsRepository: BaseTweetsRepository {
                     //Observerの型をラムダ式ではなくStringにしたかったのでここでLoadingStatusRepositoryへの依存が生まれてしまっている。
                     //モジュール性が若干下がるので、構成を見直した方が良いかもしれない・・・
                     LoadingStatusRepository.shared.loadingStatusChangedTo.onNext(false)
-                    return postedStatus
+                    return nekosanTextBody
             }
             .bind(to: _postedStatus)
             .disposed(by: self.disposeBag)
