@@ -185,7 +185,7 @@ class TweetsRepository: BaseTweetsRepository {
     private func updateMin(statuses: [NyanNyan]?) {
         guard let statuses = statuses,
             let minId = statuses.map({$0.id}).min() else { return }
-        if(minId < self.currentMinId) {
+        if (minId < self.currentMinId) || (self.currentMinId == DefaultNekosan().nyanNyanStatuses[0].id) {
             self.currentMinId = minId
         }
     }

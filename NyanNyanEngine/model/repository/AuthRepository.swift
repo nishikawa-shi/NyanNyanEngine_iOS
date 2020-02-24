@@ -357,6 +357,11 @@ class AuthRepository: BaseAuthRepository {
     }
     
     private func saveTokens(accessTokenApiResponseQuery: [URLQueryItem]) {
+        //原因は不明だが、アカウントによってはoauth_tokenやoauth_token_secretにSANITIZEDが設定されたレスポンスが返ってくる場合がある。無効なものなので、保存しない
+        if accessTokenApiResponseQuery.map({ $0.value }).contains("SANITIZED") {
+            return
+        }
+        
         accessTokenApiResponseQuery.forEach { [unowned self] item in
             print(item)
             guard let value = item.value else { return }
