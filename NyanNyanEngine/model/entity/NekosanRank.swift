@@ -10,6 +10,10 @@ import Foundation
 
 class NekosanRank {
     static func getNekosanPoint(nekogoStr: String) -> Int {
+        return getNekosanPrefixPoint(nekogoStr: nekogoStr) + getHashTagPoint()
+    }
+    
+    static func getNekosanPrefixPoint(nekogoStr: String) -> Int {
         if nekogoStr.contains("🌈") {
             return 80
         }
@@ -38,5 +42,11 @@ class NekosanRank {
             return 20
         }
         return 10
+    }
+    
+    static func getHashTagPoint() -> Int {
+        return LocalSettingsRepository.HashTagTypes.allCases.reduce(0) {
+            return $0 + (LocalSettingsRepository.shared.getHashTagSetting(type: $1).isEnabled ? $1.getTweetPoint() : 0)
+        }
     }
 }

@@ -30,6 +30,15 @@ class LocalSettingsRepository {
                 return R.string.stringValues.settings_title_hashtag_nadenade()
             }
         }
+        
+        func getTweetPoint() -> Int {
+            switch self {
+            case .hashTagEngine:
+                return 30
+            case .hashTagNadeNade:
+                return 50
+            }
+        }
     }
     
     static let shared = LocalSettingsRepository()
