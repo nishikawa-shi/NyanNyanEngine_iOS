@@ -28,10 +28,10 @@
 "settings_lowest_rank" = "Baby Nyan-nya";
 "settings_teacher_rank" = "Angel Nyan-nya";
 
-"logout_sheet_exec" = "logout";
-"logout_sheet_cancel" = "stay logged in";
-"logout_pop_succeeded" = "logout has been succeeded XD";
-"logout_pop_failed" = "logout has been failed.. meow..";
+"logout_sheet_exec" = "sign out";
+"logout_sheet_cancel" = "stay signed in";
+"logout_pop_succeeded" = "sign out has been succeeded XD";
+"logout_pop_failed" = "sign out has been failed.. meow..";
 
 "nekosan_nakigoe_type1" = "Meow";
 "nekosan_nakigoe_type2" = "Miaow";
