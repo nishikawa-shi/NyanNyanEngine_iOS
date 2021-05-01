@@ -16,11 +16,26 @@ or alternatively using `brew cask install fastlane`
 
 # Available Actions
 ## iOS
-### ios custom_lane
+### ios load_certs
 ```
-fastlane ios custom_lane
+fastlane ios load_certs
 ```
-Description of what the lane does
+provisioning profile読み取りlane
+### ios add_device_to_profiles
+```
+fastlane ios add_device_to_profiles
+```
+provisioning profileへの端末追加lane
+### ios produce_certs
+```
+fastlane ios produce_certs
+```
+provisioning profile生成lane
+### ios produce_push_certs
+```
+fastlane ios produce_push_certs
+```
+プッシュ通知証明書生成lane
 
 ----
 
