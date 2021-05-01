@@ -112,4 +112,33 @@ platform :ios do
       readonly: false
     )
   end
+
+  desc "プッシュ通知証明書生成lane"
+  lane :produce_push_certs do |options|
+    case options[:env]
+    when "develop"
+      produce_sandbox_and_production_push_certs_lane(
+        app_identifier: APP_IDENTIFIER_DEVELOP
+      )
+    when "production"
+      produce_sandbox_and_production_push_certs_lane(
+        app_identifier: APP_IDENTIFIER_PRODUCTION
+      )
+    else
+      raise("引数envを付与して実行してください。: `fastlane produce_push_certs env:(develop|production)`")
+    end
+  end
+
+  private_lane :produce_sandbox_and_production_push_certs_lane do |options|
+    if not options[:app_identifier]
+      raise("引数 app_identifier が不足しています")
+    end
+    pem(
+      app_identifier: options[:app_identifier],
+      development: true
+    )
+    pem(
+      app_identifier: options[:app_identifier]
+    )
+  end
 end
