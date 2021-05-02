@@ -1,0 +1,139 @@
+# This file contains the fastlane.tools configuration
+# You can find the documentation at https://docs.fastlane.tools
+#
+# For a list of all available actions, check out
+#
+#     https://docs.fastlane.tools/actions
+#
+# For a list of all available plugins, check out
+#
+#     https://docs.fastlane.tools/plugins/available-plugins
+#
+
+# Uncomment the line if you want fastlane to automatically update itself
+# update_fastlane
+
+default_platform(:ios)
+
+platform :ios do
+  APP_IDENTIFIER_DEVELOP = "com.ntetz.ios.NyanNyanEngine.debug"
+  APP_IDENTIFIER_PRODUCTION = "com.ntetz.ios.NyanNyanEngine"
+
+  desc "provisioning profile読み取りlane"
+  lane :load_certs do
+    match(
+      app_identifier: [
+        APP_IDENTIFIER_DEVELOP,
+        APP_IDENTIFIER_PRODUCTION
+      ],
+      type: "development",
+      readonly: true
+    )
+
+    match(
+      app_identifier: [
+        APP_IDENTIFIER_DEVELOP,
+        APP_IDENTIFIER_PRODUCTION
+      ],
+      type: "adhoc",
+      readonly: true
+    )
+
+    match(
+      app_identifier: [
+        APP_IDENTIFIER_PRODUCTION
+      ],
+      type: "appstore",
+      readonly: true
+    )
+  end
+
+  desc "provisioning profileへの端末追加lane"
+  lane :add_device_to_profiles do |options|
+    if (not options[:name]) || (not options[:udid])
+      raise("使い方: bundle exec fastlane add_device_to_profiles name:\"2019's_XSMax\" udid:\"00001111-00011112222A112E\"")
+    end
+
+    register_devices(
+      devices: {
+        options[:name] => options[:udid]
+      }
+    )
+
+    match(
+      app_identifier: [
+        APP_IDENTIFIER_DEVELOP,
+        APP_IDENTIFIER_PRODUCTION
+      ],
+      type: "development",
+      force_for_new_devices: true
+    )
+
+    match(
+      app_identifier: [
+        APP_IDENTIFIER_DEVELOP,
+        APP_IDENTIFIER_PRODUCTION
+      ],
+      type: "adhoc",
+      force_for_new_devices: true
+    )
+  end
+
+  desc "provisioning profile生成lane"
+  lane :produce_certs do
+    match(
+      app_identifier: [
+        APP_IDENTIFIER_DEVELOP,
+        APP_IDENTIFIER_PRODUCTION
+      ],
+      type: "development",
+      readonly: false
+    )
+
+    match(
+      app_identifier: [
+        APP_IDENTIFIER_DEVELOP,
+        APP_IDENTIFIER_PRODUCTION
+      ],
+      type: "adhoc",
+      readonly: false
+    )
+
+    match(
+      app_identifier: [
+        APP_IDENTIFIER_PRODUCTION
+      ],
+      type: "appstore",
+      readonly: false
+    )
+  end
+
+  desc "プッシュ通知証明書生成lane"
+  lane :produce_push_certs do |options|
+    case options[:env]
+    when "develop"
+      produce_sandbox_and_production_push_certs_lane(
+        app_identifier: APP_IDENTIFIER_DEVELOP
+      )
+    when "production"
+      produce_sandbox_and_production_push_certs_lane(
+        app_identifier: APP_IDENTIFIER_PRODUCTION
+      )
+    else
+      raise("引数envを付与して実行してください。: `fastlane produce_push_certs env:(develop|production)`")
+    end
+  end
+
+  private_lane :produce_sandbox_and_production_push_certs_lane do |options|
+    if not options[:app_identifier]
+      raise("引数 app_identifier が不足しています")
+    end
+    pem(
+      app_identifier: options[:app_identifier],
+      development: true
+    )
+    pem(
+      app_identifier: options[:app_identifier]
+    )
+  end
+end
