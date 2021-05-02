@@ -95,5 +95,8 @@ NyanNyanEngine/GoogleService-Info-Release.plist
 public/apple-app-site-association
 public/.well-known/apple-app-site-association
 
+# App Links(for android dev)
+public/.well-known/assetlinks.json
+
 # R.swift
 *.generated.swift
