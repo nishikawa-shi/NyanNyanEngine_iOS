@@ -6,12 +6,12 @@ target 'NyanNyanEngine' do
   use_frameworks!
 
   # Pods for NyanNyanEngine
-  pod 'Firebase/Core'
-  pod 'Fabric',                 '~> 1.9.0'
+  pod 'Firebase/Analytics'
   pod 'Firebase/Auth',          '~> 6.4'
+  pod 'Firebase/Core'
+  pod 'Firebase/Crashlytics'
   pod 'Firebase/Firestore',     '~> 6.15'
   pod 'FirebaseFirestoreSwift', '~> 0.2'
-  pod 'Crashlytics',            '~> 3.12.0'
   pod 'R.swift',                '~> 5'
   pod 'RxSwift',                '~> 5'
   pod 'RxCocoa',                '~> 5'
@@ -26,8 +26,9 @@ target 'NyanNyanEngine' do
 
   target 'NyanNyanEngineUITests' do
     inherit! :search_paths
-    pod 'Firebase/Core'
+    pod 'Firebase/Analytics'
     pod 'Firebase/Auth',          '~> 6.4'
+    pod 'Firebase/Core'
     pod 'Firebase/Firestore',     '~> 6.15'
     pod 'FirebaseFirestoreSwift', '~> 0.2'
     pod 'R.swift',                '~> 5'
