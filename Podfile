@@ -16,7 +16,7 @@ target 'NyanNyanEngine' do
   pod 'RxSwift',                '~> 5'
   pod 'RxCocoa',                '~> 5'
   pod 'RxDataSources',          '~> 4.0'
-  pod 'CryptoSwift',            '~> 1'
+  pod 'CryptoSwift'
   pod 'Nuke',                   '~> 7.0'
 
   target 'NyanNyanEngineTests' do
@@ -35,7 +35,7 @@ target 'NyanNyanEngine' do
     pod 'RxSwift',                '~> 5'
     pod 'RxCocoa',                '~> 5'
     pod 'RxDataSources',          '~> 4.0'
-    pod 'CryptoSwift',            '~> 1'
+    pod 'CryptoSwift'
     pod 'Nuke',                   '~> 7.0'
     # Pods for testing
   end
