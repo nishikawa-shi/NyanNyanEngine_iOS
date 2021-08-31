@@ -23,8 +23,7 @@ platform :ios do
   lane :load_certs do
     match(
       app_identifier: [
-        APP_IDENTIFIER_DEVELOP,
-        APP_IDENTIFIER_PRODUCTION
+        APP_IDENTIFIER_DEVELOP
       ],
       type: "development",
       readonly: true
@@ -32,7 +31,6 @@ platform :ios do
 
     match(
       app_identifier: [
-        APP_IDENTIFIER_DEVELOP,
         APP_IDENTIFIER_PRODUCTION
       ],
       type: "adhoc",
@@ -62,8 +60,7 @@ platform :ios do
 
     match(
       app_identifier: [
-        APP_IDENTIFIER_DEVELOP,
-        APP_IDENTIFIER_PRODUCTION
+        APP_IDENTIFIER_DEVELOP
       ],
       type: "development",
       force_for_new_devices: true
@@ -71,7 +68,6 @@ platform :ios do
 
     match(
       app_identifier: [
-        APP_IDENTIFIER_DEVELOP,
         APP_IDENTIFIER_PRODUCTION
       ],
       type: "adhoc",
@@ -83,8 +79,7 @@ platform :ios do
   lane :produce_certs do
     match(
       app_identifier: [
-        APP_IDENTIFIER_DEVELOP,
-        APP_IDENTIFIER_PRODUCTION
+        APP_IDENTIFIER_DEVELOP
       ],
       type: "development",
       readonly: false
@@ -92,7 +87,6 @@ platform :ios do
 
     match(
       app_identifier: [
-        APP_IDENTIFIER_DEVELOP,
         APP_IDENTIFIER_PRODUCTION
       ],
       type: "adhoc",
