@@ -31,11 +31,6 @@ provisioning profileへの端末追加lane
 fastlane ios produce_certs
 ```
 provisioning profile生成lane
-### ios produce_push_certs
-```
-fastlane ios produce_push_certs
-```
-プッシュ通知証明書生成lane
 
 ----
 
