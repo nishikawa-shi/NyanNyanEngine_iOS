@@ -1,12 +1,12 @@
 //
 //  CryptoSwift
 //
-//  Copyright (C) 2014-2017 Marcin Krzyżanowski <marcin@krzyzanowskim.com>
+//  Copyright (C) 2014-2025 Marcin Krzyżanowski <marcin@krzyzanowskim.com>
 //  This software is provided 'as-is', without any express or implied warranty.
 //
 //  In no event will the authors be held liable for any damages arising from the use of this software.
 //
-//  Permission is granted to anyone to use this software for any purpose,including commercial applications, and to alter it and redistribute it freely, subject to the following restrictions:
+//  Permission is granted to anyone to use this software for any purpose, including commercial applications, and to alter it and redistribute it freely, subject to the following restrictions:
 //
 //  - The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation is required.
 //  - Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
@@ -329,12 +329,20 @@ public final class Blowfish {
   }
 
   private func setupBlockModeWorkers() throws {
-    self.encryptWorker = try self.blockMode.worker(blockSize: Blowfish.blockSize, cipherOperation: self.encrypt, encryptionOperation: self.encrypt)
+    let decryptBlock = { [weak self] (block: ArraySlice<UInt8>) -> Array<UInt8>? in
+      self?.decrypt(block: block)
+    }
+
+    let encryptBlock = { [weak self] (block: ArraySlice<UInt8>) -> Array<UInt8>? in
+      self?.encrypt(block: block)
+    }
+
+    self.encryptWorker = try self.blockMode.worker(blockSize: Blowfish.blockSize, cipherOperation: encryptBlock, encryptionOperation: encryptBlock)
 
     if self.blockMode.options.contains(.useEncryptToDecrypt) {
-      self.decryptWorker = try self.blockMode.worker(blockSize: Blowfish.blockSize, cipherOperation: self.encrypt, encryptionOperation: self.encrypt)
+      self.decryptWorker = try self.blockMode.worker(blockSize: Blowfish.blockSize, cipherOperation: encryptBlock, encryptionOperation: encryptBlock)
     } else {
-      self.decryptWorker = try self.blockMode.worker(blockSize: Blowfish.blockSize, cipherOperation: self.decrypt, encryptionOperation: self.encrypt)
+      self.decryptWorker = try self.blockMode.worker(blockSize: Blowfish.blockSize, cipherOperation: decryptBlock, encryptionOperation: encryptBlock)
     }
   }
 
@@ -376,13 +384,13 @@ public final class Blowfish {
     }
   }
 
-  fileprivate func encrypt(block: ArraySlice<UInt8>) -> Array<UInt8>? {
+  private func encrypt(block: ArraySlice<UInt8>) -> Array<UInt8>? {
     var result = Array<UInt8>()
 
     var l = UInt32(bytes: block[block.startIndex..<block.startIndex.advanced(by: 4)])
     var r = UInt32(bytes: block[block.startIndex.advanced(by: 4)..<block.startIndex.advanced(by: 8)])
 
-    encryptBlowfishBlock(l: &l, r: &r)
+    self.encryptBlowfishBlock(l: &l, r: &r)
 
     // because everything is too complex to be solved in reasonable time o_O
     result += [
@@ -405,13 +413,13 @@ public final class Blowfish {
     return result
   }
 
-  fileprivate func decrypt(block: ArraySlice<UInt8>) -> Array<UInt8>? {
+  private func decrypt(block: ArraySlice<UInt8>) -> Array<UInt8>? {
     var result = Array<UInt8>()
 
     var l = UInt32(bytes: block[block.startIndex..<block.startIndex.advanced(by: 4)])
     var r = UInt32(bytes: block[block.startIndex.advanced(by: 4)..<block.startIndex.advanced(by: 8)])
 
-    decryptBlowfishBlock(l: &l, r: &r)
+    self.decryptBlowfishBlock(l: &l, r: &r)
 
     // because everything is too complex to be solved in reasonable time o_O
     result += [
@@ -527,7 +535,7 @@ extension Blowfish: Cipher {
     out.reserveCapacity(bytes.count)
 
     for chunk in Array(bytes).batched(by: Blowfish.blockSize) {
-      out += self.decryptWorker.decrypt(block: chunk) // FIXME: copying here is innefective
+      out += self.decryptWorker.decrypt(block: chunk) // FIXME: copying here is ineffective
     }
 
     out = self.padding.remove(from: out, blockSize: Blowfish.blockSize)

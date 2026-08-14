@@ -13,18 +13,62 @@
 // limitations under the License.
 
 #import <Foundation/Foundation.h>
+#import <objc/runtime.h>
 
-#import "GoogleUtilities/Network/Private/GULNetworkURLSession.h"
+#import "GoogleUtilities/Network/Public/GoogleUtilities/GULNetworkURLSession.h"
 
-#import "GoogleUtilities/Logger/Private/GULLogger.h"
-#import "GoogleUtilities/Network/Private/GULMutableDictionary.h"
-#import "GoogleUtilities/Network/Private/GULNetworkConstants.h"
-#import "GoogleUtilities/Network/Private/GULNetworkMessageCode.h"
+#import "GoogleUtilities/Logger/Public/GoogleUtilities/GULLogger.h"
+#import "GoogleUtilities/Network/GULNetworkInternal.h"
+#import "GoogleUtilities/Network/Public/GoogleUtilities/GULMutableDictionary.h"
+#import "GoogleUtilities/Network/Public/GoogleUtilities/GULNetworkConstants.h"
+#import "GoogleUtilities/Network/Public/GoogleUtilities/GULNetworkMessageCode.h"
 
 @interface GULNetworkURLSession () <NSURLSessionDelegate,
                                     NSURLSessionDataDelegate,
                                     NSURLSessionDownloadDelegate,
                                     NSURLSessionTaskDelegate>
+@end
+
+@interface GULNetworkURLSessionWeakHolder : NSObject
+@property(nonatomic, weak) GULNetworkURLSession *session;
+@end
+
+@implementation GULNetworkURLSessionWeakHolder
+@end
+
+@interface GULNetworkURLSession (Private)
++ (NSMutableDictionary<NSString *, GULNetworkURLSessionWeakHolder *> *)sessionIDToFetcherMap;
++ (NSLock *)sessionIDToFetcherMapReadWriteLock;
+@end
+
+@interface GULSessionDeallocTracker : NSObject
+@property(nonatomic, copy) NSString *sessionID;
+@property(nonatomic, strong) GULNetworkURLSessionWeakHolder *holder;
+- (instancetype)initWithSessionID:(NSString *)sessionID
+                           holder:(GULNetworkURLSessionWeakHolder *)holder;
+@end
+
+@implementation GULSessionDeallocTracker
+- (instancetype)initWithSessionID:(NSString *)sessionID
+                           holder:(GULNetworkURLSessionWeakHolder *)holder {
+  self = [super init];
+  if (self) {
+    NSParameterAssert(sessionID);
+    _sessionID = [sessionID copy];
+    _holder = holder;
+  }
+  return self;
+}
+
+- (void)dealloc {
+  [[GULNetworkURLSession sessionIDToFetcherMapReadWriteLock] lock];
+  GULNetworkURLSessionWeakHolder *currentDictionaryHolder =
+      [[GULNetworkURLSession sessionIDToFetcherMap] objectForKey:_sessionID];
+  if (currentDictionaryHolder == _holder) {
+    [[GULNetworkURLSession sessionIDToFetcherMap] removeObjectForKey:_sessionID];
+  }
+  [[GULNetworkURLSession sessionIDToFetcherMapReadWriteLock] unlock];
+}
 @end
 
 @implementation GULNetworkURLSession {
@@ -34,14 +78,11 @@
   /// Session ID generated randomly with a fixed prefix.
   NSString *_sessionID;
 
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wunguarded-availability"
-  /// The session configuration. NSURLSessionConfiguration' is only available on iOS 7.0 or newer.
+  /// The session configuration.
   NSURLSessionConfiguration *_sessionConfig;
 
   /// The current NSURLSession.
   NSURLSession *__weak _Nullable _URLSession;
-#pragma clang diagnostic pop
 
   /// The path to the directory where all temporary files are stored before uploading.
   NSURL *_networkDirectoryURL;
@@ -62,12 +103,15 @@
   self = [super init];
   if (self) {
     // Create URL to the directory where all temporary files to upload have to be stored.
+#if TARGET_OS_TV
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);
+#else
     NSArray *paths =
         NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, YES);
-    NSString *applicationSupportDirectory = paths.firstObject;
+#endif
+    NSString *storageDirectory = paths.firstObject;
     NSArray *tempPathComponents = @[
-      applicationSupportDirectory, kGULNetworkApplicationSupportSubdirectory,
-      kGULNetworkTempDirectoryName
+      storageDirectory, kGULNetworkApplicationSupportSubdirectory, kGULNetworkTempDirectoryName
     ];
     _networkDirectoryURL = [NSURL fileURLWithPathComponents:tempPathComponents];
     _sessionID = [NSString stringWithFormat:@"%@-%@", kGULNetworkBackgroundSessionConfigIDPrefix,
@@ -92,20 +136,19 @@
   if (fetcher != nil) {
     [fetcher addSystemCompletionHandler:systemCompletionHandler forSession:sessionID];
   } else {
-    GULLogError(kGULLoggerNetwork, NO,
-                [NSString stringWithFormat:@"I-NET%06ld", (long)kGULNetworkMessageCodeNetwork003],
-                @"Failed to retrieve background session with ID %@ after app is relaunched.",
-                sessionID);
+    GULOSLogError(kGULLogSubsystem, kGULLoggerNetwork, NO,
+                  [NSString stringWithFormat:@"I-NET%06ld", (long)kGULNetworkMessageCodeNetwork003],
+                  @"Failed to retrieve background session with ID %@ after app is relaunched.",
+                  sessionID);
   }
 }
 
 #pragma mark - External Methods
 
-/// Sends an async POST request using NSURLSession for iOS >= 7.0, and returns an ID of the
-/// connection.
+/// Sends an async POST request using `NSURLSession`, and returns an ID of the connection.
 - (nullable NSString *)sessionIDFromAsyncPOSTRequest:(NSURLRequest *)request
-                                   completionHandler:(GULNetworkURLSessionCompletionHandler)handler
-    API_AVAILABLE(ios(7.0)) {
+                                   completionHandler:
+                                       (GULNetworkURLSessionCompletionHandler)handler {
   // NSURLSessionUploadTask does not work with NSData in the background.
   // To avoid this issue, write the data to a temporary file to upload it.
   // Make a temporary file with the data subset.
@@ -141,19 +184,27 @@
     [self excludeFromBackupForURL:_uploadingFileURL];
 
     _sessionConfig = [self backgroundSessionConfigWithSessionID:_sessionID];
-    [self populateSessionConfig:_sessionConfig withRequest:request];
-    session = [NSURLSession sessionWithConfiguration:_sessionConfig
-                                            delegate:self
-                                       delegateQueue:[NSOperationQueue mainQueue]];
-    postRequestTask = [session uploadTaskWithRequest:request fromFile:_uploadingFileURL];
   } else {
     // If we cannot write to file, just send it in the foreground.
     _sessionConfig = [NSURLSessionConfiguration defaultSessionConfiguration];
-    [self populateSessionConfig:_sessionConfig withRequest:request];
-    session = [NSURLSession sessionWithConfiguration:_sessionConfig
-                                            delegate:self
-                                       delegateQueue:[NSOperationQueue mainQueue]];
-    postRequestTask = [session uploadTaskWithRequest:request fromData:request.HTTPBody];
+  }
+  [self populateSessionConfig:_sessionConfig withRequest:request];
+  session = [NSURLSession sessionWithConfiguration:_sessionConfig
+                                          delegate:self
+                                     delegateQueue:[NSOperationQueue mainQueue]];
+  // To avoid a runtime warning in Xcode 15 Beta 4, the given `URLRequest`
+  // should have a nil `HTTPBody`. To workaround this, the given `URLRequest`
+  // is copied and the `HTTPBody` data is removed.
+  NSData *givenRequestHTTPBody = [request.HTTPBody copy];
+  NSMutableURLRequest *requestWithoutHTTPBody = [request mutableCopy];
+  requestWithoutHTTPBody.HTTPBody = nil;
+
+  if (didWriteFile) {
+    postRequestTask = [session uploadTaskWithRequest:requestWithoutHTTPBody
+                                            fromFile:_uploadingFileURL];
+  } else {
+    postRequestTask = [session uploadTaskWithRequest:requestWithoutHTTPBody
+                                            fromData:givenRequestHTTPBody];
   }
 
   if (!session || !postRequestTask) {
@@ -180,10 +231,9 @@
   return _sessionID;
 }
 
-/// Sends an async GET request using NSURLSession for iOS >= 7.0, and returns an ID of the session.
+/// Sends an async GET request using `NSURLSession`, and returns an ID of the session.
 - (nullable NSString *)sessionIDFromAsyncGETRequest:(NSURLRequest *)request
-                                  completionHandler:(GULNetworkURLSessionCompletionHandler)handler
-    API_AVAILABLE(ios(7.0)) {
+                                  completionHandler:(GULNetworkURLSessionCompletionHandler)handler {
   if (_backgroundNetworkEnabled) {
     _sessionConfig = [self backgroundSessionConfigWithSessionID:_sessionID];
   } else {
@@ -248,7 +298,7 @@
 /// be called with the downloaded data.
 - (void)URLSession:(NSURLSession *)session
                  downloadTask:(NSURLSessionDownloadTask *)task
-    didFinishDownloadingToURL:(NSURL *)url API_AVAILABLE(ios(7.0)) {
+    didFinishDownloadingToURL:(NSURL *)url {
   if (!url.path) {
     [_loggerDelegate
         GULNetwork_logWithLevel:kGULNetworkLogLevelError
@@ -271,8 +321,7 @@
 }
 
 #if TARGET_OS_IOS || TARGET_OS_TV
-- (void)URLSessionDidFinishEventsForBackgroundURLSession:(NSURLSession *)session
-    API_AVAILABLE(ios(7.0)) {
+- (void)URLSessionDidFinishEventsForBackgroundURLSession:(NSURLSession *)session {
   [_loggerDelegate GULNetwork_logWithLevel:kGULNetworkLogLevelDebug
                                messageCode:kGULNetworkMessageCodeURLSession003
                                    message:@"Background session finished"
@@ -283,7 +332,7 @@
 
 - (void)URLSession:(NSURLSession *)session
                     task:(NSURLSessionTask *)task
-    didCompleteWithError:(NSError *)error API_AVAILABLE(ios(7.0)) {
+    didCompleteWithError:(NSError *)error {
   // Avoid any chance of recursive behavior leading to it being used repeatedly.
   GULNetworkURLSessionCompletionHandler handler = _completionHandler;
   _completionHandler = nil;
@@ -328,8 +377,7 @@
                    task:(NSURLSessionTask *)task
     didReceiveChallenge:(NSURLAuthenticationChallenge *)challenge
       completionHandler:(void (^)(NSURLSessionAuthChallengeDisposition disposition,
-                                  NSURLCredential *credential))completionHandler
-    API_AVAILABLE(ios(7.0)) {
+                                  NSURLCredential *credential))completionHandler {
   // The handling is modeled after GTMSessionFetcher.
   if ([challenge.protectionSpace.authenticationMethod
           isEqualToString:NSURLAuthenticationMethodServerTrust]) {
@@ -382,28 +430,20 @@
         dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
 
     dispatch_async(evaluateBackgroundQueue, ^{
-      SecTrustResultType trustEval = kSecTrustResultInvalid;
       BOOL shouldAllow;
-      OSStatus trustError;
+      CFErrorRef errorRef = NULL;
 
       @synchronized([GULNetworkURLSession class]) {
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
-        trustError = SecTrustEvaluate(serverTrust, &trustEval);
-#pragma clang dianostic pop
+        shouldAllow = SecTrustEvaluateWithError(serverTrust, &errorRef);
       }
 
-      if (trustError != errSecSuccess) {
-        [self->_loggerDelegate GULNetwork_logWithLevel:kGULNetworkLogLevelError
-                                           messageCode:kGULNetworkMessageCodeURLSession008
-                                               message:@"Cannot evaluate server trust. Error, host"
-                                              contexts:@[ @(trustError), self->_request.URL ]];
-        shouldAllow = NO;
-      } else {
-        // Having a trust level "unspecified" by the user is the usual result, described at
-        // https://developer.apple.com/library/mac/qa/qa1360
-        shouldAllow =
-            (trustEval == kSecTrustResultUnspecified || trustEval == kSecTrustResultProceed);
+      if (errorRef) {
+        [self->_loggerDelegate
+            GULNetwork_logWithLevel:kGULNetworkLogLevelError
+                        messageCode:kGULNetworkMessageCodeURLSession008
+                            message:@"Cannot evaluate server trust. Error, host"
+                           contexts:@[ @((int)CFErrorGetCode(errorRef)), self->_request.URL ]];
+        CFRelease(errorRef);
       }
 
       // Call the call back with the permission.
@@ -474,38 +514,8 @@
 }
 
 /// Creates a background session configuration with the session ID using the supported method.
-- (NSURLSessionConfiguration *)backgroundSessionConfigWithSessionID:(NSString *)sessionID
-    API_AVAILABLE(ios(7.0)) {
-#if (TARGET_OS_OSX && defined(MAC_OS_X_VERSION_10_10) &&         \
-     MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_10) || \
-    TARGET_OS_TV ||                                              \
-    (TARGET_OS_IOS && defined(__IPHONE_8_0) && __IPHONE_OS_VERSION_MIN_REQUIRED >= __IPHONE_8_0)
-
-  // iOS 8/10.10 builds require the new backgroundSessionConfiguration method name.
+- (NSURLSessionConfiguration *)backgroundSessionConfigWithSessionID:(NSString *)sessionID {
   return [NSURLSessionConfiguration backgroundSessionConfigurationWithIdentifier:sessionID];
-
-#elif (TARGET_OS_OSX && defined(MAC_OS_X_VERSION_10_10) &&        \
-       MAC_OS_X_VERSION_MIN_REQUIRED < MAC_OS_X_VERSION_10_10) || \
-    (TARGET_OS_IOS && defined(__IPHONE_8_0) && __IPHONE_OS_VERSION_MIN_REQUIRED < __IPHONE_8_0)
-
-  // Do a runtime check to avoid a deprecation warning about using
-  // +backgroundSessionConfiguration: on iOS 8.
-  if ([NSURLSessionConfiguration
-          respondsToSelector:@selector(backgroundSessionConfigurationWithIdentifier:)]) {
-    // Running on iOS 8+/OS X 10.10+.
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wunguarded-availability"
-    return [NSURLSessionConfiguration backgroundSessionConfigurationWithIdentifier:sessionID];
-#pragma clang diagnostic pop
-  } else {
-    // Running on iOS 7/OS X 10.9.
-    return [NSURLSessionConfiguration backgroundSessionConfiguration:sessionID];
-  }
-
-#else
-  // Building with an SDK earlier than iOS 8/OS X 10.10.
-  return [NSURLSessionConfiguration backgroundSessionConfiguration:sessionID];
-#endif
 }
 
 - (void)maybeRemoveTempFilesAtURL:(NSURL *)folderURL expiringTime:(NSTimeInterval)staleTime {
@@ -585,12 +595,12 @@
 /// When reading and writing from/to the session map, don't use this method directly.
 /// To avoid thread safety issues, use one of the helper methods at the bottom of the
 /// file: setSessionInFetcherMap:forSessionID:, sessionFromFetcherMapForSessionID:
-+ (NSMapTable<NSString *, GULNetworkURLSession *> *)sessionIDToFetcherMap {
-  static NSMapTable *sessionIDToFetcherMap;
++ (NSMutableDictionary<NSString *, GULNetworkURLSessionWeakHolder *> *)sessionIDToFetcherMap {
+  static NSMutableDictionary *sessionIDToFetcherMap;
 
   static dispatch_once_t sessionMapOnceToken;
   dispatch_once(&sessionMapOnceToken, ^{
-    sessionIDToFetcherMap = [NSMapTable strongToWeakObjectsMapTable];
+    sessionIDToFetcherMap = [[NSMutableDictionary alloc] init];
   });
   return sessionIDToFetcherMap;
 }
@@ -680,7 +690,7 @@
                           task:(NSURLSessionTask *)task
     willPerformHTTPRedirection:(NSHTTPURLResponse *)response
                     newRequest:(NSURLRequest *)request
-             completionHandler:(void (^)(NSURLRequest *))completionHandler API_AVAILABLE(ios(7.0)) {
+             completionHandler:(void (^)(NSURLRequest *))completionHandler {
   NSArray *nonAllowedRedirectionCodes = @[
     @(kGULNetworkHTTPStatusCodeFound), @(kGULNetworkHTTPStatusCodeMovedPermanently),
     @(kGULNetworkHTTPStatusCodeMovedTemporarily), @(kGULNetworkHTTPStatusCodeMultipleChoices)
@@ -704,10 +714,19 @@
 
 #pragma mark - Helper Methods
 
+static const void *kGULSessionTrackerKey = &kGULSessionTrackerKey;
+
 + (void)setSessionInFetcherMap:(GULNetworkURLSession *)session forSessionID:(NSString *)sessionID {
+  if (!sessionID) {
+    return;
+  }
+
+  GULSessionDeallocTracker *oldTrackerToReleaseOutsideLock = nil;
+
   [[self sessionIDToFetcherMapReadWriteLock] lock];
-  GULNetworkURLSession *existingSession =
+  GULNetworkURLSessionWeakHolder *holder =
       [[[self class] sessionIDToFetcherMap] objectForKey:sessionID];
+  GULNetworkURLSession *existingSession = holder.session;
   if (existingSession) {
     if (session) {
       NSString *message = [NSString stringWithFormat:@"Discarding session: %@", existingSession];
@@ -715,19 +734,39 @@
                                                     messageCode:kGULNetworkMessageCodeURLSession019
                                                         message:message];
     }
+    oldTrackerToReleaseOutsideLock =
+        objc_getAssociatedObject(existingSession, kGULSessionTrackerKey);
+    objc_setAssociatedObject(existingSession, kGULSessionTrackerKey, nil,
+                             OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     [existingSession->_URLSession finishTasksAndInvalidate];
   }
   if (session) {
-    [[[self class] sessionIDToFetcherMap] setObject:session forKey:sessionID];
+    GULNetworkURLSessionWeakHolder *newHolder = [[GULNetworkURLSessionWeakHolder alloc] init];
+    newHolder.session = session;
+    [[[self class] sessionIDToFetcherMap] setObject:newHolder forKey:sessionID];
+
+    GULSessionDeallocTracker *tracker =
+        [[GULSessionDeallocTracker alloc] initWithSessionID:sessionID holder:newHolder];
+    objc_setAssociatedObject(session, kGULSessionTrackerKey, tracker,
+                             OBJC_ASSOCIATION_RETAIN_NONATOMIC);
   } else {
     [[[self class] sessionIDToFetcherMap] removeObjectForKey:sessionID];
   }
   [[self sessionIDToFetcherMapReadWriteLock] unlock];
+
+  // Retain the old tracker until the lock is released. If it deallocates inside the lock,
+  // its -dealloc method will attempt to re-acquire the lock, resulting in a deadlock.
+  (void)oldTrackerToReleaseOutsideLock;
 }
 
 + (nullable GULNetworkURLSession *)sessionFromFetcherMapForSessionID:(NSString *)sessionID {
+  if (!sessionID) {
+    return nil;
+  }
   [[self sessionIDToFetcherMapReadWriteLock] lock];
-  GULNetworkURLSession *session = [[[self class] sessionIDToFetcherMap] objectForKey:sessionID];
+  GULNetworkURLSessionWeakHolder *holder =
+      [[[self class] sessionIDToFetcherMap] objectForKey:sessionID];
+  GULNetworkURLSession *session = holder.session;
   [[self sessionIDToFetcherMapReadWriteLock] unlock];
   return session;
 }
@@ -752,7 +791,7 @@
 
 // Always use the request parameters even if the default session configuration is more restrictive.
 - (void)populateSessionConfig:(NSURLSessionConfiguration *)sessionConfig
-                  withRequest:(NSURLRequest *)request API_AVAILABLE(ios(7.0)) {
+                  withRequest:(NSURLRequest *)request {
   sessionConfig.HTTPAdditionalHeaders = request.allHTTPHeaderFields;
   sessionConfig.timeoutIntervalForRequest = request.timeoutInterval;
   sessionConfig.timeoutIntervalForResource = request.timeoutInterval;

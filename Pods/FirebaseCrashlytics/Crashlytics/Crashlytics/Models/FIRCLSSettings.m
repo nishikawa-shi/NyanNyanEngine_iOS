@@ -30,6 +30,8 @@ NSString *const CreatedAtKey = @"created_at";
 NSString *const GoogleAppIDKey = @"google_app_id";
 NSString *const BuildInstanceID = @"build_instance_id";
 NSString *const AppVersion = @"app_version";
+NSString *const FirebaseCrashlyticsMachDefaultBehaviorKey =
+    @"FirebaseCrashlyticsMachDefaultBehavior";
 
 @interface FIRCLSSettings ()
 
@@ -40,15 +42,39 @@ NSString *const AppVersion = @"app_version";
 
 @property(nonatomic) BOOL isCacheKeyExpired;
 
+@property(nonatomic) dispatch_queue_t deletionQueue;
+
 @end
 
 @implementation FIRCLSSettings
 
 - (instancetype)initWithFileManager:(FIRCLSFileManager *)fileManager
-                         appIDModel:(FIRCLSApplicationIdentifierModel *)appIDModel {
+                         appIDModel:(FIRCLSApplicationIdentifierModel *)appIDModel
+                            appInfo:(NSDictionary *)appInfo {
+  return
+      [self initWithFileManager:fileManager
+                     appIDModel:appIDModel
+                        appInfo:appInfo
+                  deletionQueue:dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0)];
+}
+
+- (instancetype)initWithFileManager:(FIRCLSFileManager *)fileManager
+                         appIDModel:(FIRCLSApplicationIdentifierModel *)appIDModel
+                            appInfo:(NSDictionary *)appInfo
+                      deletionQueue:(dispatch_queue_t)deletionQueue {
   self = [super init];
   if (!self) {
     return nil;
+  }
+
+  // Configure the Mach exception message receiving behavior from Info.plist the mach exception
+  // message receiving behavior
+  self.machExceptionDefaultBehavior = false;
+  id crashlyticsMachDefaultBehavior =
+      [appInfo objectForKey:FirebaseCrashlyticsMachDefaultBehaviorKey];
+  if ([crashlyticsMachDefaultBehavior isKindOfClass:[NSString class]] ||
+      [crashlyticsMachDefaultBehavior isKindOfClass:[NSNumber class]]) {
+    self.machExceptionDefaultBehavior = [crashlyticsMachDefaultBehavior boolValue];
   }
 
   _fileManager = fileManager;
@@ -56,6 +82,8 @@ NSString *const AppVersion = @"app_version";
 
   _settingsDictionary = nil;
   _isCacheKeyExpired = NO;
+
+  _deletionQueue = deletionQueue;
 
   return self;
 }
@@ -190,7 +218,7 @@ NSString *const AppVersion = @"app_version";
 
 - (void)deleteCachedSettings {
   __weak FIRCLSSettings *weakSelf = self;
-  dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
+  dispatch_async(_deletionQueue, ^{
     __strong FIRCLSSettings *strongSelf = weakSelf;
     if ([strongSelf.fileManager fileExistsAtPath:strongSelf.fileManager.settingsFilePath]) {
       [strongSelf.fileManager removeItemAtPath:strongSelf.fileManager.settingsFilePath];
@@ -251,30 +279,6 @@ NSString *const AppVersion = @"app_version";
   return 60 * 60;
 }
 
-#pragma mark - Identifiers
-
-- (nullable NSString *)orgID {
-  return self.fabricSettings[@"org_id"];
-}
-
-- (nullable NSString *)fetchedBundleID {
-  return self.fabricSettings[@"bundle_id"];
-}
-
-#pragma mark - Onboarding / Update
-
-- (NSString *)appStatus {
-  return self.appSettings[@"status"];
-}
-
-- (BOOL)appNeedsOnboarding {
-  return [self.appStatus isEqualToString:@"new"];
-}
-
-- (BOOL)appUpdateRequired {
-  return [[self.appSettings objectForKey:@"update_required"] boolValue];
-}
-
 #pragma mark - On / Off Switches
 
 - (BOOL)errorReportingEnabled {
@@ -303,23 +307,14 @@ NSString *const AppVersion = @"app_version";
   return YES;
 }
 
-- (BOOL)shouldUseNewReportEndpoint {
-#ifdef CRASHLYTICS_INTERNAL
-  return YES;
-#else
-  NSNumber *value = [self appSettings][@"report_upload_variant"];
+- (BOOL)metricKitCollectionEnabled {
+  NSNumber *value = [self featuresSettings][@"collect_metric_kit"];
 
-  // Default to use the new endpoint when settings were not successfully fetched
-  // or there's an unexpected issue
-  if (value == nil) {
-    return YES;
+  if (value != nil) {
+    return value.boolValue;
   }
 
-  // 0 - Unknown
-  // 1 - Legacy
-  // 2 - New
-  return value.intValue == 2;
-#endif
+  return NO;
 }
 
 #pragma mark - Optional Limit Overrides
@@ -358,4 +353,45 @@ NSString *const AppVersion = @"app_version";
   return 64;
 }
 
+#pragma mark - On Demand Reporting Parameters
+
+- (double)onDemandUploadRate {
+  NSNumber *value = self.settingsDictionary[@"on_demand_upload_rate_per_minute"];
+
+  if (value != nil) {
+    return value.doubleValue;
+  }
+
+  return 10;  // on-demand uploads allowed per minute
+}
+
+- (double)onDemandBackoffBase {
+  NSNumber *value = self.settingsDictionary[@"on_demand_backoff_base"];
+
+  if (value != nil) {
+    return [value doubleValue];
+  }
+
+  return 1.5;  // base of exponent for exponential backoff
+}
+
+- (uint32_t)onDemandBackoffStepDuration {
+  NSNumber *value = self.settingsDictionary[@"on_demand_backoff_step_duration_seconds"];
+
+  if (value != nil) {
+    return value.unsignedIntValue;
+  }
+
+  return 6;  // step duration for exponential backoff
+}
+
+- (BOOL)onDemandThreadSuspensionEnabled {
+  NSNumber *value = self.settingsDictionary[@"on_demand_thread_recording_suspension_enabled"];
+
+  if (value != nil) {
+    return value.boolValue;
+  }
+
+  return YES;
+}
 @end

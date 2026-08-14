@@ -1,19 +1,23 @@
 //
 //  UInt128.swift
 //
-//  Copyright (C) 2014-2017 Marcin Krzyżanowski <marcin@krzyzanowskim.com>
+//  Copyright (C) 2014-2025 Marcin Krzyżanowski <marcin@krzyzanowskim.com>
 //  This software is provided 'as-is', without any express or implied warranty.
 //
 //  In no event will the authors be held liable for any damages arising from the use of this software.
 //
-//  Permission is granted to anyone to use this software for any purpose,including commercial applications, and to alter it and redistribute it freely, subject to the following restrictions:
+//  Permission is granted to anyone to use this software for any purpose, including commercial applications, and to alter it and redistribute it freely, subject to the following restrictions:
 //
 //  - The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation is required.
 //  - Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
 //  - This notice may not be removed or altered from any source or binary distribution.
 //
 
+#if canImport(FoundationEssentials)
+import FoundationEssentials
+#else
 import Foundation
+#endif
 
 struct UInt128: Equatable, ExpressibleByIntegerLiteral {
   let i: (a: UInt64, b: UInt64)
@@ -25,10 +29,12 @@ struct UInt128: Equatable, ExpressibleByIntegerLiteral {
   }
 
   init(_ raw: Array<UInt8>) {
-    self = raw.prefix(MemoryLayout<UInt128>.stride).withUnsafeBytes({ (rawBufferPointer) -> UInt128 in
-      let arr = rawBufferPointer.bindMemory(to: UInt64.self)
-      return UInt128((arr[0].bigEndian, arr[1].bigEndian))
-    })
+    precondition(raw.count >= 16, "UInt128 requires at least 16 bytes")
+    let a = UInt64(raw[0]) << 56 | UInt64(raw[1]) << 48 | UInt64(raw[2]) << 40 | UInt64(raw[3]) << 32 |
+            UInt64(raw[4]) << 24 | UInt64(raw[5]) << 16 | UInt64(raw[6]) << 8  | UInt64(raw[7])
+    let b = UInt64(raw[8]) << 56 | UInt64(raw[9]) << 48 | UInt64(raw[10]) << 40 | UInt64(raw[11]) << 32 |
+            UInt64(raw[12]) << 24 | UInt64(raw[13]) << 16 | UInt64(raw[14]) << 8  | UInt64(raw[15])
+    self.init((a, b))
   }
 
   init(_ raw: ArraySlice<UInt8>) {
@@ -58,7 +64,7 @@ struct UInt128: Equatable, ExpressibleByIntegerLiteral {
     var result = Data()
     result.append(ar)
     result.append(br)
-    return result.bytes
+    return result.byteArray
   }
 
   static func ^ (n1: UInt128, n2: UInt128) -> UInt128 {

@@ -1,12 +1,12 @@
 //
 //  CryptoSwift
 //
-//  Copyright (C) 2014-2017 Marcin Krzyżanowski <marcin@krzyzanowskim.com>
+//  Copyright (C) 2014-2025 Marcin Krzyżanowski <marcin@krzyzanowskim.com>
 //  This software is provided 'as-is', without any express or implied warranty.
 //
 //  In no event will the authors be held liable for any damages arising from the use of this software.
 //
-//  Permission is granted to anyone to use this software for any purpose,including commercial applications, and to alter it and redistribute it freely, subject to the following restrictions:
+//  Permission is granted to anyone to use this software for any purpose, including commercial applications, and to alter it and redistribute it freely, subject to the following restrictions:
 //
 //  - The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation is required.
 //  - Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
@@ -15,8 +15,12 @@
 
 #if canImport(Darwin)
 import Darwin
+#elseif canImport(Android)
+import Android
 #elseif canImport(Glibc)
 import Glibc
+#elseif canImport(Musl)
+import Musl
 #elseif canImport(WinSDK)
 import WinSDK
 #endif
@@ -33,20 +37,30 @@ final class SecureBytes {
     self.bytes = bytes
     self.count = bytes.count
     self.bytes.withUnsafeBufferPointer { (pointer) -> Void in
+      guard let baseAddress = pointer.baseAddress else { return }
       #if os(Windows)
-        VirtualLock(UnsafeMutableRawPointer(mutating: pointer.baseAddress), SIZE_T(pointer.count))
+        VirtualLock(UnsafeMutableRawPointer(mutating: baseAddress), SIZE_T(pointer.count))
+      #elseif os(WASI)
+        // not supported on WASI
+      #elseif os(Android)
+        mlock(baseAddress, pointer.count)
       #else
-        mlock(pointer.baseAddress, pointer.count)
+        mlock(baseAddress, pointer.count)
       #endif
     }
   }
 
   deinit {
     self.bytes.withUnsafeBufferPointer { (pointer) -> Void in
+      guard let baseAddress = pointer.baseAddress else { return }
       #if os(Windows)
-        VirtualUnlock(UnsafeMutableRawPointer(mutating: pointer.baseAddress), SIZE_T(pointer.count))
+        VirtualUnlock(UnsafeMutableRawPointer(mutating: baseAddress), SIZE_T(pointer.count))
+      #elseif os(WASI)
+        // not supported on WASI
+      #elseif os(Android)
+        munlock(baseAddress, pointer.count)
       #else
-        munlock(pointer.baseAddress, pointer.count)
+        munlock(baseAddress, pointer.count)
       #endif
     }
   }

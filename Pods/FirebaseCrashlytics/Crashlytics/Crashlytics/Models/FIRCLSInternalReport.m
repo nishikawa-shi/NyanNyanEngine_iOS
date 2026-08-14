@@ -21,11 +21,14 @@
 #import "Crashlytics/Crashlytics/Helpers/FIRCLSLogger.h"
 #import "Crashlytics/Crashlytics/Models/FIRCLSFileManager.h"
 
+NSString *const FIRCLSCustomFatalIndicatorFile = @"custom_fatal.clsrecord";
 NSString *const FIRCLSReportBinaryImageFile = @"binary_images.clsrecord";
 NSString *const FIRCLSReportExceptionFile = @"exception.clsrecord";
 NSString *const FIRCLSReportCustomExceptionAFile = @"custom_exception_a.clsrecord";
 NSString *const FIRCLSReportCustomExceptionBFile = @"custom_exception_b.clsrecord";
 NSString *const FIRCLSReportSignalFile = @"signal.clsrecord";
+NSString *const FIRCLSMetricKitFatalReportFile = @"metric_kit_fatal.clsrecord";
+NSString *const FIRCLSMetricKitNonfatalReportFile = @"metric_kit_nonfatal.clsrecord";
 #if CLS_MACH_EXCEPTION_SUPPORTED
 NSString *const FIRCLSReportMachExceptionFile = @"mach_exception.clsrecord";
 #endif
@@ -38,6 +41,7 @@ NSString *const FIRCLSReportInternalIncrementalKVFile = @"internal_incremental_k
 NSString *const FIRCLSReportInternalCompactedKVFile = @"internal_compacted_kv.clsrecord";
 NSString *const FIRCLSReportUserIncrementalKVFile = @"user_incremental_kv.clsrecord";
 NSString *const FIRCLSReportUserCompactedKVFile = @"user_compacted_kv.clsrecord";
+NSString *const FIRCLSReportRolloutsFile = @"rollouts.clsrecord";
 
 @interface FIRCLSInternalReport () {
   NSString *_identifier;
@@ -105,16 +109,17 @@ NSString *const FIRCLSReportUserCompactedKVFile = @"user_compacted_kv.clsrecord"
 }
 
 #pragma mark - Processing Methods
-- (BOOL)needsToBeSubmitted {
+- (BOOL)hasAnyEvents {
   NSArray *reportFiles = @[
     FIRCLSReportExceptionFile, FIRCLSReportSignalFile, FIRCLSReportCustomExceptionAFile,
-    FIRCLSReportCustomExceptionBFile,
+    FIRCLSReportCustomExceptionBFile, FIRCLSMetricKitFatalReportFile,
+    FIRCLSMetricKitNonfatalReportFile,
 #if CLS_MACH_EXCEPTION_SUPPORTED
     FIRCLSReportMachExceptionFile,
 #endif
     FIRCLSReportErrorAFile, FIRCLSReportErrorBFile
   ];
-  return [self checkExistenceOfAtLeastOnceFileInArray:reportFiles];
+  return [self checkExistenceOfAtLeastOneFileInArray:reportFiles];
 }
 
 // These are purposefully in order of precedence. If duplicate data exists
@@ -132,7 +137,7 @@ NSString *const FIRCLSReportUserCompactedKVFile = @"user_compacted_kv.clsrecord"
 #if CLS_MACH_EXCEPTION_SUPPORTED
       FIRCLSReportMachExceptionFile,
 #endif
-      FIRCLSReportSignalFile
+      FIRCLSReportSignalFile, FIRCLSMetricKitFatalReportFile, FIRCLSCustomFatalIndicatorFile
     ];
   });
   return files;
@@ -140,10 +145,10 @@ NSString *const FIRCLSReportUserCompactedKVFile = @"user_compacted_kv.clsrecord"
 
 - (BOOL)isCrash {
   NSArray *crashFiles = [FIRCLSInternalReport crashFileNames];
-  return [self checkExistenceOfAtLeastOnceFileInArray:crashFiles];
+  return [self checkExistenceOfAtLeastOneFileInArray:crashFiles];
 }
 
-- (BOOL)checkExistenceOfAtLeastOnceFileInArray:(NSArray *)files {
+- (BOOL)checkExistenceOfAtLeastOneFileInArray:(NSArray *)files {
   NSFileManager *manager = [NSFileManager defaultManager];
 
   for (NSString *fileName in files) {

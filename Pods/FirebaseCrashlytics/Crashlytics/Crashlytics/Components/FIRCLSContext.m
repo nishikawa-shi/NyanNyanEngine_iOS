@@ -17,6 +17,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+#import "Crashlytics/Shared/FIRCLSConstants.h"
+
 #import "Crashlytics/Crashlytics/Models/FIRCLSFileManager.h"
 #import "Crashlytics/Crashlytics/Models/FIRCLSInstallIdentifierModel.h"
 #import "Crashlytics/Crashlytics/Models/FIRCLSInternalReport.h"
@@ -26,13 +28,14 @@
 #include "Crashlytics/Crashlytics/Components/FIRCLSCrashedMarkerFile.h"
 #include "Crashlytics/Crashlytics/Components/FIRCLSGlobals.h"
 #include "Crashlytics/Crashlytics/Components/FIRCLSProcess.h"
+#include "Crashlytics/Crashlytics/Helpers/FIRCLSContextInitData.h"
 #include "Crashlytics/Crashlytics/Helpers/FIRCLSDefines.h"
 #include "Crashlytics/Crashlytics/Helpers/FIRCLSFeatures.h"
 #include "Crashlytics/Crashlytics/Helpers/FIRCLSUtility.h"
 
 // The writable size is our handler stack plus whatever scratch we need.  We have to use this space
 // extremely carefully, however, because thread stacks always needs to be page-aligned.  Only the
-// first allocation is gauranteed to be page-aligned.
+// first allocation is guaranteed to be page-aligned.
 //
 // CLS_SIGNAL_HANDLER_STACK_SIZE and CLS_MACH_EXCEPTION_HANDLER_STACK_SIZE are platform dependant,
 // defined as 0 for tv/watch.
@@ -43,68 +46,37 @@
 // We need enough space here for the context, plus storage for strings.
 #define CLS_MINIMUM_READABLE_SIZE (sizeof(FIRCLSReadOnlyContext) + 4096 * 4)
 
-static const int64_t FIRCLSContextInitWaitTime = 5LL * NSEC_PER_SEC;
-
-static bool FIRCLSContextRecordMetadata(const char* path, const FIRCLSContextInitData* initData);
 static const char* FIRCLSContextAppendToRoot(NSString* root, NSString* component);
 static void FIRCLSContextAllocate(FIRCLSContext* context);
 
-FIRCLSContextInitData FIRCLSContextBuildInitData(FIRCLSInternalReport* report,
-                                                 FIRCLSSettings* settings,
-                                                 FIRCLSInstallIdentifierModel* installIDModel,
-                                                 FIRCLSFileManager* fileManager) {
+FIRCLSContextInitData* FIRCLSContextBuildInitData(FIRCLSInternalReport* report,
+                                                  FIRCLSSettings* settings,
+                                                  FIRCLSFileManager* fileManager,
+                                                  NSString* appQualitySessionId) {
   // Because we need to start the crash reporter right away,
   // it starts up either with default settings, or cached settings
   // from the last time they were fetched
 
-  FIRCLSContextInitData initData;
-
-  memset(&initData, 0, sizeof(FIRCLSContextInitData));
-
+  FIRCLSContextInitData* initData = [[FIRCLSContextInitData alloc] init];
   initData.customBundleId = nil;
-  initData.installId = [installIDModel.installID UTF8String];
-  initData.sessionId = [[report identifier] UTF8String];
-  initData.rootPath = [[report path] UTF8String];
-  initData.previouslyCrashedFileRootPath = [[fileManager rootPath] UTF8String];
+  initData.sessionId = [report identifier];
+  initData.appQualitySessionId = appQualitySessionId;
+  initData.rootPath = [report path];
+  initData.previouslyCrashedFileRootPath = [fileManager rootPath];
   initData.errorsEnabled = [settings errorReportingEnabled];
   initData.customExceptionsEnabled = [settings customExceptionsEnabled];
+  initData.machExceptionDefaultBehavior = [settings machExceptionDefaultBehavior];
   initData.maxCustomExceptions = [settings maxCustomExceptions];
   initData.maxErrorLogSize = [settings errorLogBufferSize];
   initData.maxLogSize = [settings logBufferSize];
   initData.maxKeyValues = [settings maxCustomKeys];
-  initData.betaToken = "";
-
-  // If this is set, then we could attempt to do a synchronous submission for certain kinds of
-  // events (exceptions). This is a very cool feature, but adds complexity to the backend. For now,
-  // we're going to leave this disabled. It does work in the exception case, but will ultimtely
-  // result in the following crash to be discared. Usually that crash isn't interesting. But, if it
-  // was, we'd never have a chance to see it.
-  initData.delegate = nil;
-
-#if CLS_MACH_EXCEPTION_SUPPORTED
-  __block exception_mask_t mask = 0;
-
-  // TODO(b/141241224) This if statement was hardcoded to no, so this block was never run
-  //  FIRCLSSignalEnumerateHandledSignals(^(int idx, int signal) {
-  //    if ([self.delegate ensureDeliveryOfUnixSignal:signal]) {
-  //      mask |= FIRCLSMachExceptionMaskForSignal(signal);
-  //    }
-  //  });
-
-  initData.machExceptionMask = mask;
-#endif
+  initData.betaToken = @"";
 
   return initData;
 }
 
-bool FIRCLSContextInitialize(FIRCLSInternalReport* report,
-                             FIRCLSSettings* settings,
-                             FIRCLSInstallIdentifierModel* installIDModel,
-                             FIRCLSFileManager* fileManager) {
-  FIRCLSContextInitData initDataObj =
-      FIRCLSContextBuildInitData(report, settings, installIDModel, fileManager);
-  FIRCLSContextInitData* initData = &initDataObj;
-
+FBLPromise* FIRCLSContextInitialize(FIRCLSContextInitData* initData,
+                                    FIRCLSFileManager* fileManager) {
   if (!initData) {
     return false;
   }
@@ -114,21 +86,23 @@ bool FIRCLSContextInitialize(FIRCLSInternalReport* report,
   dispatch_group_t group = dispatch_group_create();
   dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
 
-  if (!FIRCLSIsValidPointer(initData->rootPath)) {
+  if (!FIRCLSIsValidPointer(initData.rootPath)) {
     return false;
   }
 
-  NSString* rootPath = [NSString stringWithUTF8String:initData->rootPath];
+  NSString* rootPath = initData.rootPath;
 
   // setup our SDK log file synchronously, because other calls may depend on it
   _firclsContext.readonly->logPath = FIRCLSContextAppendToRoot(rootPath, @"sdk.log");
+  _firclsContext.readonly->initialReportPath = FIRCLSDupString([[initData rootPath] UTF8String]);
   if (!FIRCLSUnlinkIfExists(_firclsContext.readonly->logPath)) {
     FIRCLSErrorLog(@"Unable to write initialize SDK write paths %s", strerror(errno));
   }
 
   // some values that aren't tied to particular subsystem
   _firclsContext.readonly->debuggerAttached = FIRCLSProcessDebuggerAttached();
-  _firclsContext.readonly->delegate = initData->delegate;
+
+  __block FBLPromise* initPromise = [FBLPromise pendingPromise];
 
   dispatch_group_async(group, queue, ^{
     FIRCLSHostInitialize(&_firclsContext.readonly->host);
@@ -137,7 +111,7 @@ bool FIRCLSContextInitialize(FIRCLSInternalReport* report,
   dispatch_group_async(group, queue, ^{
     _firclsContext.readonly->logging.errorStorage.maxSize = 0;
     _firclsContext.readonly->logging.errorStorage.maxEntries =
-        initData->errorsEnabled ? initData->maxCustomExceptions : 0;
+        initData.errorsEnabled ? initData.maxCustomExceptions : 0;
     _firclsContext.readonly->logging.errorStorage.restrictBySize = false;
     _firclsContext.readonly->logging.errorStorage.entryCount =
         &_firclsContext.writable->logging.errorsCount;
@@ -146,7 +120,7 @@ bool FIRCLSContextInitialize(FIRCLSInternalReport* report,
     _firclsContext.readonly->logging.errorStorage.bPath =
         FIRCLSContextAppendToRoot(rootPath, FIRCLSReportErrorBFile);
 
-    _firclsContext.readonly->logging.logStorage.maxSize = initData->maxLogSize;
+    _firclsContext.readonly->logging.logStorage.maxSize = initData.maxLogSize;
     _firclsContext.readonly->logging.logStorage.maxEntries = 0;
     _firclsContext.readonly->logging.logStorage.restrictBySize = true;
     _firclsContext.readonly->logging.logStorage.entryCount = NULL;
@@ -161,11 +135,11 @@ bool FIRCLSContextInitialize(FIRCLSInternalReport* report,
     _firclsContext.readonly->logging.customExceptionStorage.maxSize = 0;
     _firclsContext.readonly->logging.customExceptionStorage.restrictBySize = false;
     _firclsContext.readonly->logging.customExceptionStorage.maxEntries =
-        initData->maxCustomExceptions;
+        initData.maxCustomExceptions;
     _firclsContext.readonly->logging.customExceptionStorage.entryCount =
         &_firclsContext.writable->exception.customExceptionCount;
 
-    _firclsContext.readonly->logging.userKVStorage.maxCount = initData->maxKeyValues;
+    _firclsContext.readonly->logging.userKVStorage.maxCount = initData.maxKeyValues;
     _firclsContext.readonly->logging.userKVStorage.incrementalPath =
         FIRCLSContextAppendToRoot(rootPath, FIRCLSReportUserIncrementalKVFile);
     _firclsContext.readonly->logging.userKVStorage.compactedPath =
@@ -184,17 +158,19 @@ bool FIRCLSContextInitialize(FIRCLSInternalReport* report,
     _firclsContext.readonly->binaryimage.path =
         FIRCLSContextAppendToRoot(rootPath, FIRCLSReportBinaryImageFile);
 
-    FIRCLSBinaryImageInit(&_firclsContext.readonly->binaryimage,
-                          &_firclsContext.writable->binaryImage);
+    FIRCLSBinaryImageInit();
   });
 
   dispatch_group_async(group, queue, ^{
-    NSString* rootPath = [NSString stringWithUTF8String:initData->previouslyCrashedFileRootPath];
+    NSString* rootPath = initData.previouslyCrashedFileRootPath;
     NSString* fileName = [NSString stringWithUTF8String:FIRCLSCrashedMarkerFileName];
     _firclsContext.readonly->previouslyCrashedFileFullPath =
         FIRCLSContextAppendToRoot(rootPath, fileName);
   });
 
+  // To initialize Crashlytics handlers even if the Xcode debugger is attached, replace this check
+  // with YES. Note that this is only possible to do on an actual device as it will cause the
+  // simulator to crash.
   if (!_firclsContext.readonly->debuggerAttached) {
 #if CLS_SIGNAL_SUPPORTED
     dispatch_group_async(group, queue, ^{
@@ -210,7 +186,16 @@ bool FIRCLSContextInitialize(FIRCLSInternalReport* report,
       _firclsContext.readonly->machException.path =
           FIRCLSContextAppendToRoot(rootPath, FIRCLSReportMachExceptionFile);
 
-      FIRCLSMachExceptionInit(&_firclsContext.readonly->machException, initData->machExceptionMask);
+      // MacOS12 below does not support identity protected behavior
+      // check releases here: https://opensource.apple.com/releases/
+      // TODO: remove EXCEPTION_DEFAULT support when we bump min MacOS support to 12+
+      _firclsContext.readonly->machException.behavior = EXCEPTION_DEFAULT;
+      if (@available(macOS 12, *)) {
+        if (!initData.machExceptionDefaultBehavior) {
+          _firclsContext.readonly->machException.behavior = EXCEPTION_IDENTITY_PROTECTED;
+        }
+      }
+      FIRCLSMachExceptionInit(&_firclsContext.readonly->machException);
     });
 #endif
 
@@ -218,19 +203,17 @@ bool FIRCLSContextInitialize(FIRCLSInternalReport* report,
       _firclsContext.readonly->exception.path =
           FIRCLSContextAppendToRoot(rootPath, FIRCLSReportExceptionFile);
       _firclsContext.readonly->exception.maxCustomExceptions =
-          initData->customExceptionsEnabled ? initData->maxCustomExceptions : 0;
+          initData.customExceptionsEnabled ? initData.maxCustomExceptions : 0;
 
       FIRCLSExceptionInitialize(&_firclsContext.readonly->exception,
-                                &_firclsContext.writable->exception, initData->delegate);
+                                &_firclsContext.writable->exception);
     });
   } else {
     FIRCLSSDKLog("Debugger present - not installing handlers\n");
   }
 
   dispatch_group_async(group, queue, ^{
-    const char* metaDataPath = [[rootPath stringByAppendingPathComponent:FIRCLSReportMetadataFile]
-        fileSystemRepresentation];
-    if (!FIRCLSContextRecordMetadata(metaDataPath, initData)) {
+    if (!FIRCLSContextRecordMetadata(rootPath, initData)) {
       FIRCLSSDKLog("Unable to record context metadata\n");
     }
   });
@@ -248,32 +231,10 @@ bool FIRCLSContextInitialize(FIRCLSInternalReport* report,
     if (!FIRCLSAllocatorProtect(_firclsContext.allocator)) {
       FIRCLSSDKLog("Error: Memory protection failed\n");
     }
+    [initPromise fulfill:nil];
   });
 
-  if (dispatch_group_wait(group, dispatch_time(DISPATCH_TIME_NOW, FIRCLSContextInitWaitTime)) !=
-      0) {
-    FIRCLSSDKLog("Error: Delayed initialization\n");
-  }
-
-  return true;
-}
-
-void FIRCLSContextUpdateMetadata(FIRCLSInternalReport* report,
-                                 FIRCLSSettings* settings,
-                                 FIRCLSInstallIdentifierModel* installIDModel,
-                                 FIRCLSFileManager* fileManager) {
-  FIRCLSContextInitData initDataObj =
-      FIRCLSContextBuildInitData(report, settings, installIDModel, fileManager);
-  FIRCLSContextInitData* initData = &initDataObj;
-
-  NSString* rootPath = [NSString stringWithUTF8String:initData->rootPath];
-
-  const char* metaDataPath =
-      [[rootPath stringByAppendingPathComponent:FIRCLSReportMetadataFile] fileSystemRepresentation];
-
-  if (!FIRCLSContextRecordMetadata(metaDataPath, initData)) {
-    FIRCLSErrorLog(@"Unable to update context metadata");
-  }
+  return initPromise;
 }
 
 void FIRCLSContextBaseInit(void) {
@@ -284,6 +245,10 @@ void FIRCLSContextBaseInit(void) {
   NSString* exceptionQueueName = [sdkBundleID stringByAppendingString:@".exception"];
 
   _firclsLoggingQueue = dispatch_queue_create([loggingQueueName UTF8String], DISPATCH_QUEUE_SERIAL);
+  if (_firclsLoggingQueue) {
+    dispatch_queue_set_specific(_firclsLoggingQueue, &_firclsLoggingQueue, &_firclsLoggingQueue,
+                                NULL);
+  }
   _firclsBinaryImageQueue =
       dispatch_queue_create([binaryImagesQueueName UTF8String], DISPATCH_QUEUE_SERIAL);
   _firclsExceptionQueue =
@@ -380,14 +345,8 @@ bool FIRCLSContextMarkAndCheckIfCrashed(void) {
     return false;
   }
 
-  if (_firclsContext.writable->crashOccurred) {
-    return true;
-  }
-
-  _firclsContext.writable->crashOccurred = true;
-  __sync_synchronize();
-
-  return false;
+  // Atomic compare-and-swap: only one thread can set false -> true
+  return !__sync_bool_compare_and_swap(&_firclsContext.writable->crashOccurred, false, true);
 }
 
 static const char* FIRCLSContextAppendToRoot(NSString* root, NSString* component) {
@@ -395,19 +354,26 @@ static const char* FIRCLSContextAppendToRoot(NSString* root, NSString* component
       [[root stringByAppendingPathComponent:component] fileSystemRepresentation]);
 }
 
-static bool FIRCLSContextRecordIdentity(FIRCLSFile* file, const FIRCLSContextInitData* initData) {
+static bool FIRCLSContextRecordIdentity(FIRCLSFile* file,
+                                        const char* sessionId,
+                                        const char* betaToken,
+                                        const char* appQualitySessionId) {
   FIRCLSFileWriteSectionStart(file, "identity");
 
   FIRCLSFileWriteHashStart(file);
 
-  FIRCLSFileWriteHashEntryString(file, "generator", CLS_SDK_GENERATOR_NAME);
-  FIRCLSFileWriteHashEntryString(file, "display_version", CLS_SDK_DISPLAY_VERSION);
-  FIRCLSFileWriteHashEntryString(file, "build_version", CLS_SDK_DISPLAY_VERSION);
+  FIRCLSFileWriteHashEntryString(file, "generator", FIRCLSSDKGeneratorName().UTF8String);
+  FIRCLSFileWriteHashEntryString(file, "display_version", FIRCLSSDKVersion().UTF8String);
+  FIRCLSFileWriteHashEntryString(file, "build_version", FIRCLSSDKVersion().UTF8String);
   FIRCLSFileWriteHashEntryUint64(file, "started_at", time(NULL));
 
-  FIRCLSFileWriteHashEntryString(file, "session_id", initData->sessionId);
-  FIRCLSFileWriteHashEntryString(file, "install_id", initData->installId);
-  FIRCLSFileWriteHashEntryString(file, "beta_token", initData->betaToken);
+  FIRCLSFileWriteHashEntryString(file, "session_id", sessionId);
+  FIRCLSFileWriteHashEntryString(file, "app_quality_session_id", appQualitySessionId);
+
+  // install_id is written into the proto directly. This is only left here to
+  // support Apple Report Converter.
+  FIRCLSFileWriteHashEntryString(file, "install_id", "");
+  FIRCLSFileWriteHashEntryString(file, "beta_token", betaToken);
   FIRCLSFileWriteHashEntryBoolean(file, "absolute_log_timestamps", true);
 
   FIRCLSFileWriteHashEnd(file);
@@ -437,7 +403,13 @@ static bool FIRCLSContextRecordApplication(FIRCLSFile* file, const char* customB
   return true;
 }
 
-static bool FIRCLSContextRecordMetadata(const char* path, const FIRCLSContextInitData* initData) {
+bool FIRCLSContextRecordMetadata(NSString* rootPath, const FIRCLSContextInitData* initData) {
+  const char* sessionId = [[initData sessionId] UTF8String];
+  const char* betaToken = [[initData betaToken] UTF8String];
+  const char* customBundleId = [[initData customBundleId] UTF8String];
+  const char* appQualitySessionId = [[initData appQualitySessionId] UTF8String];
+  const char* path =
+      [[rootPath stringByAppendingPathComponent:FIRCLSReportMetadataFile] fileSystemRepresentation];
   if (!FIRCLSUnlinkIfExists(path)) {
     FIRCLSSDKLog("Unable to unlink existing metadata file %s\n", strerror(errno));
   }
@@ -449,7 +421,7 @@ static bool FIRCLSContextRecordMetadata(const char* path, const FIRCLSContextIni
     return false;
   }
 
-  if (!FIRCLSContextRecordIdentity(&file, initData)) {
+  if (!FIRCLSContextRecordIdentity(&file, sessionId, betaToken, appQualitySessionId)) {
     FIRCLSSDKLog("Unable to write out identity metadata\n");
   }
 
@@ -457,7 +429,7 @@ static bool FIRCLSContextRecordMetadata(const char* path, const FIRCLSContextIni
     FIRCLSSDKLog("Unable to write out host metadata\n");
   }
 
-  if (!FIRCLSContextRecordApplication(&file, initData->customBundleId)) {
+  if (!FIRCLSContextRecordApplication(&file, customBundleId)) {
     FIRCLSSDKLog("Unable to write out application metadata\n");
   }
 
@@ -468,4 +440,20 @@ static bool FIRCLSContextRecordMetadata(const char* path, const FIRCLSContextIni
   FIRCLSFileClose(&file);
 
   return true;
+}
+
+void FIRCLSExecuteOnLoggingQueue(void (^block)(void)) {
+  if (!block) {
+    return;
+  }
+
+  if (!_firclsLoggingQueue) {
+    FIRCLSSDKLogWarn(
+        "FIRCLSExecuteOnLoggingQueue invoked with NULL logging queue; running block inline.\n");
+    block();
+  } else if (dispatch_get_specific(&_firclsLoggingQueue) != NULL) {
+    block();
+  } else {
+    dispatch_sync(_firclsLoggingQueue, block);
+  }
 }
