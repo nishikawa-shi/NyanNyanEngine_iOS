@@ -9,12 +9,13 @@ target 'NyanNyanEngine' do
   pod 'Firebase/Auth',          '~> 12.0'
   pod 'Firebase/Crashlytics',   '~> 12.0'
   pod 'Firebase/Firestore',     '~> 12.0'
-  pod 'R.swift',                '~> 5'
-  pod 'RxSwift',                '~> 5'
-  pod 'RxCocoa',                '~> 5'
-  pod 'RxDataSources',          '~> 4.0'
-  pod 'CryptoSwift'
-  pod 'Nuke',                   '~> 7.0'
+  pod 'R.swift',                '~> 7'
+  pod 'RxSwift',                '~> 6.9'
+  pod 'RxCocoa',                '~> 6.9'
+  pod 'RxDataSources',          '~> 5.0'
+  pod 'CryptoSwift',            '~> 1.8'
+  # Nuke 11以降はSPM専用配布のため、CocoaPods継続の間は10系に留める（SPM移行時に最新化）
+  pod 'Nuke',                   '~> 10'
 
   target 'NyanNyanEngineTests' do
     inherit! :search_paths
@@ -26,12 +27,12 @@ target 'NyanNyanEngine' do
     pod 'Firebase/Analytics',     '~> 12.0'
     pod 'Firebase/Auth',          '~> 12.0'
     pod 'Firebase/Firestore',     '~> 12.0'
-    pod 'R.swift',                '~> 5'
-    pod 'RxSwift',                '~> 5'
-    pod 'RxCocoa',                '~> 5'
-    pod 'RxDataSources',          '~> 4.0'
-    pod 'CryptoSwift'
-    pod 'Nuke',                   '~> 7.0'
+    pod 'R.swift',                '~> 7'
+    pod 'RxSwift',                '~> 6.9'
+    pod 'RxCocoa',                '~> 6.9'
+    pod 'RxDataSources',          '~> 5.0'
+    pod 'CryptoSwift',            '~> 1.8'
+    pod 'Nuke',                   '~> 10'
     # Pods for testing
   end
 
