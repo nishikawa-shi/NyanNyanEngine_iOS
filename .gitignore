@@ -70,9 +70,10 @@ report.xml
 Preview.html
 screenshots/**/*.png
 test_output
-Gemfile.lock
 .bundle/
 vendor/
+.bundle.bak_*
+Gemfile.lock.bak_*
 
 # Code Injection
 #
