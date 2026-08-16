@@ -31,7 +31,7 @@ NS_ASSUME_NONNULL_BEGIN
 + (instancetype)new NS_UNAVAILABLE;
 - (instancetype)initWithFileManager:(FIRCLSFileManager *)fileManager
                          appIDModel:(FIRCLSApplicationIdentifierModel *)appIDModel
-    NS_DESIGNATED_INITIALIZER;
+                            appInfo:(NSDictionary *)appInfo;
 
 /**
  * Recreates the settings dictionary by re-reading the settings file from persistent storage. This
@@ -64,29 +64,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, readonly) uint32_t cacheDurationSeconds;
 
 /**
- * The Crashlytics Organization identifier of the app. Allows data continuity between
- * old and new Crashlytics SDKs.
- */
-@property(nonatomic, nullable, readonly) NSString *orgID;
-
-/**
- * The backend bundle identifier of the app. Crashlytics can in some cases have
- * a different bundle identifier than the app itself (eg. Crashlytics will always downcase
- * the bundle ID).
- */
-@property(nonatomic, nullable, readonly) NSString *fetchedBundleID;
-
-/**
- * Indicates whether the app needs onboarding
- */
-@property(nonatomic, readonly) BOOL appNeedsOnboarding;
-
-/**
- * Indicates whether the app needs an update
- */
-@property(nonatomic, readonly) BOOL appUpdateRequired;
-
-/**
  * When this is false, Crashlytics will not start up
  */
 @property(nonatomic, readonly) BOOL collectReportsEnabled;
@@ -103,9 +80,15 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, readonly) BOOL customExceptionsEnabled;
 
 /**
- * Determine if the SDK should use the new endpoint for uploading reports
+ * When this is true, Crashlytics will fallback to EXCEPTION_DEFAULT
+ * for mach exception handler instead of EXCEPTION_IDENTITY_PROTECTED
  */
-@property(nonatomic, readonly) BOOL shouldUseNewReportEndpoint;
+@property(nonatomic) BOOL machExceptionDefaultBehavior;
+
+/**
+ * When this is true, Crashlytics will collect data from MetricKit
+ */
+@property(nonatomic, readonly) BOOL metricKitCollectionEnabled;
 
 /**
  * Returns the maximum number of custom exception events that will be
@@ -128,6 +111,26 @@ NS_ASSUME_NONNULL_BEGIN
  * Returns the maximum number of custom key-value pair keys (not bytes).
  */
 @property(nonatomic, readonly) uint32_t maxCustomKeys;
+
+/**
+ * Returns the initial upload rate for on-demand exception reporting.
+ */
+@property(nonatomic, readonly) double onDemandUploadRate;
+
+/**
+ * Base exponent used when exponential backoff is triggered for on-demand reporting.
+ */
+@property(nonatomic, readonly) double onDemandBackoffBase;
+
+/**
+ * Step duration to use with exponential backoff for on-demand reporting.
+ */
+@property(nonatomic, readonly) uint32_t onDemandBackoffStepDuration;
+
+/**
+ * When this is true, Crashlytics will suspend all threads to do on-demand fatal recording.
+ */
+@property(nonatomic, readonly) BOOL onDemandThreadSuspensionEnabled;
 
 @end
 

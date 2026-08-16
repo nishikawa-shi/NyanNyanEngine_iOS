@@ -135,8 +135,8 @@ class ApiRequestFactory: BaseApiRequestFactory {
                              apiUrl.addingPercentEncoding(withAllowedCharacters: allowedCharacterSet)!,
                              createSignatureBody(params: params)]
             .joined(separator: "&")
-        let sigKeyByte = signatureKey.data(using: .utf8)!.bytes
-        let sigDataByte = signatureData.data(using: .utf8)!.bytes
+        let sigKeyByte = [UInt8](signatureKey.utf8)
+        let sigDataByte = [UInt8](signatureData.utf8)
         let hmac = try! HMAC(key: sigKeyByte, variant: .sha1).authenticate(sigDataByte)
         return Data(hmac).base64EncodedString()
     }

@@ -58,10 +58,10 @@ class NekosanTest: XCTestCase {
     }
     
     private func calcAngou(sigKey: String, sigData: String) -> String {
-        let sigKeyByte = sigKey.data(using: .utf8)!.bytes
+        let sigKeyByte = [UInt8](sigKey.utf8)
         print("nekosa-n sigKeyByte is \(sigKeyByte)")
 
-        let sigDataByte = sigData.data(using: .utf8)!.bytes
+        let sigDataByte = [UInt8](sigData.utf8)
         print("nekosa-n sigDataByte is \(sigDataByte)")
 
         let hmac = try! HMAC(key: sigKeyByte, variant: .sha1).authenticate(sigDataByte)

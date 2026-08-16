@@ -12,32 +12,28 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#import "FirebaseCore/Extension/FIRAppInternal.h"
+#import "FirebaseCore/Extension/FIRLogger.h"
 #import "FirebaseCore/Sources/FIRBundleUtil.h"
-#import "FirebaseCore/Sources/FIRVersion.h"
-#import "FirebaseCore/Sources/Private/FIRAppInternal.h"
-#import "FirebaseCore/Sources/Private/FIRLogger.h"
-#import "FirebaseCore/Sources/Private/FIROptionsInternal.h"
+#import "FirebaseCore/Sources/FIROptionsInternal.h"
+#import "FirebaseCore/Sources/Public/FirebaseCore/FIRVersion.h"
 
 // Keys for the strings in the plist file.
 NSString *const kFIRAPIKey = @"API_KEY";
-NSString *const kFIRTrackingID = @"TRACKING_ID";
 NSString *const kFIRGoogleAppID = @"GOOGLE_APP_ID";
 NSString *const kFIRClientID = @"CLIENT_ID";
 NSString *const kFIRGCMSenderID = @"GCM_SENDER_ID";
-NSString *const kFIRAndroidClientID = @"ANDROID_CLIENT_ID";
 NSString *const kFIRDatabaseURL = @"DATABASE_URL";
 NSString *const kFIRStorageBucket = @"STORAGE_BUCKET";
 // The key to locate the expected bundle identifier in the plist file.
 NSString *const kFIRBundleID = @"BUNDLE_ID";
 // The key to locate the project identifier in the plist file.
 NSString *const kFIRProjectID = @"PROJECT_ID";
+NSString *const kFIRRecaptchaSiteKey = @"RECAPTCHA_SITE_KEY";
 
 NSString *const kFIRIsMeasurementEnabled = @"IS_MEASUREMENT_ENABLED";
 NSString *const kFIRIsAnalyticsCollectionEnabled = @"FIREBASE_ANALYTICS_COLLECTION_ENABLED";
 NSString *const kFIRIsAnalyticsCollectionDeactivated = @"FIREBASE_ANALYTICS_COLLECTION_DEACTIVATED";
-
-NSString *const kFIRIsAnalyticsEnabled = @"IS_ANALYTICS_ENABLED";
-NSString *const kFIRIsSignInEnabled = @"IS_SIGNIN_ENABLED";
 
 // Library version ID formatted like:
 // @"5"     // Major version (one or more digits)
@@ -80,6 +76,18 @@ NSString *const kFIRExceptionBadModification =
  * Throw exception if editing is locked when attempting to modify an option.
  */
 - (void)checkEditingLocked;
+
+/**
+ * The flag indicating whether this object was constructed with the values in the default plist
+ * file.
+ */
+@property(nonatomic) BOOL usingOptionsFromDefaultPlist;
+
+/**
+ * Whether or not Measurement was enabled. Measurement is enabled unless explicitly disabled in
+ * GoogleService-Info.plist.
+ */
+@property(nonatomic, readonly) BOOL isMeasurementEnabled;
 
 @end
 
@@ -160,10 +168,9 @@ static dispatch_once_t sDefaultOptionsDictionaryOnceToken;
 }
 
 - (id)copyWithZone:(NSZone *)zone {
-  FIROptions *newOptions = [[[self class] allocWithZone:zone] init];
+  FIROptions *newOptions = [(FIROptions *)[[self class] allocWithZone:zone]
+      initInternalWithOptionsDictionary:self.optionsDictionary];
   if (newOptions) {
-    newOptions.optionsDictionary = self.optionsDictionary;
-    newOptions.deepLinkURLScheme = self.deepLinkURLScheme;
     newOptions.appGroupID = self.appGroupID;
     newOptions.editingLocked = self.isEditingLocked;
     newOptions.usingOptionsFromDefaultPlist = self.usingOptionsFromDefaultPlist;
@@ -172,6 +179,12 @@ static dispatch_once_t sDefaultOptionsDictionaryOnceToken;
 }
 
 #pragma mark - Public instance methods
+
+- (instancetype)init {
+  // Unavailable.
+  [self doesNotRecognizeSelector:_cmd];
+  return nil;
+}
 
 - (instancetype)initWithContentsOfFile:(NSString *)plistPath {
   self = [super init];
@@ -230,15 +243,6 @@ static dispatch_once_t sDefaultOptionsDictionaryOnceToken;
   _optionsDictionary[kFIRClientID] = [clientID copy];
 }
 
-- (NSString *)trackingID {
-  return self.optionsDictionary[kFIRTrackingID];
-}
-
-- (void)setTrackingID:(NSString *)trackingID {
-  [self checkEditingLocked];
-  _optionsDictionary[kFIRTrackingID] = [trackingID copy];
-}
-
 - (NSString *)GCMSenderID {
   return self.optionsDictionary[kFIRGCMSenderID];
 }
@@ -257,15 +261,6 @@ static dispatch_once_t sDefaultOptionsDictionaryOnceToken;
   _optionsDictionary[kFIRProjectID] = [projectID copy];
 }
 
-- (NSString *)androidClientID {
-  return self.optionsDictionary[kFIRAndroidClientID];
-}
-
-- (void)setAndroidClientID:(NSString *)androidClientID {
-  [self checkEditingLocked];
-  _optionsDictionary[kFIRAndroidClientID] = [androidClientID copy];
-}
-
 - (NSString *)googleAppID {
   return self.optionsDictionary[kFIRGoogleAppID];
 }
@@ -279,9 +274,9 @@ static dispatch_once_t sDefaultOptionsDictionaryOnceToken;
   static dispatch_once_t onceToken;
   dispatch_once(&onceToken, ^{
     // The unit tests are set up to catch anything that does not properly convert.
-    NSString *version = [NSString stringWithUTF8String:FIRCoreVersionString];
+    NSString *version = FIRFirebaseVersion();
     NSArray *components = [version componentsSeparatedByString:@"."];
-    NSString *major = [components objectAtIndex:0];
+    NSString *major = [NSString stringWithFormat:@"%02d", [[components objectAtIndex:0] intValue]];
     NSString *minor = [NSString stringWithFormat:@"%02d", [[components objectAtIndex:1] intValue]];
     NSString *patch = [NSString stringWithFormat:@"%02d", [[components objectAtIndex:2] intValue]];
     kFIRLibraryVersionID = [NSString stringWithFormat:@"%@%@%@000", major, minor, patch];
@@ -312,9 +307,13 @@ static dispatch_once_t sDefaultOptionsDictionaryOnceToken;
   _optionsDictionary[kFIRStorageBucket] = [storageBucket copy];
 }
 
-- (void)setDeepLinkURLScheme:(NSString *)deepLinkURLScheme {
+- (NSString *)recaptchaSiteKey {
+  return self.optionsDictionary[kFIRRecaptchaSiteKey];
+}
+
+- (void)setRecaptchaSiteKey:(NSString *)recaptchaSiteKey {
   [self checkEditingLocked];
-  _deepLinkURLScheme = [deepLinkURLScheme copy];
+  _optionsDictionary[kFIRRecaptchaSiteKey] = [recaptchaSiteKey copy];
 }
 
 - (NSString *)bundleID {
@@ -354,11 +353,6 @@ static dispatch_once_t sDefaultOptionsDictionaryOnceToken;
 
   // Validate extra properties not contained in the dictionary. Only validate it if one of the
   // objects has the property set.
-  if ((options.deepLinkURLScheme != nil || self.deepLinkURLScheme != nil) &&
-      ![options.deepLinkURLScheme isEqualToString:self.deepLinkURLScheme]) {
-    return NO;
-  }
-
   if ((options.appGroupID != nil || self.appGroupID != nil) &&
       ![options.appGroupID isEqualToString:self.appGroupID]) {
     return NO;
@@ -381,7 +375,7 @@ static dispatch_once_t sDefaultOptionsDictionaryOnceToken;
   // Note: `self.analyticsOptionsDictionary` was left out here since it solely relies on the
   // contents of the main bundle's `Info.plist`. We should avoid reading that file and the contents
   // should be identical.
-  return self.optionsDictionary.hash ^ self.deepLinkURLScheme.hash ^ self.appGroupID.hash;
+  return self.optionsDictionary.hash ^ self.appGroupID.hash;
 }
 
 #pragma mark - Internal instance methods
@@ -411,8 +405,8 @@ static dispatch_once_t sDefaultOptionsDictionaryOnceToken;
 
 /**
  * Whether or not Measurement was enabled. Measurement is enabled unless explicitly disabled in
- * GoogleService-Info.plist. This uses the old plist flag IS_MEASUREMENT_ENABLED, which should still
- * be supported.
+ * GoogleService-Info.plist. This uses the old plist flag `IS_MEASUREMENT_ENABLED`, which should
+ * still be supported.
  */
 - (BOOL)isMeasurementEnabled {
   if (self.isAnalyticsCollectionDeactivated) {
@@ -438,8 +432,8 @@ static dispatch_once_t sDefaultOptionsDictionaryOnceToken;
 }
 
 - (BOOL)isAnalyticsCollectionExplicitlySet {
-  // If it's de-activated, it classifies as explicity set. If not, it's not a good enough indication
-  // that the developer wants FirebaseAnalytics enabled so continue checking.
+  // If it's de-activated, it classifies as explicitly set. If not, it's not a good enough
+  // indication that the developer wants FirebaseAnalytics enabled so continue checking.
   if (self.isAnalyticsCollectionDeactivated) {
     return YES;
   }
@@ -479,14 +473,6 @@ static dispatch_once_t sDefaultOptionsDictionaryOnceToken;
     return NO;  // Analytics Collection is not deactivated when the key is not in the dictionary.
   }
   return [value boolValue];
-}
-
-- (BOOL)isAnalyticsEnabled {
-  return [self.optionsDictionary[kFIRIsAnalyticsEnabled] boolValue];
-}
-
-- (BOOL)isSignInEnabled {
-  return [self.optionsDictionary[kFIRIsSignInEnabled] boolValue];
 }
 
 @end

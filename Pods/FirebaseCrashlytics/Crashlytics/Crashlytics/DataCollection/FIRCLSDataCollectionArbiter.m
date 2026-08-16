@@ -20,7 +20,7 @@
 #import "FBLPromises.h"
 #endif
 
-#import "FirebaseCore/Sources/Private/FirebaseCoreInternal.h"
+#import "FirebaseCore/Extension/FirebaseCoreInternal.h"
 
 #import "Crashlytics/Crashlytics/FIRCLSUserDefaults/FIRCLSUserDefaults.h"
 
@@ -101,11 +101,7 @@ typedef NS_ENUM(NSInteger, FIRCLSDataCollectionSetting) {
       [firebaseCrashlyticsCollectionEnabled isKindOfClass:[NSNumber class]]) {
     return [firebaseCrashlyticsCollectionEnabled boolValue];
   }
-#ifdef CRASHLYTICS_INTERNAL
-  return NO;
-#else
   return [app isDataCollectionDefaultEnabled];
-#endif
 }
 
 - (BOOL)isCrashlyticsCollectionEnabled {

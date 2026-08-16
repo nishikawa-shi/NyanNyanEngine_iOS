@@ -1,12 +1,12 @@
 //
 //  CryptoSwift
 //
-//  Copyright (C) 2014-2017 Marcin Krzyżanowski <marcin@krzyzanowskim.com>
+//  Copyright (C) 2014-2025 Marcin Krzyżanowski <marcin@krzyzanowskim.com>
 //  This software is provided 'as-is', without any express or implied warranty.
 //
 //  In no event will the authors be held liable for any damages arising from the use of this software.
 //
-//  Permission is granted to anyone to use this software for any purpose,including commercial applications, and to alter it and redistribute it freely, subject to the following restrictions:
+//  Permission is granted to anyone to use this software for any purpose, including commercial applications, and to alter it and redistribute it freely, subject to the following restrictions:
 //
 //  - The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation is required.
 //  - Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
@@ -18,10 +18,16 @@
 
 #if canImport(Darwin)
 import Darwin
+#elseif canImport(Android)
+import Android
 #elseif canImport(Glibc)
 import Glibc
+#elseif canImport(Musl)
+import Musl
 #elseif canImport(ucrt)
 import ucrt
+#elseif canImport(WASILibc)
+import WASILibc
 #endif
 
 /// A key derivation function.
@@ -44,7 +50,7 @@ public struct HKDF {
   ///   - salt: optional salt (if not provided, it is set to a sequence of variant.digestLength zeros)
   ///   - info: optional context and application specific information
   ///   - keyLength: intended length of derived key
-  public init(password: Array<UInt8>, salt: Array<UInt8>? = nil, info: Array<UInt8>? = nil, keyLength: Int? = nil /* dkLen */, variant: HMAC.Variant = .sha256) throws {
+  public init(password: Array<UInt8>, salt: Array<UInt8>? = nil, info: Array<UInt8>? = nil, keyLength: Int? = nil /* dkLen */, variant: HMAC.Variant = .sha2(.sha256)) throws {
     guard !password.isEmpty else {
       throw Error.invalidInput
     }
@@ -82,5 +88,9 @@ public struct HKDF {
       value = bytes
     }
     return Array(ret.prefix(self.dkLen))
+  }
+
+  public func callAsFunction() throws -> Array<UInt8> {
+    try calculate()
   }
 }

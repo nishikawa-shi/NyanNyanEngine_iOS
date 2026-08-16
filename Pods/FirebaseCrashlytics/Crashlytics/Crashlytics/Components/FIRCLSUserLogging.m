@@ -32,18 +32,27 @@ NSString *const FIRCLSUserIdentifierKey = @"com.crashlytics.user-id";
 NSString *const FIRCLSDevelopmentPlatformNameKey = @"com.crashlytics.development-platform-name";
 NSString *const FIRCLSDevelopmentPlatformVersionKey =
     @"com.crashlytics.development-platform-version";
+NSString *const FIRCLSOnDemandRecordedExceptionsKey =
+    @"com.crashlytics.on-demand.recorded-exceptions";
+NSString *const FIRCLSOnDemandDroppedExceptionsKey =
+    @"com.crashlytics.on-demand.dropped-exceptions";
+
+// Empty string object synchronized on to prevent a race condition when accessing AB file path
+NSString *const FIRCLSSynchronizedPathKey = @"";
 
 const uint32_t FIRCLSUserLoggingMaxKVEntries = 64;
 
 #pragma mark - Prototypes
-static void FIRCLSUserLoggingWriteKeyValue(NSString *key,
-                                           NSString *value,
-                                           FIRCLSUserLoggingKVStorage *storage,
-                                           uint32_t *counter);
+static void FIRCLSUserLoggingWriteKeysAndValues(NSDictionary *keysAndValues,
+                                                FIRCLSUserLoggingKVStorage *storage,
+                                                uint32_t *counter,
+                                                BOOL containsNullValue);
 static void FIRCLSUserLoggingCheckAndSwapABFiles(FIRCLSUserLoggingABStorage *storage,
                                                  const char **activePath,
                                                  off_t fileSize);
-void FIRCLSLogInternal(NSString *message);
+void FIRCLSLogInternal(FIRCLSUserLoggingABStorage *storage,
+                       const char **activePath,
+                       NSString *message);
 
 #pragma mark - Setup
 void FIRCLSUserLoggingInit(FIRCLSUserLoggingReadOnlyContext *roContext,
@@ -68,13 +77,21 @@ void FIRCLSUserLoggingRecordInternalKeyValue(NSString *key, id value) {
 
 void FIRCLSUserLoggingWriteInternalKeyValue(NSString *key, NSString *value) {
   // Unsynchronized - must be run on the correct queue
-  FIRCLSUserLoggingWriteKeyValue(key, value, &_firclsContext.readonly->logging.internalKVStorage,
-                                 &_firclsContext.writable->logging.internalKVCount);
+  NSDictionary *keysAndValues = key ? @{key : value ?: [NSNull null]} : nil;
+  FIRCLSUserLoggingWriteKeysAndValues(keysAndValues,
+                                      &_firclsContext.readonly->logging.internalKVStorage,
+                                      &_firclsContext.writable->logging.internalKVCount, NO);
 }
 
 void FIRCLSUserLoggingRecordUserKeyValue(NSString *key, id value) {
   FIRCLSUserLoggingRecordKeyValue(key, value, &_firclsContext.readonly->logging.userKVStorage,
                                   &_firclsContext.writable->logging.userKVCount);
+}
+
+void FIRCLSUserLoggingRecordUserKeysAndValues(NSDictionary *keysAndValues) {
+  FIRCLSUserLoggingRecordKeysAndValues(keysAndValues,
+                                       &_firclsContext.readonly->logging.userKVStorage,
+                                       &_firclsContext.writable->logging.userKVCount);
 }
 
 static id FIRCLSUserLoggingGetComponent(NSDictionary *entry,
@@ -140,6 +157,30 @@ NSDictionary *FIRCLSUserLoggingGetCompactedKVEntries(FIRCLSUserLoggingKVStorage 
   return finalKVSet;
 }
 
+static void FIRCLSUserLoggingWriteKVEntriesToFile(
+    NSDictionary<NSString *, NSString *> *keysAndValues, BOOL shouldHexEncode, FIRCLSFile *file) {
+  for (NSString *key in keysAndValues) {
+    NSString *valueObject = [keysAndValues objectForKey:key];
+
+    // map `NSNull` into nil
+    const char *value = (valueObject == (NSString *)[NSNull null] ? nil : [valueObject UTF8String]);
+
+    FIRCLSFileWriteSectionStart(file, "kv");
+    FIRCLSFileWriteHashStart(file);
+
+    if (shouldHexEncode) {
+      FIRCLSFileWriteHashEntryHexEncodedString(file, "key", [key UTF8String]);
+      FIRCLSFileWriteHashEntryHexEncodedString(file, "value", value);
+    } else {
+      FIRCLSFileWriteHashEntryString(file, "key", [key UTF8String]);
+      FIRCLSFileWriteHashEntryString(file, "value", value);
+    }
+
+    FIRCLSFileWriteHashEnd(file);
+    FIRCLSFileWriteSectionEnd(file);
+  }
+}
+
 void FIRCLSUserLoggingCompactKVEntries(FIRCLSUserLoggingKVStorage *storage) {
   if (!FIRCLSIsValidPointer(storage)) {
     FIRCLSSDKLogError("Error: storage invalid\n");
@@ -167,24 +208,14 @@ void FIRCLSUserLoggingCompactKVEntries(FIRCLSUserLoggingKVStorage *storage) {
     // but it's very uncommon to go down this path.
     NSArray *keys = [finalKVs allKeys];
 
-    FIRCLSSDKLogInfo("Truncating KV set, which is above max %d\n", maxCount);
+    FIRCLSSDKLogInfo("Truncating %d keys from KV set, which is above max %d\n",
+                     (uint32_t)(finalKVs.count - maxCount), maxCount);
 
     finalKVs =
         [finalKVs dictionaryWithValuesForKeys:[keys subarrayWithRange:NSMakeRange(0, maxCount)]];
   }
 
-  for (NSString *key in finalKVs) {
-    NSString *value = [finalKVs objectForKey:key];
-
-    FIRCLSFileWriteSectionStart(&file, "kv");
-    FIRCLSFileWriteHashStart(&file);
-    // tricky - the values stored incrementally have already been hex-encoded
-    FIRCLSFileWriteHashEntryString(&file, "key", [key UTF8String]);
-    FIRCLSFileWriteHashEntryString(&file, "value", [value UTF8String]);
-    FIRCLSFileWriteHashEnd(&file);
-    FIRCLSFileWriteSectionEnd(&file);
-  }
-
+  FIRCLSUserLoggingWriteKVEntriesToFile(finalKVs, false, &file);
   FIRCLSFileClose(&file);
 
   if (unlink(storage->incrementalPath) != 0) {
@@ -202,33 +233,66 @@ void FIRCLSUserLoggingRecordKeyValue(NSString *key,
     return;
   }
 
-  // ensure that any invalid pointer is actually set to nil
-  if (!FIRCLSIsValidPointer(value) && value != nil) {
-    FIRCLSSDKLogWarn("Bad value pointer being clamped to nil\n");
-    value = nil;
-  }
+  NSDictionary *keysAndValues = @{key : (value ?: [NSNull null])};
+  FIRCLSUserLoggingRecordKeysAndValues(keysAndValues, storage, counter);
+}
 
+void FIRCLSUserLoggingRecordKeysAndValues(NSDictionary *keysAndValues,
+                                          FIRCLSUserLoggingKVStorage *storage,
+                                          uint32_t *counter) {
   if (!FIRCLSContextIsInitialized()) {
+    FIRCLSSDKLogWarn(
+        "Failed to write key/value pairs. Crashlytics context has not initialized yet.\n");
     return;
   }
 
-  if ([value respondsToSelector:@selector(description)]) {
-    value = [value description];
-  } else {
-    // passing nil will result in a JSON null being written, which is deserialized as [NSNull null],
-    // signaling to remove the key during compaction
-    value = nil;
+  if (keysAndValues.count == 0) {
+    FIRCLSSDKLogWarn("User provided empty key/value dictionary\n");
+    return;
   }
 
-  dispatch_sync(FIRCLSGetLoggingQueue(), ^{
-    FIRCLSUserLoggingWriteKeyValue(key, value, storage, counter);
+  if (!FIRCLSIsValidPointer(keysAndValues)) {
+    FIRCLSSDKLogWarn("User provided bad key/value dictionary\n");
+    return;
+  }
+
+  NSMutableDictionary *sanitizedKeysAndValues = [keysAndValues mutableCopy];
+  BOOL containsNullValue = NO;
+
+  for (NSString *key in keysAndValues) {
+    if (!FIRCLSIsValidPointer(key)) {
+      FIRCLSSDKLogWarn("User provided bad key\n");
+      return;
+    }
+
+    id value = keysAndValues[key];
+
+    // ensure that any invalid pointer is actually set to nil
+    if (!FIRCLSIsValidPointer(value) && value != nil) {
+      FIRCLSSDKLogWarn("Bad value pointer being clamped to nil\n");
+      sanitizedKeysAndValues[key] = [NSNull null];
+    }
+
+    if ([value respondsToSelector:@selector(description)] && ![value isEqual:[NSNull null]]) {
+      sanitizedKeysAndValues[key] = [value description];
+    } else {
+      // passing nil will result in a JSON null being written, which is deserialized as [NSNull
+      // null], signaling to remove the key during compaction
+      sanitizedKeysAndValues[key] = [NSNull null];
+      containsNullValue = YES;
+    }
+  }
+
+  FIRCLSExecuteOnLoggingQueue(^{
+    FIRCLSUserLoggingWriteKeysAndValues(sanitizedKeysAndValues, storage, counter,
+                                        containsNullValue);
   });
 }
 
-static void FIRCLSUserLoggingWriteKeyValue(NSString *key,
-                                           NSString *value,
-                                           FIRCLSUserLoggingKVStorage *storage,
-                                           uint32_t *counter) {
+static void FIRCLSUserLoggingWriteKeysAndValues(NSDictionary *keysAndValues,
+                                                FIRCLSUserLoggingKVStorage *storage,
+                                                uint32_t *counter,
+                                                BOOL containsNullValue) {
   FIRCLSFile file;
 
   if (!FIRCLSIsValidPointer(storage) || !FIRCLSIsValidPointer(counter)) {
@@ -241,17 +305,11 @@ static void FIRCLSUserLoggingWriteKeyValue(NSString *key,
     return;
   }
 
-  FIRCLSFileWriteSectionStart(&file, "kv");
-  FIRCLSFileWriteHashStart(&file);
-  FIRCLSFileWriteHashEntryHexEncodedString(&file, "key", [key UTF8String]);
-  FIRCLSFileWriteHashEntryHexEncodedString(&file, "value", [value UTF8String]);
-  FIRCLSFileWriteHashEnd(&file);
-  FIRCLSFileWriteSectionEnd(&file);
-
+  FIRCLSUserLoggingWriteKVEntriesToFile(keysAndValues, true, &file);
   FIRCLSFileClose(&file);
 
-  *counter += 1;
-  if (*counter >= storage->maxIncrementalCount) {
+  *counter += keysAndValues.count;
+  if (*counter >= storage->maxIncrementalCount || containsNullValue) {
     dispatch_async(FIRCLSGetLoggingQueue(), ^{
       FIRCLSUserLoggingCompactKVEntries(storage);
       *counter = 0;
@@ -261,6 +319,8 @@ static void FIRCLSUserLoggingWriteKeyValue(NSString *key,
 
 NSArray *FIRCLSUserLoggingStoredKeyValues(const char *path) {
   if (!FIRCLSContextIsInitialized()) {
+    FIRCLSSDKLogWarn(
+        "Failed to read key/value pairs. Crashlytics context has not initialized yet.\n");
     return nil;
   }
 
@@ -299,7 +359,8 @@ static void FIRCLSUserLoggingWriteError(FIRCLSFile *file,
                                         NSError *error,
                                         NSDictionary<NSString *, id> *additionalUserInfo,
                                         NSArray *addresses,
-                                        uint64_t timestamp) {
+                                        uint64_t timestamp,
+                                        NSString *rolloutsInfoJSON) {
   FIRCLSFileWriteSectionStart(file, "error");
   FIRCLSFileWriteHashStart(file);
   FIRCLSFileWriteHashEntryHexEncodedString(file, "domain", [[error domain] UTF8String]);
@@ -318,29 +379,36 @@ static void FIRCLSUserLoggingWriteError(FIRCLSFile *file,
   FIRCLSUserLoggingRecordErrorUserInfo(file, "info", [error userInfo]);
   FIRCLSUserLoggingRecordErrorUserInfo(file, "extra_info", additionalUserInfo);
 
+  // rollouts
+  if (rolloutsInfoJSON) {
+    FIRCLSFileWriteHashKey(file, "rollouts");
+    FIRCLSFileWriteStringUnquoted(file, [rolloutsInfoJSON UTF8String]);
+    FIRCLSFileWriteHashEnd(file);
+  }
+
   FIRCLSFileWriteHashEnd(file);
   FIRCLSFileWriteSectionEnd(file);
 }
 
 void FIRCLSUserLoggingRecordError(NSError *error,
-                                  NSDictionary<NSString *, id> *additionalUserInfo) {
+                                  NSDictionary<NSString *, id> *additionalUserInfo,
+                                  NSString *rolloutsInfoJSON,
+                                  NSArray *addresses,
+                                  uint64_t timestamp) {
   if (!error) {
     return;
   }
 
   if (!FIRCLSContextIsInitialized()) {
+    FIRCLSSDKLogWarn("Failed to record error. Crashlytics context has not initialized yet.\n");
     return;
   }
-
-  // record the stacktrace and timestamp here, so we
-  // are as close as possible to the user's log statement
-  NSArray *addresses = [NSThread callStackReturnAddresses];
-  uint64_t timestamp = time(NULL);
 
   FIRCLSUserLoggingWriteAndCheckABFiles(
       &_firclsContext.readonly->logging.errorStorage,
       &_firclsContext.writable->logging.activeErrorLogPath, ^(FIRCLSFile *file) {
-        FIRCLSUserLoggingWriteError(file, error, additionalUserInfo, addresses, timestamp);
+        FIRCLSUserLoggingWriteError(file, error, additionalUserInfo, addresses, timestamp,
+                                    rolloutsInfoJSON);
       });
 }
 
@@ -356,7 +424,26 @@ void FIRCLSLog(NSString *format, ...) {
   NSString *msg = [[NSString alloc] initWithFormat:format arguments:args];
   va_end(args);
 
-  FIRCLSLogInternal(msg);
+  FIRCLSUserLoggingABStorage *currentStorage = &_firclsContext.readonly->logging.logStorage;
+  const char **activePath = &_firclsContext.writable->logging.activeUserLogPath;
+  FIRCLSLogInternal(currentStorage, activePath, msg);
+}
+
+void FIRCLSLogToStorage(FIRCLSUserLoggingABStorage *storage,
+                        const char **activePath,
+                        NSString *format,
+                        ...) {
+  // If the format is nil do nothing just like NSLog.
+  if (!format) {
+    return;
+  }
+
+  va_list args;
+  va_start(args, format);
+  NSString *msg = [[NSString alloc] initWithFormat:format arguments:args];
+  va_end(args);
+
+  FIRCLSLogInternal(storage, activePath, msg);
 }
 
 #pragma mark - Properties
@@ -426,7 +513,9 @@ void FIRCLSUserLoggingCheckAndSwapABFiles(FIRCLSUserLoggingABStorage *storage,
     [[NSFileManager defaultManager] removeItemAtPath:pathString error:nil];
   }
 
-  *activePath = otherPath;
+  @synchronized(FIRCLSSynchronizedPathKey) {
+    *activePath = otherPath;
+  }
 }
 
 void FIRCLSUserLoggingWriteAndCheckABFiles(FIRCLSUserLoggingABStorage *storage,
@@ -436,8 +525,10 @@ void FIRCLSUserLoggingWriteAndCheckABFiles(FIRCLSUserLoggingABStorage *storage,
     return;
   }
 
-  if (!*activePath) {
-    return;
+  @synchronized(FIRCLSSynchronizedPathKey) {
+    if (!*activePath) {
+      return;
+    }
   }
 
   if (storage->restrictBySize) {
@@ -450,7 +541,7 @@ void FIRCLSUserLoggingWriteAndCheckABFiles(FIRCLSUserLoggingABStorage *storage,
     }
   }
 
-  dispatch_sync(FIRCLSGetLoggingQueue(), ^{
+  FIRCLSExecuteOnLoggingQueue(^{
     FIRCLSFile file;
 
     if (!FIRCLSFileInitWithPath(&file, *activePath, true)) {
@@ -484,7 +575,9 @@ void FIRCLSLogInternalWrite(FIRCLSFile *file, NSString *message, uint64_t time) 
   FIRCLSFileWriteSectionEnd(file);
 }
 
-void FIRCLSLogInternal(NSString *message) {
+void FIRCLSLogInternal(FIRCLSUserLoggingABStorage *storage,
+                       const char **activePath,
+                       NSString *message) {
   if (!message) {
     return;
   }
@@ -498,7 +591,7 @@ void FIRCLSLogInternal(NSString *message) {
   struct timeval te;
 
   NSUInteger messageLength = [message length];
-  int maxLogSize = _firclsContext.readonly->logging.logStorage.maxSize;
+  int maxLogSize = storage->maxSize;
 
   if (messageLength > maxLogSize) {
     FIRCLSWarningLog(
@@ -515,9 +608,7 @@ void FIRCLSLogInternal(NSString *message) {
 
   const uint64_t time = te.tv_sec * 1000LL + te.tv_usec / 1000;
 
-  FIRCLSUserLoggingWriteAndCheckABFiles(&_firclsContext.readonly->logging.logStorage,
-                                        &_firclsContext.writable->logging.activeUserLogPath,
-                                        ^(FIRCLSFile *file) {
-                                          FIRCLSLogInternalWrite(file, message, time);
-                                        });
+  FIRCLSUserLoggingWriteAndCheckABFiles(storage, activePath, ^(FIRCLSFile *file) {
+    FIRCLSLogInternalWrite(file, message, time);
+  });
 }

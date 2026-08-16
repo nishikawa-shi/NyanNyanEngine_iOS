@@ -1,306 +1,200 @@
-[![Version](https://img.shields.io/cocoapods/v/Firebase.svg?style=flat)](https://cocoapods.org/pods/Firebase)
-[![License](https://img.shields.io/cocoapods/l/Firebase.svg?style=flat)](https://cocoapods.org/pods/Firebase)
-[![Platform](https://img.shields.io/cocoapods/p/Firebase.svg?style=flat)](https://cocoapods.org/pods/Firebase)
+<p align="center">
+  <a href="https://cocoapods.org/pods/Firebase">
+    <img src="https://img.shields.io/github/v/release/Firebase/firebase-ios-sdk?style=flat&label=CocoaPods"/>
+  </a>
+  <a href="https://swiftpackageindex.com/firebase/firebase-ios-sdk">
+    <img src="https://img.shields.io/github/v/release/Firebase/firebase-ios-sdk?style=flat&label=Swift%20Package%20Index&color=red"/>
+  </a>
+  <a href="https://cocoapods.org/pods/Firebase">
+    <img src="https://img.shields.io/github/license/Firebase/firebase-ios-sdk?style=flat"/>
+  </a><br/>
+  <a href="https://swiftpackageindex.com/firebase/firebase-ios-sdk">
+    <img src="https://img.shields.io/endpoint?url=https%3A%2F%2Fswiftpackageindex.com%2Fapi%2Fpackages%2Ffirebase%2Ffirebase-ios-sdk%2Fbadge%3Ftype%3Dplatforms"/>
+  </a>
+  <a href="https://swiftpackageindex.com/firebase/firebase-ios-sdk">
+    <img src="https://img.shields.io/endpoint?url=https%3A%2F%2Fswiftpackageindex.com%2Fapi%2Fpackages%2Ffirebase%2Ffirebase-ios-sdk%2Fbadge%3Ftype%3Dswift-versions"/>
+  </a>
+</p>
 
-[![Actions Status][gh-abtesting-badge]][gh-actions]
-[![Actions Status][gh-appdistribution-badge]][gh-actions]
-[![Actions Status][gh-auth-badge]][gh-actions]
-[![Actions Status][gh-core-badge]][gh-actions]
-[![Actions Status][gh-crashlytics-badge]][gh-actions]
-[![Actions Status][gh-database-badge]][gh-actions]
-[![Actions Status][gh-datatransport-badge]][gh-actions]
-[![Actions Status][gh-dynamiclinks-badge]][gh-actions]
-[![Actions Status][gh-firebasepod-badge]][gh-actions]
-[![Actions Status][gh-firestore-badge]][gh-actions]
-[![Actions Status][gh-functions-badge]][gh-actions]
-[![Actions Status][gh-inappmessaging-badge]][gh-actions]
-[![Actions Status][gh-interop-badge]][gh-actions]
-[![Actions Status][gh-messaging-badge]][gh-actions]
-[![Actions Status][gh-remoteconfig-badge]][gh-actions]
-[![Actions Status][gh-storage-badge]][gh-actions]
-[![Actions Status][gh-symbolcollision-badge]][gh-actions]
-[![Actions Status][gh-zip-badge]][gh-actions]
-[![Travis](https://travis-ci.org/firebase/firebase-ios-sdk.svg?branch=master)](https://travis-ci.org/firebase/firebase-ios-sdk)
+> [!WARNING]
+> **CocoaPods:** New versions of the Firebase Apple SDK will no longer be
+> published to CocoaPods after **October 2026**. Existing CocoaPods versions
+> will remain available and installations will remain functional. See the
+> [migration guide](https://firebase.google.com/docs/ios/cocoapods-deprecation)
+> for more information.
+
+> [!TIP]
+> **Preview Release:** Firebase AI Logic's Gemini Foundation Models framework
+> adapter is now available in preview. Get started by visiting the
+> [documentation](https://firebase.google.com/docs/ai-logic/apple-foundation-models-framework/get-started).
 
 # Firebase Apple Open Source Development
 
-This repository contains all Apple platform Firebase SDK source except FirebaseAnalytics,
-FirebasePerformance, and FirebaseML.
+This repository contains the source code for all Apple platform Firebase
+libraries except `FirebaseAnalytics`.
 
-The repository also includes GoogleUtilities source. The
-[GoogleUtilities](GoogleUtilities/README.md) pod is
-a set of utilities used by Firebase and other Google products.
+Firebase is an app development platform with libraries, services, and tools to
+help you build, grow, and monetize your app. Learn more about Firebase at the
+[official Firebase website](https://firebase.google.com).
 
-Firebase is an app development platform with tools to help you build, grow and
-monetize your app. More information about Firebase can be found at
-[https://firebase.google.com](https://firebase.google.com).
+### Supported Firebase Products
+
+The following products are open-source and included in this repository:
+
+*   [Firebase AI Logic](https://firebase.google.com/docs/ai-logic) (`FirebaseAI`)
+*   [App Check](https://firebase.google.com/docs/app-check) (`FirebaseAppCheck`)
+*   [App Distribution](https://firebase.google.com/docs/app-distribution) (`FirebaseAppDistribution`)
+*   [Authentication](https://firebase.google.com/docs/auth) (`FirebaseAuth`)
+*   [Cloud Firestore](https://firebase.google.com/docs/firestore) (`FirebaseFirestore`)
+*   [Cloud Functions](https://firebase.google.com/docs/functions) (`FirebaseFunctions`)
+*   [Cloud Messaging](https://firebase.google.com/docs/cloud-messaging) (`FirebaseMessaging`)
+*   [Crashlytics](https://firebase.google.com/docs/crashlytics) (`FirebaseCrashlytics`)
+*   [In-App Messaging](https://firebase.google.com/docs/in-app-messaging) (`FirebaseInAppMessaging`)
+*   [Performance Monitoring](https://firebase.google.com/docs/perf-mon) (`FirebasePerformance`)
+*   [Realtime Database](https://firebase.google.com/docs/database) (`FirebaseDatabase`)
+*   [Remote Config](https://firebase.google.com/docs/remote-config) (`FirebaseRemoteConfig`)
+*   [Storage](https://firebase.google.com/docs/storage) (`FirebaseStorage`)
+
+> [!NOTE]
+> **Firebase Analytics** is not open-source, but its pre-compiled binaries are
+> included when installing Firebase via Swift Package Manager or CocoaPods.
 
 ## Installation
 
 See the subsections below for details about the different installation methods.
-1. [Standard pod install](README.md#standard-pod-install)
-1. [Swift Package Manager (Beta)](SwiftPackageManager.md)
-1. [Installing from the GitHub repo](README.md#installing-from-github)
-1. [Experimental Carthage](README.md#carthage-ios-only)
+Where available, it's recommended to install libraries with a `Swift` suffix to
+get the best experience when writing your app in Swift.
 
-### Standard pod install
+- [Swift Package Manager](#swift-package-manager-installation)
+- [CocoaPods](#cocoapods-installation)
+- [Install from GitHub](#install-from-github)
+- [Experimental Carthage](#carthage-ios-only)
+- [Framework or library](#use-firebase-from-a-framework-or-a-library)
 
-Go to
-[https://firebase.google.com/docs/ios/setup](https://firebase.google.com/docs/ios/setup).
+### Swift Package Manager installation
 
-### Swift Package Manager (Beta)
+Find instructions for installing using
+[Swift Package Manager](https://swift.org/package-manager/) in the
+[Firebase get started documentation](https://firebase.google.com/docs/ios/setup).
 
-Instructions for the Beta of [Swift Package Manager](https://swift.org/package-manager/)
-support can be found at [SwiftPackageManager.md](SwiftPackageManager.md).
+### CocoaPods installation
 
-### Installing from GitHub
+Find instructions for installing with CocoaPods (`pod install`) in the
+[Firebase installation options documentation](https://firebase.google.com/docs/ios/installation-methods#cocoapods).
 
-For releases starting with 5.0.0, the source for each release is also deployed
-to CocoaPods master and available via standard
-[CocoaPods Podfile syntax](https://guides.cocoapods.org/syntax/podfile.html#pod).
+**Note:** To accommodate the read-only announcement from CocoaPods, Firebase
+will stop publishing new versions to CocoaPods in October 2026.
+[Learn more.](https://firebase.google.com/docs/ios/cocoapods-deprecation)
 
-These instructions can be used to access the Firebase repo at other branches,
-tags, or commits.
+### Install from GitHub
+
+You can install from GitHub to access the Firebase repo at other branches, tags,
+or commits.
 
 #### Background
 
-See
-[the Podfile Syntax Reference](https://guides.cocoapods.org/syntax/podfile.html#pod)
-for instructions and options about overriding pod source locations.
+For instructions and options about overriding pod source locations, see the
+[Podfile Syntax Reference](https://guides.cocoapods.org/syntax/podfile.html#pod).
 
-#### Accessing Firebase Source Snapshots
+#### Access Firebase source snapshots
 
-All of the official releases are tagged in this repo and available via CocoaPods. To access a local
-source snapshot or unreleased branch, use Podfile directives like the following:
+All official releases are tagged in this repo and available via CocoaPods. To
+access a local source snapshot or unreleased branch, use Podfile directives.
+Here are some example directives which use `FirebaseFirestore` as the example
+library.
 
-To access FirebaseFirestore via a branch:
+To access `FirebaseFirestore` via a **branch**:
+
+```ruby
+pod 'FirebaseCore', :git => 'https://github.com/firebase/firebase-ios-sdk.git', :branch => 'main'
+pod 'FirebaseFirestore', :git => 'https://github.com/firebase/firebase-ios-sdk.git', :branch => 'main'
 ```
-pod 'FirebaseCore', :git => 'https://github.com/firebase/firebase-ios-sdk.git', :branch => 'master'
-pod 'FirebaseFirestore', :git => 'https://github.com/firebase/firebase-ios-sdk.git', :branch => 'master'
-```
 
-To access FirebaseMessaging via a checked out version of the firebase-ios-sdk repo do:
+To access `FirebaseFirestore` via a **checked-out version** of the `firebase-ios-sdk` repo:
 
-```
+```ruby
 pod 'FirebaseCore', :path => '/path/to/firebase-ios-sdk'
-pod 'FirebaseMessaging', :path => '/path/to/firebase-ios-sdk'
+pod 'FirebaseFirestore', :path => '/path/to/firebase-ios-sdk'
 ```
 
 ### Carthage (iOS only)
 
-Instructions for the experimental Carthage distribution are at
-[Carthage](Carthage.md).
+Find instructions for the experimental Carthage distribution (iOS only) at
+[Carthage.md](Carthage.md) within this repo.
 
-### Rome
+### Use Firebase from a Framework or a library
 
-Instructions for installing binary frameworks via
-[Rome](https://github.com/CocoaPods/Rome) are at [Rome](Rome.md).
+Find details about using Firebase from a Framework or a library at
+[firebase_in_libraries.md](docs/firebase_in_libraries.md) within this repo.
 
-### Using Firebase from a Framework or a library
 
-[Using Firebase from a Framework or a library](docs/firebase_in_libraries.md)
+## Building with Firebase on Apple platforms
 
-## Development
+Firebase provides official beta support for macOS, Catalyst, and tvOS. visionOS
+and watchOS are community supported. Thanks to community contributions for many
+of the multi-platform PRs.
 
-To develop Firebase software in this repository, ensure that you have at least
-the following software:
+At this time, most Firebase products are available across Apple platforms. There
+are still a few gaps, especially on visionOS and watchOS. For details about the
+current support matrix, see
+[this chart](https://firebase.google.com/docs/ios/learn-more#firebase_library_support_by_platform)
+in the Firebase documentation.
 
-  * Xcode 10.3 (or later)
-  * CocoaPods 1.7.2 (or later)
-  * [CocoaPods generate](https://github.com/square/cocoapods-generate)
+### visionOS
 
-For the pod that you want to develop:
+Where supported, visionOS works as expected with the exception of Firestore via
+Swift Package Manager where it is required to use the source distribution.
 
-`pod gen Firebase{name here}.podspec --local-sources=./ --auto-open --platforms=ios`
+To enable the Firestore source distribution, quit Xcode and open the desired
+project from the command line with the `FIREBASE_SOURCE_FIRESTORE` environment
+variable: `open --env FIREBASE_SOURCE_FIRESTORE /path/to/project.xcodeproj`.
+To go back to using the binary distribution of Firestore, quit Xcode and open
+Xcode like normal, without the environment variable.
 
-Note: If the CocoaPods cache is out of date, you may need to run
-`pod repo update` before the `pod gen` command.
+### watchOS
 
-Note: Set the `--platforms` option to `macos` or `tvos` to develop/test for
-those platforms. Since 10.2, Xcode does not properly handle multi-platform
-CocoaPods workspaces.
-
-Firestore has a self contained Xcode project. See
-[Firestore/README.md](Firestore/README.md).
-
-### Development for Catalyst
-* `pod gen {name here}.podspec --local-sources=./ --auto-open --platforms=ios`
-* Check the Mac box in the App-iOS Build Settings
-* Sign the App in the Settings Signing & Capabilities tab
-* Click Pods in the Project Manager
-* Add Signing to the iOS host app and unit test targets
-* Select the Unit-unit scheme
-* Run it to build and test
-
-### Adding a New Firebase Pod
-
-See [AddNewPod.md](AddNewPod.md).
-
-### Managing Headers and Imports
-
-See [HeadersImports.md](HeadersImports.md).
-
-### Code Formatting
-
-To ensure that the code is formatted consistently, run the script
-[./scripts/check.sh](https://github.com/firebase/firebase-ios-sdk/blob/master/scripts/check.sh)
-before creating a PR.
-
-GitHub Actions will verify that any code changes are done in a style compliant
-way. Install `clang-format` and `mint`:
-
-```
-brew install clang-format
-brew install mint
-```
-
-### Running Unit Tests
-
-Select a scheme and press Command-u to build a component and run its unit tests.
-
-#### Viewing Code Coverage (Deprecated)
-
-First, make sure that [xcov](https://github.com/nakiostudio/xcov) is installed with `gem install xcov`.
-
-After running the `AllUnitTests_iOS` scheme in Xcode, execute
-`xcov --workspace Firebase.xcworkspace --scheme AllUnitTests_iOS --output_directory xcov_output`
-at Example/ in the terminal. This will aggregate the coverage, and you can run `open xcov_output/index.html` to see the results.
-
-### Running Sample Apps
-In order to run the sample apps and integration tests, you'll need valid
-`GoogleService-Info.plist` files for those samples. The Firebase Xcode project contains dummy plist
-files without real values, but can be replaced with real plist files. To get your own
-`GoogleService-Info.plist` files:
-
-1. Go to the [Firebase Console](https://console.firebase.google.com/)
-2. Create a new Firebase project, if you don't already have one
-3. For each sample app you want to test, create a new Firebase app with the sample app's bundle
-identifier (e.g. `com.google.Database-Example`)
-4. Download the resulting `GoogleService-Info.plist` and add it to the Xcode project.
-
-## Specific Component Instructions
-See the sections below for any special instructions for those components.
-
-### Firebase Auth
-
-If you're doing specific Firebase Auth development, see
-[the Auth Sample README](FirebaseAuth/Tests/Sample/README.md) for instructions about
-building and running the FirebaseAuth pod along with various samples and tests.
-
-### Firebase Database
-
-The Firebase Database Integration tests can be run against a locally running Database Emulator
-or against a production instance.
-
-To run against a local emulator instance, invoke `./scripts/run_database_emulator.sh start` before
-running the integration test.
-
-To run against a production instance, provide a valid GoogleServices-Info.plist and copy it to
-`FirebaseDatabase/Tests/Resources/GoogleService-Info.plist`. Your Security Rule must be set to
-[public](https://firebase.google.com/docs/database/security/quickstart) while your tests are
-running.
-
-### Firebase Storage
-
-To run the Storage Integration tests, follow the instructions in
-[FIRStorageIntegrationTests.m](FirebaseStorage/Tests/Integration/FIRStorageIntegrationTests.m).
-
-#### Push Notifications
-
-Push notifications can only be delivered to specially provisioned App IDs in the developer portal.
-In order to actually test receiving push notifications, you will need to:
-
-1. Change the bundle identifier of the sample app to something you own in your Apple Developer
-account, and enable that App ID for push notifications.
-2. You'll also need to
-[upload your APNs Provider Authentication Key or certificate to the Firebase Console](https://firebase.google.com/docs/cloud-messaging/ios/certs)
-at **Project Settings > Cloud Messaging > [Your Firebase App]**.
-3. Ensure your iOS device is added to your Apple Developer portal as a test device.
-
-#### iOS Simulator
-
-The iOS Simulator cannot register for remote notifications, and will not receive push notifications.
-In order to receive push notifications, you'll have to follow the steps above and run the app on a
-physical device.
-
-## Community Supported Efforts
-
-We've seen an amazing amount of interest and contributions to improve the Firebase SDKs, and we are
-very grateful!  We'd like to empower as many developers as we can to be able to use Firebase and
-participate in the Firebase community.
-
-### tvOS, macOS, watchOS and Catalyst
-Thanks to contributions from the community, many of Firebase SDKs now compile, run unit tests, and work on
-tvOS, macOS, watchOS and Catalyst.
-
-For tvOS, checkout the [Sample](Example/tvOSSample).
-For watchOS, currently only Messaging and Storage (and their dependencies) have limited support. Checkout the
+Thanks to contributions from the community, many of Firebase SDKs now compile,
+run unit tests, and work on watchOS. See the
 [Independent Watch App Sample](Example/watchOSSample).
 
-Keep in mind that macOS, tvOS, watchOS and Catalyst are not officially supported by Firebase, and this
-repository is actively developed primarily for iOS. While we can catch basic unit test issues with
-Travis, there may be some changes where the SDK no longer works as expected on macOS, tvOS or watchOS. If you
-encounter this, please [file an issue](https://github.com/firebase/firebase-ios-sdk/issues).
+Keep in mind that watchOS is not officially supported by Firebase. While we can
+catch basic unit test issues with GitHub Actions, there may be some changes
+where the SDK no longer works as expected on watchOS. If you encounter this,
+please [file an issue](https://github.com/firebase/firebase-ios-sdk/issues).
 
-During app setup in the console, you may get to a step that mentions something like "Checking if the app
-has communicated with our servers". This relies on Analytics and will not work on macOS/tvOS/watchOS/Catalyst.
-**It's safe to ignore the message and continue**, the rest of the SDKs will work as expected.
+During app setup in the console, you may get to a step that mentions something
+like "Checking if the app has communicated with our servers". This relies on
+`FirebaseAnalytics` and will not work on watchOS.
+**It's safe to ignore the message and continue**, the rest of the SDKs will work
+as expected.
 
-To install, add a subset of the following to the Podfile:
+#### Additional Crashlytics notes for watchOS
 
-```
-pod 'Firebase/ABTesting'     # No watchOS support yet
-pod 'Firebase/Auth'          # Limited watchOS support
-pod 'Firebase/Crashlytics'
-pod 'Firebase/Database'      # No watchOS support yet
-pod 'Firebase/Firestore'     # No watchOS support yet
-pod 'Firebase/Functions'     # No watchOS support yet
-pod 'Firebase/Messaging'
-pod 'Firebase/RemoteConfig'  # No watchOS support yet
-pod 'Firebase/Storage'
-```
+Using Crashlytics with watchOS has limited support. Due to watchOS restrictions,
+mach exceptions and signal crashes are not recorded. (Crashes in SwiftUI are
+generated as mach exceptions, so will not be recorded).
 
-#### Additional Catalyst Notes
+## Combine
 
-* FirebaseAuth and FirebaseMessaging require adding `Keychain Sharing Capability`
-to Build Settings.
-* FirebaseFirestore requires signing the
-[gRPC Resource target](https://github.com/firebase/firebase-ios-sdk/issues/3500#issuecomment-518741681).
+Thanks to contributions from the community, _FirebaseCombineSwift_ contains
+support for Apple's Combine framework. This module is currently under
+development and not yet supported for use in production environments. For more
+details, see the [docs](FirebaseCombineSwift/README.md) within this repo.
 
 ## Roadmap
 
-See [Roadmap](ROADMAP.md) for more about the Firebase iOS SDK Open Source
+See [Roadmap](ROADMAP.md) for more about the Firebase Apple SDK Open Source
 plans and directions.
 
 ## Contributing
 
-See [Contributing](CONTRIBUTING.md) for more information on contributing to the Firebase
-iOS SDK.
+For information on how to contribute, set up the development environment, build,
+or test the SDK, see the [Contributing Guide](CONTRIBUTING.md).
 
 ## License
 
-The contents of this repository is licensed under the
+The contents of this repository are licensed under the
 [Apache License, version 2.0](http://www.apache.org/licenses/LICENSE-2.0).
 
 Your use of Firebase is governed by the
 [Terms of Service for Firebase Services](https://firebase.google.com/terms/).
-
-[gh-actions]: https://github.com/firebase/firebase-ios-sdk/actions
-[gh-abtesting-badge]: https://github.com/firebase/firebase-ios-sdk/workflows/abtesting/badge.svg
-[gh-appdistribution-badge]: https://github.com/firebase/firebase-ios-sdk/workflows/appdistribution/badge.svg
-[gh-auth-badge]: https://github.com/firebase/firebase-ios-sdk/workflows/auth/badge.svg
-[gh-core-badge]: https://github.com/firebase/firebase-ios-sdk/workflows/core/badge.svg
-[gh-crashlytics-badge]: https://github.com/firebase/firebase-ios-sdk/workflows/crashlytics/badge.svg
-[gh-database-badge]: https://github.com/firebase/firebase-ios-sdk/workflows/database/badge.svg
-[gh-datatransport-badge]: https://github.com/firebase/firebase-ios-sdk/workflows/datatransport/badge.svg
-[gh-dynamiclinks-badge]: https://github.com/firebase/firebase-ios-sdk/workflows/dynamiclinks/badge.svg
-[gh-firebasepod-badge]: https://github.com/firebase/firebase-ios-sdk/workflows/firebasepod/badge.svg
-[gh-firestore-badge]: https://github.com/firebase/firebase-ios-sdk/workflows/firestore/badge.svg
-[gh-functions-badge]: https://github.com/firebase/firebase-ios-sdk/workflows/functions/badge.svg
-[gh-inappmessaging-badge]: https://github.com/firebase/firebase-ios-sdk/workflows/inappmessaging/badge.svg
-[gh-interop-badge]: https://github.com/firebase/firebase-ios-sdk/workflows/interop/badge.svg
-[gh-messaging-badge]: https://github.com/firebase/firebase-ios-sdk/workflows/messaging/badge.svg
-[gh-remoteconfig-badge]: https://github.com/firebase/firebase-ios-sdk/workflows/remoteconfig/badge.svg
-[gh-storage-badge]: https://github.com/firebase/firebase-ios-sdk/workflows/storage/badge.svg
-[gh-symbolcollision-badge]: https://github.com/firebase/firebase-ios-sdk/workflows/symbolcollision/badge.svg
-[gh-zip-badge]: https://github.com/firebase/firebase-ios-sdk/workflows/zip/badge.svg

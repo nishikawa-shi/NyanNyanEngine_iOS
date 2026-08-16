@@ -1,11 +1,11 @@
 //  CryptoSwift
 //
-//  Copyright (C) 2014-2018 Marcin Krzyżanowski <marcin@krzyzanowskim.com>
+//  Copyright (C) 2014-2025 Marcin Krzyżanowski <marcin@krzyzanowskim.com>
 //  This software is provided 'as-is', without any express or implied warranty.
 //
 //  In no event will the authors be held liable for any damages arising from the use of this software.
 //
-//  Permission is granted to anyone to use this software for any purpose,including commercial applications, and to alter it and redistribute it freely, subject to the following restrictions:
+//  Permission is granted to anyone to use this software for any purpose, including commercial applications, and to alter it and redistribute it freely, subject to the following restrictions:
 //
 //  - The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation is required.
 //  - Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
@@ -14,6 +14,11 @@
 
 @usableFromInline
 final class StreamEncryptor: Cryptor, Updatable {
+
+  @usableFromInline
+  enum Error: Swift.Error {
+    case unsupported
+  }
 
   @usableFromInline
   internal let blockSize: Int
@@ -49,7 +54,7 @@ final class StreamEncryptor: Cryptor, Updatable {
       encrypted += self.worker.encrypt(block: chunk)
     }
 
-    // omit unecessary calculation if not needed
+    // omit unnecessary calculation if not needed
     if self.padding != .noPadding {
       self.lastBlockRemainder = encrypted.count.quotientAndRemainder(dividingBy: self.blockSize).remainder
     }
@@ -63,6 +68,6 @@ final class StreamEncryptor: Cryptor, Updatable {
 
   @usableFromInline
   func seek(to: Int) throws {
-    fatalError("Not supported")
+    throw Error.unsupported
   }
 }
