@@ -1,0 +1,46 @@
+# NyanNyanEngine CI（Azure Pipelinesから移行。tatetsuのCI構成・秘密情報配布方式を踏襲）
+name: CI
+
+on:
+  push:
+    branches:
+      - master
+      - 'feature/**'
+  pull_request:
+
+jobs:
+  qa:
+    name: 動作検証ステージ
+    runs-on: macos-26
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Inflate configs
+        env:
+          CONFIGS_TAR_B64: ${{ secrets.CONFIGS_TAR_B64 }}
+        run: printf '%s' "$CONFIGS_TAR_B64" | base64 -d | tar -zxv
+
+      - uses: ruby/setup-ruby@v1
+        with:
+          bundler-cache: true
+
+      - name: pod install
+        run: bundle exec pod install
+
+      - name: Resolve available iOS Simulator
+        run: |
+          xcrun simctl list devices
+          SIM_NAME=$(xcrun simctl list devices available | grep -E '^[[:space:]]+iPhone' | head -1 | sed -E 's/^[[:space:]]+//; s/[[:space:]]*\(.*//')
+          echo "Resolved simulator: $SIM_NAME"
+          echo "SIM_DEVICE_NAME=$SIM_NAME" >> "$GITHUB_ENV"
+
+      - name: Run unit tests
+        run: |
+          xcodebuild \
+            -sdk iphonesimulator \
+            -workspace NyanNyanEngine.xcworkspace \
+            -scheme NyanNyanEngineTests \
+            -destination "platform=iOS Simulator,name=$SIM_DEVICE_NAME" \
+            -testLanguage en -testRegion US \
+            -skip-testing:NyanNyanEngineUITests \
+            test
