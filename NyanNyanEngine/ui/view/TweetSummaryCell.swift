@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import Nuke
 
 class TweetSummaryCell: UITableViewCell {
     @IBOutlet private weak var userImage: UIImageView!
@@ -17,11 +16,7 @@ class TweetSummaryCell: UITableViewCell {
     @IBOutlet private weak var tweetBody: UILabel!
     
     func configure(nyanNyan: NyanNyan) {
-        nyanNyan.profileUrl
-            .flatMap({ URL(string: $0) })
-            .map({ Nuke.loadImage(with: $0, into: userImage)
-                return
-            })
+        userImage.setNekosanImage(urlString: nyanNyan.profileUrl)
         userName.text = nyanNyan.userName
         userId.text = "@" + nyanNyan.userId
         publishedAt.text = nyanNyan.nyanedAt

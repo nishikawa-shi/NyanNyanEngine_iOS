@@ -9,7 +9,7 @@
 struct DefaultNekosan {
     let nyanNyanStatuses: [NyanNyan] = [
         NyanNyan(id: 28,
-                 profileUrl: "https://nyannyanengine.firebaseapp.com/assets/nyannya_sensei.png",
+                 profileUrl: nil,
                  userName: R.string.stringValues.default_user_name(),
                  userId: R.string.stringValues.default_user_id(),
                  nyanedAt: R.string.stringValues.default_user_posted_at(),
