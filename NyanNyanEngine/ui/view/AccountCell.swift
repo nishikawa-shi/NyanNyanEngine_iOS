@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import Nuke
 
 class AccountCell: UITableViewCell {
     @IBOutlet private weak var userImage: UIImageView!
@@ -16,9 +15,7 @@ class AccountCell: UITableViewCell {
     
     func configure(account: Account?) {
         let user = account?.user ?? Account().user
-        if let urlStr = user.getFineImageUrl(), let url = URL(string: urlStr) {
-            Nuke.loadImage(with: url, into: userImage)
-        }
+        userImage.setNekosanImage(urlString: user.getFineImageUrl())
         userName.text = user.name
         userId.text = "@" + user.screenName
     }
