@@ -223,12 +223,8 @@ class AuthRepository: BaseAuthRepository {
     }
     
     private func getCurrentAccount() -> Observable<Account> {
-        let defaultUser = User(name: R.string.stringValues.default_user_name(),
-                               screenName: R.string.stringValues.default_user_id(),
-                               profileImageUrlHttps: R.string.stringValues.default_user_profile_url())
         let defaultObservable = Observable<Account>.create {
-            $0.onNext(Account(user: defaultUser,
-                              headerName: R.string.stringValues.default_timeline_name()))
+            $0.onNext(Account())
             return Disposables.create()
         }
         
