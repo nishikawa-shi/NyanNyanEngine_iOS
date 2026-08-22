@@ -101,3 +101,12 @@ public/.well-known/assetlinks.json
 
 # R.swift
 *.generated.swift
+
+# CI/CD credentials
+
+appstore_api_key.json
+app_distribution_sa_*.json
+
+# npm
+
+node_modules/
