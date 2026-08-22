@@ -1,4 +1,12 @@
-# NyanNyanEngine CI（Azure Pipelinesから移行。tatetsuのCI構成・秘密情報配布方式を踏襲）
+# NyanNyanEngine CI
+#
+# beta / store ジョブを workflow_dispatch からも実行できるようにしているのは、
+# masterへマージする前に配布経路そのものを実証するため。リポジトリはpublicで
+# macOSランナーの無料枠制限がないため、実行回数を気にする必要がない。
+#
+# store ジョブを push で自動実行しないのは、App Storeから削除された状態では
+# TestFlightが利用できないとAppleが案内しており、成功を保証できないため
+# （2026-08-22時点）。TestFlightへのアップロードが一度成功したら push へ開放する。
 name: CI
 
 on:
@@ -7,6 +15,20 @@ on:
       - master
       - 'feature/**'
   pull_request:
+  workflow_dispatch:
+    inputs:
+      run_beta:
+        description: 'β版アプリ配布ステージを実行する'
+        type: boolean
+        default: false
+      run_store:
+        description: 'ストアアプリ配布ステージ（TestFlightアップロード）を実行する'
+        type: boolean
+        default: false
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/master' }}
 
 jobs:
   qa:
@@ -18,7 +40,7 @@ jobs:
       - name: Inflate configs
         env:
           CONFIGS_TAR_B64: ${{ secrets.CONFIGS_TAR_B64 }}
-        run: printf '%s' "$CONFIGS_TAR_B64" | base64 -d | tar -zxv
+        run: printf '%s' "$CONFIGS_TAR_B64" | base64 -d | tar -zxv --strip-components=1
 
       - uses: ruby/setup-ruby@v1
         with:
@@ -44,3 +66,90 @@ jobs:
             -testLanguage en -testRegion US \
             -skip-testing:NyanNyanEngineUITests \
             test
+
+  beta:
+    name: β版アプリ配布ステージ / Firebaseへベータ版アプリ配布
+    needs: qa
+    if: >-
+      (github.event_name == 'push' && github.ref == 'refs/heads/master') ||
+      (github.event_name == 'workflow_dispatch' && inputs.run_beta)
+    runs-on: macos-26
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Inflate configs
+        env:
+          CONFIGS_TAR_B64: ${{ secrets.CONFIGS_TAR_B64 }}
+        run: printf '%s' "$CONFIGS_TAR_B64" | base64 -d | tar -zxv --strip-components=1
+
+      - uses: ruby/setup-ruby@v1
+        with:
+          bundler-cache: true
+
+      - name: pod install
+        run: bundle exec pod install
+
+      - name: Setup SSH for match repo
+        uses: webfactory/ssh-agent@v0.10.0
+        with:
+          ssh-private-key: ${{ secrets.MATCH_REPO_DEPLOY_KEY }}
+
+      - name: Fastlane match
+        env:
+          MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
+        run: bundle exec fastlane load_certs
+
+      - name: Resolve build number
+        run: echo "IOS_BUILD_NUMBER=$(date -u +%Y%m%d).${{ github.run_number }}" >> "$GITHUB_ENV"
+
+      - name: Build beta ipa
+        run: bundle exec fastlane build_beta build_number:"$IOS_BUILD_NUMBER"
+
+      - name: Install Firebase tools
+        run: |
+          npm ci
+          npx firebase --version
+
+      - name: Deploy to Firebase App Distribution
+        env:
+          FIREBASE_APP_ID_IOS_PRD: ${{ secrets.FIREBASE_APP_ID_IOS_PRD }}
+          FIREBASE_BETA_TESTER_GROUP_NAME_PRD: ${{ secrets.FIREBASE_BETA_TESTER_GROUP_NAME_PRD }}
+        run: |
+          ls -latr build/
+          GOOGLE_APPLICATION_CREDENTIALS=app_distribution_sa_nyannyanengine.json npx firebase appdistribution:distribute build/NyanNyanEngine-adhoc.ipa --app "$FIREBASE_APP_ID_IOS_PRD" --groups "$FIREBASE_BETA_TESTER_GROUP_NAME_PRD"
+
+  store:
+    name: ストアアプリ配布ステージ / TestFlightへアップロード
+    needs: qa
+    if: github.event_name == 'workflow_dispatch' && inputs.run_store
+    runs-on: macos-26
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Inflate configs
+        env:
+          CONFIGS_TAR_B64: ${{ secrets.CONFIGS_TAR_B64 }}
+        run: printf '%s' "$CONFIGS_TAR_B64" | base64 -d | tar -zxv --strip-components=1
+
+      - uses: ruby/setup-ruby@v1
+        with:
+          bundler-cache: true
+
+      - name: pod install
+        run: bundle exec pod install
+
+      - name: Setup SSH for match repo
+        uses: webfactory/ssh-agent@v0.10.0
+        with:
+          ssh-private-key: ${{ secrets.MATCH_REPO_DEPLOY_KEY }}
+
+      - name: Fastlane match
+        env:
+          MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
+        run: bundle exec fastlane load_certs
+
+      - name: Resolve build number
+        run: echo "IOS_BUILD_NUMBER=$(date -u +%Y%m%d).${{ github.run_number }}" >> "$GITHUB_ENV"
+
+      - name: Upload to TestFlight
+        run: bundle exec fastlane upload_ipa_to_testflight build_number:"$IOS_BUILD_NUMBER"
