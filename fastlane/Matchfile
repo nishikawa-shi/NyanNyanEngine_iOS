@@ -1,4 +1,4 @@
-git_url("https://github.com/nishikawa-shi/NyanNyanEngine_iOS_cert.git")
+git_url("git@github.com:nishikawa-shi/NyanNyanEngine_iOS_cert.git")
 
 storage_mode("git")
 
