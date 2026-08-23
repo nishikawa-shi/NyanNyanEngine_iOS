@@ -23,6 +23,7 @@ platform :ios do
   WORKSPACE = "NyanNyanEngine.xcworkspace"
   SCHEME = "NyanNyanEngine"
   BUILD_DIR = "build"
+  ADHOC_DEV_IPA_NAME = "NyanNyanEngine-adhoc-dev.ipa"
   ADHOC_IPA_NAME = "NyanNyanEngine-adhoc.ipa"
   APPSTORE_IPA_NAME = "NyanNyanEngine-appstore.ipa"
 
@@ -40,6 +41,7 @@ platform :ios do
 
     match(
       app_identifier: [
+        APP_IDENTIFIER_DEVELOP,
         APP_IDENTIFIER_PRODUCTION
       ],
       type: "adhoc",
@@ -77,6 +79,7 @@ platform :ios do
 
     match(
       app_identifier: [
+        APP_IDENTIFIER_DEVELOP,
         APP_IDENTIFIER_PRODUCTION
       ],
       type: "adhoc",
@@ -96,6 +99,7 @@ platform :ios do
 
     match(
       app_identifier: [
+        APP_IDENTIFIER_DEVELOP,
         APP_IDENTIFIER_PRODUCTION
       ],
       type: "adhoc",
@@ -111,12 +115,31 @@ platform :ios do
     )
   end
 
-  desc "β版アプリ配布用のad-hoc署名ipaを作るlane"
+  desc "dev環境向けβ版アプリ配布用のad-hoc署名ipaを作るlane"
+  desc "使い方: bundle exec fastlane build_beta_dev build_number:20260823.1"
+  desc "事前に load_certs を実行して証明書とprovisioning profileを取得しておくこと"
+  lane :build_beta_dev do |options|
+    # dev向けだけ Debug 構成を使う。専用のビルド構成を新設しないのは、AppDelegate が
+    # #if DEBUG で接続先Firebaseを選ぶ作りになっており、構成と環境が1対1で固定されて
+    # いるため。環境と最適化レベルを掛け合わせる軸がこのプロジェクトには存在しない
+    build_signed_ipa(
+      build_number: options[:build_number],
+      configuration: "Debug",
+      app_identifier: APP_IDENTIFIER_DEVELOP,
+      export_method: "ad-hoc",
+      profile_name: "match AdHoc #{APP_IDENTIFIER_DEVELOP}",
+      output_name: ADHOC_DEV_IPA_NAME
+    )
+  end
+
+  desc "prd環境向けβ版アプリ配布用のad-hoc署名ipaを作るlane"
   desc "使い方: bundle exec fastlane build_beta build_number:20260822.1"
   desc "事前に load_certs を実行して証明書とprovisioning profileを取得しておくこと"
   lane :build_beta do |options|
     build_signed_ipa(
       build_number: options[:build_number],
+      configuration: "Release",
+      app_identifier: APP_IDENTIFIER_PRODUCTION,
       export_method: "ad-hoc",
       profile_name: "match AdHoc #{APP_IDENTIFIER_PRODUCTION}",
       output_name: ADHOC_IPA_NAME
@@ -129,6 +152,8 @@ platform :ios do
   lane :upload_ipa_to_testflight do |options|
     build_signed_ipa(
       build_number: options[:build_number],
+      configuration: "Release",
+      app_identifier: APP_IDENTIFIER_PRODUCTION,
       export_method: "app-store",
       profile_name: "match AppStore #{APP_IDENTIFIER_PRODUCTION}",
       output_name: APPSTORE_IPA_NAME
@@ -153,17 +178,19 @@ platform :ios do
       raise("引数 build_number が不足しています。: `bundle exec fastlane build_beta build_number:20260822.1`")
     end
 
+    # ONLY_ACTIVE_ARCH を明示するのは、Debug構成がYESを持っているため。ランナーや
+    # 開発機のアーキテクチャによって成果物の中身が変わる余地を残さない
     gym(
       workspace: WORKSPACE,
       scheme: SCHEME,
-      configuration: "Release",
+      configuration: options[:configuration],
       export_method: options[:export_method],
-      xcargs: "CURRENT_PROJECT_VERSION=#{build_number}",
+      xcargs: "CURRENT_PROJECT_VERSION=#{build_number} ONLY_ACTIVE_ARCH=NO",
       export_options: {
         signingStyle: "manual",
         teamID: TEAM_ID,
         provisioningProfiles: {
-          APP_IDENTIFIER_PRODUCTION => options[:profile_name]
+          options[:app_identifier] => options[:profile_name]
         }
       },
       output_directory: BUILD_DIR,

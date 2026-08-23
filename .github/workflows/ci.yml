@@ -102,7 +102,10 @@ jobs:
       - name: Resolve build number
         run: echo "IOS_BUILD_NUMBER=$(date -u +%Y%m%d).${{ github.run_number }}" >> "$GITHUB_ENV"
 
-      - name: Build beta ipa
+      - name: Build beta ipa (dev)
+        run: bundle exec fastlane build_beta_dev build_number:"$IOS_BUILD_NUMBER"
+
+      - name: Build beta ipa (prd)
         run: bundle exec fastlane build_beta build_number:"$IOS_BUILD_NUMBER"
 
       - name: Install Firebase tools
@@ -112,10 +115,13 @@ jobs:
 
       - name: Deploy to Firebase App Distribution
         env:
+          FIREBASE_APP_ID_IOS_DEV: ${{ secrets.FIREBASE_APP_ID_IOS_DEV }}
           FIREBASE_APP_ID_IOS_PRD: ${{ secrets.FIREBASE_APP_ID_IOS_PRD }}
+          FIREBASE_BETA_TESTER_GROUP_NAME_DEV: ${{ secrets.FIREBASE_BETA_TESTER_GROUP_NAME_DEV }}
           FIREBASE_BETA_TESTER_GROUP_NAME_PRD: ${{ secrets.FIREBASE_BETA_TESTER_GROUP_NAME_PRD }}
         run: |
           ls -latr build/
+          GOOGLE_APPLICATION_CREDENTIALS=app_distribution_sa_nyannyanengine-ios-d.json npx firebase appdistribution:distribute build/NyanNyanEngine-adhoc-dev.ipa --app "$FIREBASE_APP_ID_IOS_DEV" --groups "$FIREBASE_BETA_TESTER_GROUP_NAME_DEV"
           GOOGLE_APPLICATION_CREDENTIALS=app_distribution_sa_nyannyanengine.json npx firebase appdistribution:distribute build/NyanNyanEngine-adhoc.ipa --app "$FIREBASE_APP_ID_IOS_PRD" --groups "$FIREBASE_BETA_TESTER_GROUP_NAME_PRD"
 
   store:

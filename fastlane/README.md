@@ -39,13 +39,25 @@ provisioning profileへの端末追加lane
 
 provisioning profile生成lane
 
+### ios build_beta_dev
+
+```sh
+[bundle exec] fastlane ios build_beta_dev
+```
+
+dev環境向けβ版アプリ配布用のad-hoc署名ipaを作るlane
+
+使い方: bundle exec fastlane build_beta_dev build_number:20260823.1
+
+事前に load_certs を実行して証明書とprovisioning profileを取得しておくこと
+
 ### ios build_beta
 
 ```sh
 [bundle exec] fastlane ios build_beta
 ```
 
-β版アプリ配布用のad-hoc署名ipaを作るlane
+prd環境向けβ版アプリ配布用のad-hoc署名ipaを作るlane
 
 使い方: bundle exec fastlane build_beta build_number:20260822.1
 
