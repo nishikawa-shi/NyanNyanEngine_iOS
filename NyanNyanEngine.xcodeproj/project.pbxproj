@@ -11,6 +11,8 @@
 		670B66FC229ADF09006DFC73 /* GoogleService-Info-Release.plist in Resources */ = {isa = PBXBuildFile; fileRef = 670B66FB229ADF09006DFC73 /* GoogleService-Info-Release.plist */; };
 		670E3979227E4738002318AE /* LoadingStatusRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 670E3978227E4738002318AE /* LoadingStatusRepository.swift */; };
 		670E397C227E7179002318AE /* DefaultNekosan.swift in Sources */ = {isa = PBXBuildFile; fileRef = 670E397B227E7179002318AE /* DefaultNekosan.swift */; };
+		67A1B2C82A00000100000006 /* KeychainConnector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67A1B2C72A00000100000005 /* KeychainConnector.swift */; };
+		67A1B2CA2A00000100000008 /* KeychainConnectorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67A1B2C92A00000100000007 /* KeychainConnectorTests.swift */; };
 		670E397E227FB4F7002318AE /* NekosanConverterTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 670E397D227FB4F7002318AE /* NekosanConverterTest.swift */; };
 		670E3980227FB67C002318AE /* Nekosan.swift in Sources */ = {isa = PBXBuildFile; fileRef = 670E397F227FB67C002318AE /* Nekosan.swift */; };
 		6723B286227682F60004FB3D /* JsonDecodeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6723B285227682F60004FB3D /* JsonDecodeTests.swift */; };
@@ -109,6 +111,8 @@
 		670B66FB229ADF09006DFC73 /* GoogleService-Info-Release.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info-Release.plist"; sourceTree = "<group>"; };
 		670E3978227E4738002318AE /* LoadingStatusRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingStatusRepository.swift; sourceTree = "<group>"; };
 		670E397B227E7179002318AE /* DefaultNekosan.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultNekosan.swift; sourceTree = "<group>"; };
+		67A1B2C72A00000100000005 /* KeychainConnector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainConnector.swift; sourceTree = "<group>"; };
+		67A1B2C92A00000100000007 /* KeychainConnectorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainConnectorTests.swift; sourceTree = "<group>"; };
 		670E397D227FB4F7002318AE /* NekosanConverterTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NekosanConverterTest.swift; sourceTree = "<group>"; };
 		670E397F227FB67C002318AE /* Nekosan.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Nekosan.swift; sourceTree = "<group>"; };
 		6723B285227682F60004FB3D /* JsonDecodeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JsonDecodeTests.swift; sourceTree = "<group>"; };
@@ -366,6 +370,7 @@
 				67D86EE3227FE20E00965816 /* DateFormatterTest.swift */,
 				6744D3672402B9E6003FFC0D /* NekosanTest.swift */,
 				67A1B2C52A00000100000003 /* DefaultNekosanTest.swift */,
+				67A1B2C92A00000100000007 /* KeychainConnectorTests.swift */,
 			);
 			path = NyanNyanEngineTests;
 			sourceTree = "<group>";
@@ -479,6 +484,7 @@
 			isa = PBXGroup;
 			children = (
 				679A5E64227B3B590043D0E1 /* PlistConnector.swift */,
+				67A1B2C72A00000100000005 /* KeychainConnector.swift */,
 				67F88C09227C2484004DF44A /* UserDefaultsConnector.swift */,
 				678C6B3D23E531BF00B5F8E9 /* FirebaseClient.swift */,
 			);
@@ -823,6 +829,7 @@
 				676ACD1923384C040036F328 /* Account.swift in Sources */,
 				6744D36624028876003FFC0D /* HashTag.swift in Sources */,
 				679A5E65227B3B590043D0E1 /* PlistConnector.swift in Sources */,
+				67A1B2C82A00000100000006 /* KeychainConnector.swift in Sources */,
 				673E5CC123372256000E1A65 /* SettingsSectionHeader.swift in Sources */,
 				678E360E229A9E7600CBBCCC /* R.generated.swift in Sources */,
 				67B787E522C8427400BDC612 /* LoadingCell.swift in Sources */,
@@ -858,6 +865,7 @@
 				67D86EE4227FE20E00965816 /* DateFormatterTest.swift in Sources */,
 				6744D3682402B9E6003FFC0D /* NekosanTest.swift in Sources */,
 				67A1B2C62A00000100000004 /* DefaultNekosanTest.swift in Sources */,
+				67A1B2CA2A00000100000008 /* KeychainConnectorTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
