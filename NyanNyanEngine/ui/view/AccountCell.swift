@@ -17,6 +17,6 @@ class AccountCell: UITableViewCell {
         let user = account?.user ?? Account().user
         userImage.setNekosanImage(urlString: user.getFineImageUrl())
         userName.text = user.name
-        userId.text = "@" + user.screenName
+        userId.text = "@" + user.username
     }
 }

@@ -237,10 +237,11 @@ class AuthRepository: BaseAuthRepository {
         guard let screenName = userDefaultsConnector.getString(withKey: "screen_name"),
             let headerName = userDefaultsConnector.getString(withKey: "screen_name"),
             let name = userDefaultsConnector.getString(withKey: "name"),
-            let profileImageUrlHttps = userDefaultsConnector.getString(withKey: "profile_image_url_https") else {
+            let userId = userDefaultsConnector.getString(withKey: "user_id"),
+            let profileImageUrl = userDefaultsConnector.getString(withKey: "profile_image_url_https") else {
                 return defaultObservable
         }
-        let user = User(name: name, screenName: screenName, profileImageUrlHttps: profileImageUrlHttps)
+        let user = User(id: userId, name: name, username: screenName, profileImageUrl: profileImageUrl)
         let account = Account(user: user, headerName: headerName)
         return Observable<Account>.create { observer in
             observer.onNext(account)
@@ -367,9 +368,9 @@ class AuthRepository: BaseAuthRepository {
     
     private func saveUserInfo(user: User?) {
         guard let name = user?.name,
-            let profileImageUrlHttps = user?.profileImageUrlHttps else { return }
+            let profileImageUrl = user?.profileImageUrl else { return }
         let records = ["name": name,
-                       "profile_image_url_https": profileImageUrlHttps]
+                       "profile_image_url_https": profileImageUrl]
         records.forEach { [unowned self] in
             self.userDefaultsConnector.registerString(key: $0.key, value: $0.value)
         }

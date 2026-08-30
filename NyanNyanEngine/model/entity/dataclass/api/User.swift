@@ -9,12 +9,13 @@
 import Foundation
 
 struct User: Codable {
+    let id: String
     let name: String
-    let screenName: String
-    var profileImageUrlHttps: String? = nil
-    
+    let username: String
+    var profileImageUrl: String? = nil
+
     func getFineImageUrl() -> String? {
-        guard let normalSizeImageUrl = profileImageUrlHttps else { return nil }
+        guard let normalSizeImageUrl = profileImageUrl else { return nil }
         return normalSizeImageUrl.replacingOccurrences(
             of: "^https?://(.+)_normal(.+)$",
             with: "https://$1$2",

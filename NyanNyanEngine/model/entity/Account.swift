@@ -12,15 +12,18 @@ struct Account: Equatable {
     static func == (lhs: Account, rhs: Account) -> Bool {
         return lhs.headerName == rhs.headerName
             && lhs.user.name == rhs.user.name
-            && lhs.user.screenName == rhs.user.screenName
-            && lhs.user.profileImageUrlHttps == rhs.user.profileImageUrlHttps
+            && lhs.user.username == rhs.user.username
+            && lhs.user.profileImageUrl == rhs.user.profileImageUrl
     }
     
     let user: User
     let headerName: String
-    init(user: User = User(name: R.string.stringValues.default_user_name(),
-                           screenName: R.string.stringValues.default_user_id(),
-                           profileImageUrlHttps: nil),
+    //idが空文字なのは、にゃんにゃ先生がXのアカウントを持たないため。
+    //先生を値の不在ではなく人格として型で表す件は Issue #146 で扱う
+    init(user: User = User(id: "",
+                           name: R.string.stringValues.default_user_name(),
+                           username: R.string.stringValues.default_user_id(),
+                           profileImageUrl: nil),
          headerName: String = R.string.stringValues.default_timeline_name()) {
         self.user = user
         self.headerName = headerName
