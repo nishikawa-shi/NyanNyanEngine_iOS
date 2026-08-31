@@ -7,13 +7,16 @@
 # store ジョブを push で自動実行しないのは、App Storeから削除された状態では
 # TestFlightが利用できないとAppleが案内しており、成功を保証できないため
 # （2026-08-22時点）。TestFlightへのアップロードが一度成功したら push へ開放する。
+#
+# push トリガに作業ブランチを含めないのは、ブランチへのpushとそのPullRequestで
+# 同じ qa が二重に走るため。PullRequestを作る前にブランチ単体で検証したい場合は、
+# workflow_dispatch から起動する。
 name: CI
 
 on:
   push:
     branches:
       - master
-      - 'feature/**'
   pull_request:
   workflow_dispatch:
     inputs:
