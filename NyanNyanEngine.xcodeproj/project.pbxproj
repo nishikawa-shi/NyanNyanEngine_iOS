@@ -20,6 +20,7 @@
 		67A1B2D42A00000100000012 /* V2ApiRequestFactoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67A1B2D32A00000100000011 /* V2ApiRequestFactoryTests.swift */; };
 		67A1B2D62A00000100000014 /* URLRequest+Building.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67A1B2D52A00000100000013 /* URLRequest+Building.swift */; };
 		67A1B2D82A00000100000016 /* URLRequestBuildingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67A1B2D72A00000100000015 /* URLRequestBuildingTests.swift */; };
+		67A1B2DD2A0000010000001B /* ApiClientTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67A1B2DC2A0000010000001A /* ApiClientTests.swift */; };
 		670E397E227FB4F7002318AE /* NekosanConverterTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 670E397D227FB4F7002318AE /* NekosanConverterTest.swift */; };
 		670E3980227FB67C002318AE /* Nekosan.swift in Sources */ = {isa = PBXBuildFile; fileRef = 670E397F227FB67C002318AE /* Nekosan.swift */; };
 		6723B286227682F60004FB3D /* JsonDecodeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6723B285227682F60004FB3D /* JsonDecodeTests.swift */; };
@@ -127,6 +128,7 @@
 		67A1B2D32A00000100000011 /* V2ApiRequestFactoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = V2ApiRequestFactoryTests.swift; sourceTree = "<group>"; };
 		67A1B2D52A00000100000013 /* URLRequest+Building.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URLRequest+Building.swift"; sourceTree = "<group>"; };
 		67A1B2D72A00000100000015 /* URLRequestBuildingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLRequestBuildingTests.swift; sourceTree = "<group>"; };
+		67A1B2DC2A0000010000001A /* ApiClientTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApiClientTests.swift; sourceTree = "<group>"; };
 		670E397D227FB4F7002318AE /* NekosanConverterTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NekosanConverterTest.swift; sourceTree = "<group>"; };
 		670E397F227FB67C002318AE /* Nekosan.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Nekosan.swift; sourceTree = "<group>"; };
 		6723B285227682F60004FB3D /* JsonDecodeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JsonDecodeTests.swift; sourceTree = "<group>"; };
@@ -390,6 +392,7 @@
 				67A1B2D32A00000100000011 /* V2ApiRequestFactoryTests.swift */,
 				67A1B2D72A00000100000015 /* URLRequestBuildingTests.swift */,
 				67A1B2D12A0000010000000F /* V2JsonDecodeTests.swift */,
+				67A1B2DC2A0000010000001A /* ApiClientTests.swift */,
 			);
 			path = NyanNyanEngineTests;
 			sourceTree = "<group>";
@@ -894,6 +897,7 @@
 				67A1B2D22A00000100000010 /* V2JsonDecodeTests.swift in Sources */,
 				67A1B2D42A00000100000012 /* V2ApiRequestFactoryTests.swift in Sources */,
 				67A1B2D82A00000100000016 /* URLRequestBuildingTests.swift in Sources */,
+				67A1B2DD2A0000010000001B /* ApiClientTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
