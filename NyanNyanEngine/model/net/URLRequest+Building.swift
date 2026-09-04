@@ -17,10 +17,10 @@ extension URLRequest {
         return request
     }
 
-    func posting(jsonBody: Data) -> URLRequest {
+    func posting(body: Data) -> URLRequest {
         var request = self
         request.httpMethod = "POST"
-        request.httpBody = jsonBody
+        request.httpBody = body
         return request
     }
 }

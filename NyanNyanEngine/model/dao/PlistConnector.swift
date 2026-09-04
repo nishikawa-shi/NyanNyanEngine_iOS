@@ -9,6 +9,7 @@
 import Foundation
 
 protocol BasePlistConnector: AnyObject {
+    func getClientId() -> String?
     func getString(withKey: String) -> String?
 }
 

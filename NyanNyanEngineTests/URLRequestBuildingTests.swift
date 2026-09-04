@@ -22,7 +22,7 @@ class URLRequestBuildingTests: XCTestCase {
     func testPostingSetsMethodAndBody() {
         let body = Data("にゃーん".utf8)
 
-        let request = baseRequest.posting(jsonBody: body)
+        let request = baseRequest.posting(body: body)
 
         XCTAssertEqual(request.httpMethod, "POST")
         XCTAssertEqual(request.httpBody, body)
@@ -32,7 +32,7 @@ class URLRequestBuildingTests: XCTestCase {
     //持たずに済む前提になっている
     func testOriginalRequestStaysUntouched() {
         _ = baseRequest
-            .posting(jsonBody: Data("にゃーん".utf8))
+            .posting(body: Data("にゃーん".utf8))
             .adding(header: "application/json", forField: "Content-Type")
 
         XCTAssertNil(baseRequest.httpBody)

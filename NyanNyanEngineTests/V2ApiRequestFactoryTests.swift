@@ -11,7 +11,7 @@ import XCTest
 
 class V2ApiRequestFactoryTests: XCTestCase {
 
-    private let factory = V2ApiRequestFactory()
+    private let factory = V2ApiRequestFactory.shared
 
     func testMyAccountRequestAsksForProfileImage() {
         let request = factory.createMyAccountRequest()
@@ -21,7 +21,7 @@ class V2ApiRequestFactoryTests: XCTestCase {
         XCTAssertEqual(request?.httpMethod, "GET")
     }
 
-    //Authorizationの付与はXAuthServiceの責務のため、ここでは載らないことを確かめる
+    //Authorizationの付与はXAuthClientの責務のため、ここでは載らないことを確かめる
     func testRequestsCarryNoAuthorizationHeader() {
         XCTAssertNil(factory.createMyAccountRequest()?
             .value(forHTTPHeaderField: "Authorization"))
@@ -38,6 +38,20 @@ class V2ApiRequestFactoryTests: XCTestCase {
 
         let body = request?.httpBody.flatMap { try? JSONDecoder().decode([String: String].self, from: $0) }
         XCTAssertEqual(body?["text"], "にゃーん🐾")
+    }
+
+    //トークンに「+」や「=」が含まれても壊れずに届くことを確かめる。
+    //クエリ文脈のエンコードでは、この2文字が素通しになる
+    func testRevokeTokenRequestEncodesBodyForForm() {
+        let request = factory.createRevokeTokenRequest(token: "ab+cd=ef",
+                                                       tokenTypeHint: "refresh_token",
+                                                       clientId: "nyannyan-client-id")
+
+        XCTAssertEqual(request?.url?.absoluteString, "https://api.x.com/2/oauth2/revoke")
+        XCTAssertEqual(request?.httpMethod, "POST")
+        XCTAssertEqual(request?.value(forHTTPHeaderField: "Content-Type"), "application/x-www-form-urlencoded")
+        XCTAssertEqual(request?.httpBody.flatMap { String(data: $0, encoding: .utf8) },
+                       "token=ab%2Bcd%3Def&token_type_hint=refresh_token&client_id=nyannyan-client-id")
     }
 
     //v1.1のcreatePostTweetRequestは本文をURLへ載せていたため、
