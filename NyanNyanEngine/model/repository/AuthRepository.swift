@@ -199,15 +199,18 @@ class AuthRepository: BaseAuthRepository {
         if !isAllAccountInfoFetched() {
             self.updateAccount()
         }
+        //アイコンを必須にしないのは、Xのアカウントはアイコンを持たないことがあり、
+        //その利用者が既定のアカウント表示から抜けられなくなるため
         guard let screenName = userDefaultsConnector.getString(withKey: "screen_name"),
-            let headerName = userDefaultsConnector.getString(withKey: "screen_name"),
             let name = userDefaultsConnector.getString(withKey: "name"),
-            let userId = userDefaultsConnector.getString(withKey: "user_id"),
-            let profileImageUrl = userDefaultsConnector.getString(withKey: "profile_image_url_https") else {
+            let userId = userDefaultsConnector.getString(withKey: "user_id") else {
                 return defaultObservable
         }
-        let user = User(id: userId, name: name, username: screenName, profileImageUrl: profileImageUrl)
-        let account = Account(user: user, headerName: headerName)
+        let user = User(id: userId,
+                        name: name,
+                        username: screenName,
+                        profileImageUrl: userDefaultsConnector.getString(withKey: "profile_image_url_https"))
+        let account = Account(user: user, headerName: screenName)
         return Observable<Account>.create { observer in
             observer.onNext(account)
             return Disposables.create()
@@ -304,10 +307,12 @@ class AuthRepository: BaseAuthRepository {
                                        completionHandler: completionHandler)
     }
 
+    //アイコンを含めないのは、持たない利用者では永久に揃わず、
+    //更新のたびに取り直しが走り続けるため
     private func isAllAccountInfoFetched() -> Bool {
         let requiredKeys = ["screen_name",
                             "name",
-                            "profile_image_url_https"]
+                            "user_id"]
         return requiredKeys.reduce(true) { [unowned self] (current: Bool, additive: String) -> Bool in
             return current && (self.userDefaultsConnector.getString(withKey: additive) != nil)
         }

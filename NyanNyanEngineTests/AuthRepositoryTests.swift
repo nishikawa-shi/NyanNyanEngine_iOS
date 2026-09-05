@@ -15,6 +15,17 @@ class AuthRepositoryTests: XCTestCase {
     private var xAuthClient: StubXAuthClient!
     private var disposeBag = DisposeBag()
 
+    //アイコンを設定していないアカウントの応答。profile_image_url が省かれる
+    private let myAccountWithoutImageJson = """
+        {
+            "data": {
+                "id": "1568466609035161600",
+                "name": "nishik",
+                "username": "nishik75"
+            }
+        }
+        """
+
     //2026-08-30 に実際の GET /2/users/me から受け取った応答
     private let myAccountJson = """
         {
@@ -107,6 +118,26 @@ class AuthRepositoryTests: XCTestCase {
 
         XCTAssertEqual(xAuthClient.executedRequests.first?.url?.absoluteString,
                        "https://api.x.com/2/users/me?user.fields=profile_image_url")
+    }
+
+    //アイコンを持たない利用者が、ログインしても既定のアカウント表示から
+    //抜けられなくなることがあった。アイコンの有無で表示が止まらないことを固定する
+    func testShowsAccountEvenWithoutProfileImage() {
+        xAuthClient.requestResult = .success(Data(myAccountWithoutImageJson.utf8))
+        xAuthClient.hasSession = true
+        let userDefaultsConnector = StubUserDefaultsConnector()
+        let repository = createRepository(userDefaultsConnector: userDefaultsConnector)
+        var received: Account? = nil
+
+        repository.beginAuthorization(presenter: StubAuthorizationSheetPresenter()) { }
+        repository.currentAccount
+            .subscribe(onNext: { received = $0 })
+            .disposed(by: disposeBag)
+        repository.accountUpdatedAt?.onNext("")
+
+        XCTAssertEqual(received?.user.username, "nishik75")
+        XCTAssertNil(received?.user.profileImageUrl)
+        XCTAssertFalse(received?.isDefaultAccount() ?? true)
     }
 
     //認可画面を閉じただけのときに画面が動くと、利用者にとっては
