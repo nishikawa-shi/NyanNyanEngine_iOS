@@ -8,11 +8,10 @@
 | --- | --- | --- |
 | Xcode | 26.2 | `.xcode-version` |
 | Ruby | 3.1.2 | `.ruby-version` |
-| CocoaPods | 1.16 以上 | `Gemfile` / `Gemfile.lock` |
 | fastlane | `Gemfile.lock` 参照 | `Gemfile` |
 | Firebase CLI | `package-lock.json` 参照 | `package.json`（CIの配布ステージでのみ使用） |
 
-ライブラリのバージョンは `Podfile.lock` で固定されている。`Pods/` はGit追跡対象のため、クローン直後でも `pod install` なしでビルドできる。
+ライブラリは Swift Package Manager で取得する。バージョンは `NyanNyanEngine.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved` で固定されており、初回ビルド時に Xcode が解決する。
 
 ## ディレクトリ構成
 
@@ -27,7 +26,7 @@
 
 ## ビルドとテスト
 
-Xcode で開く場合は `NyanNyanEngine.xcworkspace` を使う（`.xcodeproj` ではない）。
+Xcode で開く場合は `NyanNyanEngine.xcodeproj` を使う。
 
 ビルド構成は `Debug` と `Release` の2つで、それぞれが開発環境と本番環境に1対1で対応する。接続先の切り替えは `#if DEBUG` / `#elseif RELEASE` のコンパイル条件で行っており、複数のソースファイルに分散している。ビルド構成を増やすときは、そのすべてに分岐を足すこと。どれか1つでも `#else` に落ちると、ビルドは成功したまま実行時に nil で落ちる。
 
@@ -35,13 +34,17 @@ Xcode で開く場合は `NyanNyanEngine.xcworkspace` を使う（`.xcodeproj` �
 
 ```sh
 xcodebuild \
-  -sdk iphonesimulator \
-  -workspace NyanNyanEngine.xcworkspace \
+  -project NyanNyanEngine.xcodeproj \
   -scheme NyanNyanEngineTests \
   -destination "platform=iOS Simulator,name=iPhone 17 Pro" \
   -testLanguage en -testRegion US \
+  -skipPackagePluginValidation \
   test
 ```
+
+`-skipPackagePluginValidation` の明示は必須。R.swift をビルドツールプラグインとして使っており、コマンドラインからのビルドでは対話的な承認ができないため、これが無いとプラグインの実行前で止まる。
+
+`-sdk` を指定しないこと。プラットフォームは `-destination` が決めるため冗長であるうえ、`-sdk iphonesimulator` はビルドツールプラグインが呼ぶ生成ツール（Macの上で走る実行ファイル）までシミュレータ向けにビルドさせてしまい、プラグインが実行時に落ちる。
 
 `-testLanguage` / `-testRegion` の明示は必須。Xcode 26 ではテスト実行時のロケールがデフォルトで非決定のため、ローカライズ文字列を比較するテストが環境によって落ちる。
 

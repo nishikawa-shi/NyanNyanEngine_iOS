@@ -20,7 +20,7 @@ platform :ios do
   APP_IDENTIFIER_PRODUCTION = "com.ntetz.ios.NyanNyanEngine"
 
   TEAM_ID = "K85M397W48"
-  WORKSPACE = "NyanNyanEngine.xcworkspace"
+  PROJECT = "NyanNyanEngine.xcodeproj"
   SCHEME = "NyanNyanEngine"
   BUILD_DIR = "build"
   ADHOC_DEV_IPA_NAME = "NyanNyanEngine-adhoc-dev.ipa"
@@ -171,7 +171,7 @@ platform :ios do
 
   # provisioning profileの差し替えはエクスポート時の再署名に任せている。xcargsで
   # PROVISIONING_PROFILE_SPECIFIERを上書きするとビルド全体に効いてしまい、profileを
-  # 必要としないPodsのフレームワークターゲットの署名が壊れるため
+  # 必要としない依存パッケージのターゲットの署名が壊れるため
   private_lane :build_signed_ipa do |options|
     build_number = options[:build_number].to_s
     if build_number.empty?
@@ -181,11 +181,11 @@ platform :ios do
     # ONLY_ACTIVE_ARCH を明示するのは、Debug構成がYESを持っているため。ランナーや
     # 開発機のアーキテクチャによって成果物の中身が変わる余地を残さない
     gym(
-      workspace: WORKSPACE,
+      project: PROJECT,
       scheme: SCHEME,
       configuration: options[:configuration],
       export_method: options[:export_method],
-      xcargs: "CURRENT_PROJECT_VERSION=#{build_number} ONLY_ACTIVE_ARCH=NO",
+      xcargs: "CURRENT_PROJECT_VERSION=#{build_number} ONLY_ACTIVE_ARCH=NO -skipPackagePluginValidation",
       export_options: {
         signingStyle: "manual",
         teamID: TEAM_ID,
