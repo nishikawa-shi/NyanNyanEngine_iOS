@@ -9,7 +9,6 @@
 import UIKit
 import RxSwift
 import RxCocoa
-import SafariServices
 import IntentsUI
 import CoreSpotlight
 import MobileCoreServices
@@ -47,7 +46,7 @@ class HomeTimelineViewController: UIViewController {
         
         authButton.rx.tap
             .throttle(DispatchTimeInterval.seconds(3), latest: false, scheduler: ConcurrentMainScheduler.instance)
-            .map { "0000/01/01 00:00:00" }
+            .compactMap { [weak self] _ -> AuthorizationSheetPresenter? in self }
             .bind(to: input.authExecutedAt!)
             .disposed(by: disposeBag)
         
@@ -104,20 +103,6 @@ class HomeTimelineViewController: UIViewController {
             .map { !$0 }
             .bind(to: authButton.rx.isEnabled)
             .disposed(by: disposeBag)
-        
-        output.authPageUrl?
-            .subscribe { [unowned self] in
-                guard let pageUrl = $0.element as? URL else { return }
-                let sFSafariViewController = SFSafariViewController(url: pageUrl)
-                if #available(iOS 11.0, *) {
-                    sFSafariViewController.dismissButtonStyle = .cancel
-                }
-                
-                self.present(sFSafariViewController,
-                             animated: true,
-                             completion: nil)
-        }
-        .disposed(by: disposeBag)
         
         output.postSucceeded
             .subscribe { [unowned self] in
@@ -197,4 +182,10 @@ class HomeTimelineViewController: UIViewController {
             })
         }
     }
+}
+
+//準拠を画面の側に置くのは、自分が提示元になれることを知っているのが
+//画面自身のため。model側からUIViewControllerを名指しせずに済む
+extension HomeTimelineViewController: AuthorizationSheetPresenter {
+    var viewControllerForAuthorizationSheet: UIViewController { return self }
 }

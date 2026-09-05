@@ -16,14 +16,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     var window: UIWindow?
     
-    func application(_ application: UIApplication, continue userActivity: NSUserActivity, restorationHandler: @escaping ([UIUserActivityRestoring]?) -> Void) -> Bool {
-        //webviewからの遷移だったら、遷移元のwebviewを消す
-        if(userActivity.activityType == "NSUserActivityTypeBrowsingWeb"){
-            window?.rootViewController?.dismiss(animated: true, completion: nil)
-        }
-        guard let redirectedUrl = userActivity.webpageURL else { return true }
-        self.appDelegateModel.loginExecutedAt?.onNext(redirectedUrl)
-        return true
+    //認可画面からの戻りがOS経由で届いたときの受け口。ASWebAuthenticationSession は
+    //自分のコールバックへ直接返すため通常は通らないが、Info.plistにスキームを
+    //登録している以上、受け手がいないとログインの途中で止まる
+    func application(_ app: UIApplication,
+                     open url: URL,
+                     options: [UIApplication.OpenURLOptionsKey: Any] = [:]) -> Bool {
+        return self.appDelegateModel.resumeAuthorization(with: url)
     }
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {

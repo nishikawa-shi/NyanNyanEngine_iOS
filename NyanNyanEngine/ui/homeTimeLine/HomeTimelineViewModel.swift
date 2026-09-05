@@ -7,11 +7,13 @@
 //
 
 import Foundation
+import UIKit
 import RxSwift
 
 protocol HomeTimelineViewModelInput: AnyObject {
     //TODO: 後々、日付型っぽいやつにする
-    var authExecutedAt: AnyObserver<String>? { get }
+    //提示元を受け取るのは、認可シートを出すのに提示元の画面が要るため
+    var authExecutedAt: AnyObserver<AuthorizationSheetPresenter>? { get }
     var buttonRefreshExecutedAt: AnyObserver<String>? { get }
     var pullToRefreshExecutedAt: AnyObserver<UIRefreshControl>? { get }
     var infiniteScrollExecutedAt: AnyObserver<String>? { get }
@@ -26,7 +28,6 @@ protocol HomeTimelineViewModelOutput: AnyObject {
     var isLoading: Observable<Bool> { get }
     var isInfiniteLoading: Observable<Bool> { get }
     var isLoggedIn: Observable<Bool>? { get }
-    var authPageUrl: Observable<URL?>? { get }
     var postSucceeded: Observable<String?> { get }
 }
 
@@ -36,7 +37,7 @@ final class HomeTimelineViewModel: HomeTimelineViewModelInput, HomeTimelineViewM
     private let loadingStatusRepository: BaseLoadingStatusRepository
     private let disposeBag = DisposeBag()
     
-    var authExecutedAt: AnyObserver<String>? = nil
+    var authExecutedAt: AnyObserver<AuthorizationSheetPresenter>? = nil
     var buttonRefreshExecutedAt: AnyObserver<String>? = nil
     var pullToRefreshExecutedAt: AnyObserver<UIRefreshControl>? = nil
     var infiniteScrollExecutedAt: AnyObserver<String>? = nil
@@ -47,7 +48,6 @@ final class HomeTimelineViewModel: HomeTimelineViewModelInput, HomeTimelineViewM
     let isLoading: Observable<Bool>
     let isInfiniteLoading: Observable<Bool>
     let isLoggedIn: Observable<Bool>?
-    let authPageUrl: Observable<URL?>?
     let postSucceeded: Observable<String?>
     
     init(tweetsRepository: BaseTweetsRepository = TweetsRepository.shared,
@@ -63,7 +63,6 @@ final class HomeTimelineViewModel: HomeTimelineViewModelInput, HomeTimelineViewM
         self.isLoading = loadingStatusRepository.isLoading
         self.isInfiniteLoading = loadingStatusRepository.isInfiniteLoading
         self.isLoggedIn = authRepository.isLoggedIn
-        self.authPageUrl = authRepository.authPageUrl
         self.postSucceeded = tweetsRepository.postedStatus.map {
             guard let text = $0 else { return nil }
             return [text, R.string.stringValues.post_original_text()].joined()
@@ -124,8 +123,13 @@ final class HomeTimelineViewModel: HomeTimelineViewModelInput, HomeTimelineViewM
             }
         }
         
-        self.authExecutedAt = AnyObserver<String>() { [unowned self] authedAt in
-            self.authRepository.getRequestToken()
+        self.authExecutedAt = AnyObserver<AuthorizationSheetPresenter>() { [weak self] event in
+            guard let self = self, let presenter = event.element else { return }
+            self.authRepository.beginAuthorization(presenter: presenter) { [weak self] in
+                //ログイン直後の更新をボタン更新と同じ経路へ載せるのは、アカウントと
+                //タイムラインの取り直し、ローディングの解除が既に揃っているため
+                self?.buttonRefreshExecutedAt?.onNext("0000/01/01 00:00:00")
+            }
         }
     }
     
