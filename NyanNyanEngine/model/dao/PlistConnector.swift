@@ -9,6 +9,7 @@
 import Foundation
 
 protocol BasePlistConnector: AnyObject {
+    func getClientId() -> String?
     func getString(withKey: String) -> String?
 }
 
@@ -40,6 +41,12 @@ class PlistConnector: BasePlistConnector {
         return self.getString(withKey: keyName)
     }
     
+    //getApiKeyと違い環境で出し分けないのは、X側のアプリが1つしかなく
+    //dev/prdで同じclient_idを共有しているため
+    func getClientId() -> String? {
+        return self.getString(withKey: "clientId")
+    }
+
     func getString(withKey: String) -> String? {
         guard let keys = getKeys() else { return nil }
         return keys[withKey] as? String

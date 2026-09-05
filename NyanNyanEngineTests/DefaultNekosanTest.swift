@@ -17,7 +17,7 @@ class DefaultNekosanTest: XCTestCase {
 
     //ログイン前のアカウント表示が、ネットワーク越しの画像に依存していないこと
     func testDefaultAccountHasNoRemoteProfileUrl() {
-        XCTAssertNil(Account().user.profileImageUrlHttps)
+        XCTAssertNil(Account().user.profileImageUrl)
     }
 
     //デフォルトアカウントの定義がAccountとAuthRepositoryに二重管理されると壊れる箇所の回帰テスト

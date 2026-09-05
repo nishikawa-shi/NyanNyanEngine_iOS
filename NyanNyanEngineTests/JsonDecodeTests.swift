@@ -270,7 +270,7 @@ class JsonDecodeTests: XCTestCase {
             }
         """.data(using: .utf8)!
         
-        let testUserObj = try! decoder!.decode(User.self, from: testJson)
+        let testUserObj = try! decoder!.decode(Status.TimelineUser.self, from: testJson)
         
         XCTAssertEqual(testUserObj.name, "ハイボールマン 3号")
         XCTAssertEqual(testUserObj.screenName, "oauth_dancer")

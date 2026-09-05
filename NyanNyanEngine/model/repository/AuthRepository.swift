@@ -12,35 +12,37 @@ import RxSwift
 import RxRelay
 
 protocol BaseAuthRepository: AnyObject {
-    func downloadAccessToken(redirectedUrl: URL,
-                             modelUpdateLogic: @escaping(() -> Void) ) -> Observable<Bool>
+    func beginAuthorization(presenter: AuthorizationSheetPresenter,
+                            modelUpdateLogic: @escaping(() -> Void) )
+    func resumeAuthorization(with url: URL) -> Bool
     func authAppUser()
     func invalidateAccountInfo(modelUpdateLogic: @escaping(() -> Void) ) -> Observable<Bool>
-    
-    func getRequestToken()
+
     func getLoggedInStatus() -> Bool
-    
+
     func updateNyanNyanAccount(postedStatus: Status)
-    
+
     func useMultiplierValue(completion: @escaping ((Int) -> Void))
-    
+
     var currentAccount: Observable<Account> { get }
     var currentNyanNyanAccount: Observable<NyanNyanUser> { get }
     var isLoggedIn: Observable<Bool>? { get }
     var logoutSucceeded: Observable<Bool>? { get }
-    var authPageUrl: Observable<URL?>? { get }
-    
+
     var accountUpdatedAt: AnyObserver<String>? { get }
 }
 
 class AuthRepository: BaseAuthRepository {
     static let shared = AuthRepository()
-    
+
     private let disposeBag = DisposeBag()
-    private let apiClient: BaseApiClient
     private let firebaseClient: BaseFirebaseClient
     private let userDefaultsConnector: BaseUserDefaultsConnector
-    
+    private let xAuthClient: BaseXAuthClient
+
+    private let oauth1CredentialKeys = ["oauth_token",
+                                        "oauth_token_secret"]
+
     let currentAccount: Observable<Account>
     private let _currentAccount: BehaviorRelay<Account>
     let currentNyanNyanAccount: Observable<NyanNyanUser>
@@ -49,84 +51,77 @@ class AuthRepository: BaseAuthRepository {
     private let _isLoggedIn: BehaviorRelay<Bool>
     var logoutSucceeded: Observable<Bool>? = nil
     private let _logoutSucceeded: PublishRelay<Bool>
-    var authPageUrl: Observable<URL?>? = nil
-    private let _authPageUrl: BehaviorRelay<URL?>
-    
+
     var accountUpdatedAt: AnyObserver<String>? = nil
-    
-    private init(apiClient: BaseApiClient = ApiClient.shared,
-                 firebaseClient: BaseFirebaseClient = FirebaseClient.shared,
-                 userDefaultsConnector: BaseUserDefaultsConnector = UserDefaultsConnector.shared) {
-        self.apiClient = apiClient
+
+    //private init にしていないのは、テストが XAuthClient と UserDefaults を差し替えるため
+    init(firebaseClient: BaseFirebaseClient = FirebaseClient.shared,
+         userDefaultsConnector: BaseUserDefaultsConnector = UserDefaultsConnector.shared,
+         xAuthClient: BaseXAuthClient = XAuthClient.shared) {
         self.firebaseClient = firebaseClient
         self.userDefaultsConnector = userDefaultsConnector
-        
+        self.xAuthClient = xAuthClient
+
         self._currentAccount = BehaviorRelay<Account>(value: Account())
         self.currentAccount = _currentAccount.asObservable()
-        
+
         self._currentNyanNyanAccount = BehaviorRelay<NyanNyanUser>(value: NyanNyanUser())
         self.currentNyanNyanAccount = _currentNyanNyanAccount.asObservable()
-        
-        //本当はself.getLoggedInStatusを呼びたいのだが、selfを使うものが、loginExecutedAtとここと、2箇所あ
-        //またこのためだけに全プロパティをvarにするのもキモいので、getLoggedInStatusnの中身を直書きしている。
-        self._isLoggedIn = BehaviorRelay<Bool>(value: (userDefaultsConnector.getString(withKey: "screen_name") != nil))
+
+        //self.getLoggedInStatusを呼ばず中身を直書きしているのは、全プロパティの
+        //初期化が済むまでselfを使えないため
+        self._isLoggedIn = BehaviorRelay<Bool>(value: xAuthClient.hasAuthorizedSession())
         self.isLoggedIn = _isLoggedIn.asObservable()
-        
+
         self._logoutSucceeded = PublishRelay<Bool>()
         self.logoutSucceeded = _logoutSucceeded.asObservable()
-        
-        self._authPageUrl = BehaviorRelay<URL?>(value: nil)
-        self.authPageUrl = _authPageUrl.asObservable()
-        
+
         self.accountUpdatedAt = AnyObserver<String> { [unowned self] executedAt in
             self.getCurrentAccount()
                 .bind(to: self._currentAccount)
                 .disposed(by: self.disposeBag)
-            
+
             self.getCurrentNyanNyanAccount()
                 .bind(to: self._currentNyanNyanAccount)
                 .disposed(by: self.disposeBag)
         }
+
+        self.discardOAuth1CredentialsIfNeeded()
     }
-    
-    func getRequestToken() {
-        guard let apiKey = PlistConnector.shared.getApiKey(),
-            let apiSecret = PlistConnector.shared.getApiSecret(),
-            let urlRequest = ApiRequestFactory(apiKey: apiKey,
-                                               apiSecret: apiSecret,
-                                               oauthNonce: "0000").createRequestTokenRequest() else { return }
-        self.apiClient
-            .executeHttpRequest(urlRequest: urlRequest)
-            .map { [unowned self] in self.toAuthTokenValue(data: $0) }
-            .flatMap { $0.flatMap {Observable<URL>.just($0)} ?? Observable<URL>.empty() }
-            .subscribe { [unowned self] in self._authPageUrl.accept($0.element) }
-            .disposed(by: self.disposeBag)
-    }
-    
-    func invalidateAccountInfo(modelUpdateLogic: @escaping (() -> Void)) -> Observable<Bool> {
-        guard let apiKey = PlistConnector.shared.getApiKey(),
-            let apiSecret = PlistConnector.shared.getApiSecret(),
-            let accessToken = UserDefaultsConnector.shared.getString(withKey: "oauth_token"),
-            let accessTokenSecret = UserDefaultsConnector.shared.getString(withKey: "oauth_token_secret"),
-            let urlRequest = ApiRequestFactory(apiKey: apiKey,
-                                               apiSecret: apiSecret,
-                                               oauthNonce: "0000",
-                                               accessTokenSecret: accessTokenSecret,
-                                               accessToken: accessToken).createInvalidateTokenRequest() else {
-                                                self._logoutSucceeded.accept(false)
-                                                modelUpdateLogic()
-                                                return Observable<Bool>.empty()
+
+    func beginAuthorization(presenter: AuthorizationSheetPresenter,
+                            modelUpdateLogic: @escaping (() -> Void)) {
+        self.xAuthClient.authorize(presenter: presenter) { [weak self] authorized in
+            //認可されなかったときに何もしないのは、利用者が認可画面を閉じた場合と
+            //失敗した場合が区別できず、閉じただけで画面が動くと驚きになるため
+            guard authorized, let self = self else { return }
+            self._isLoggedIn.accept(self.getLoggedInStatus())
+            self.downloadMyAccount()
+                .map { [weak self] in self?.saveUserInfo(user: $0) }
+                .map (modelUpdateLogic)
+                .subscribe()
+                .disposed(by: self.disposeBag)
         }
-        return self.apiClient
-            .executeHttpRequest(urlRequest: urlRequest)
+    }
+
+    //戻り先のURLがOS経由で届いたときに、進行中の認可へ渡す
+    func resumeAuthorization(with url: URL) -> Bool {
+        return self.xAuthClient.resumeAuthorization(with: url)
+    }
+
+    func invalidateAccountInfo(modelUpdateLogic: @escaping (() -> Void)) -> Observable<Bool> {
+        return self.xAuthClient
+            .revokeSession()
             .map { [unowned self] _ in self.deleteAccountInfo() }
             .map { [unowned self] in
                 self._isLoggedIn.accept(self.getLoggedInStatus())
+                //失効の成否をログアウトの成否として扱わないのは、Xへ届かなくても
+                //端末からは消えており、利用者から見たログアウトは成立しているため
                 self._logoutSucceeded.accept(true) }
             .map (modelUpdateLogic)
             .map { true }
     }
-    
+
     func authAppUser() {
         self.firebaseClient.authAnonymously()
             .subscribe { [unowned self] event in
@@ -134,41 +129,11 @@ class AuthRepository: BaseAuthRepository {
                 self.userDefaultsConnector.registerString(key: "app_user_id", value: appUserId)
         }.disposed(by: disposeBag)
     }
-    
-    func downloadAccessToken(redirectedUrl: URL,
-                             modelUpdateLogic: @escaping (() -> Void)) -> Observable<Bool> {
-        guard let urlRequest = ApiRequestFactory().createAccessTokenRequest(redirectedUrl: redirectedUrl) else { return Observable<Bool>.empty() }
-        return self.apiClient
-            .executeHttpRequest(urlRequest: urlRequest)
-            .map { [unowned self] in self.parseTokens(accessTokenApiResponse: $0) }
-            .map { [unowned self] in self.saveTokens(accessTokenApiResponseQuery: $0 ?? [])}
-            .map { [unowned self] in self._isLoggedIn.accept(self.getLoggedInStatus()) }
-            .map { [unowned self] in self.downloadUserInfo() }
-            .map (modelUpdateLogic)
-            .map { true }
-    }
-    
-    func downloadUserInfo() {
-        guard let apiKey = PlistConnector.shared.getApiKey(),
-            let apiSecret = PlistConnector.shared.getApiSecret(),
-            let accessToken = UserDefaultsConnector.shared.getString(withKey: "oauth_token"),
-            let accessTokenSecret = UserDefaultsConnector.shared.getString(withKey: "oauth_token_secret"),
-            let urlRequest = ApiRequestFactory(apiKey: apiKey,
-                                               apiSecret: apiSecret,
-                                               oauthNonce: "0000",
-                                               accessTokenSecret: accessTokenSecret,
-                                               accessToken: accessToken).createVerifyCredentialsRequest() else { return }
-        self.apiClient.executeHttpRequest(urlRequest: urlRequest)
-            .map { [unowned self] in self.saveUserInfo(user: self.toUser(data: $0))}
-            .map { [unowned self] in self.accountUpdatedAt?.onNext("8888/12/31 23:59:59") }
-            .subscribe()
-            .disposed(by: disposeBag)
-    }
-    
+
     func getLoggedInStatus() -> Bool {
-        return self.userDefaultsConnector.getString(withKey: "screen_name") != nil
+        return self.xAuthClient.hasAuthorizedSession()
     }
-    
+
     func useMultiplierValue(completion: @escaping ((Int) -> Void)) {
         self.firebaseClient.readDatabase(dbName: "config",
                                          key: "np_multiplier",
@@ -178,10 +143,10 @@ class AuthRepository: BaseAuthRepository {
                 completion(multiplier)
         }.disposed(by: disposeBag)
     }
-    
+
     func updateNyanNyanAccount(postedStatus: Status) {
         guard let sealedTwitterId = self.userDefaultsConnector.getString(withKey: "user_id")?.md5() else { return }
-        
+
         self.firebaseClient.readDatabase(dbName: "users", key: sealedTwitterId, completionHandler: { res, error in
             // 何らかの原因で、ネコさんアカウントができる前に投稿できてしまう現象があるらしいので、アカウント存在チェックをしている。
             if (res?.data() == nil) && (error == nil) {
@@ -217,58 +182,76 @@ class AuthRepository: BaseAuthRepository {
                                                             self.updateNyanNyanAccount()
                     }
             }.disposed(by: self.disposeBag)
-            
+
         }).subscribe()
             .disposed(by: disposeBag)
     }
-    
+
     private func getCurrentAccount() -> Observable<Account> {
         let defaultObservable = Observable<Account>.create {
             $0.onNext(Account())
             return Disposables.create()
         }
-        
+
         if !self.getLoggedInStatus() {
             return defaultObservable
         }
         if !isAllAccountInfoFetched() {
             self.updateAccount()
         }
+        //アイコンを必須にしないのは、Xのアカウントはアイコンを持たないことがあり、
+        //その利用者が既定のアカウント表示から抜けられなくなるため
         guard let screenName = userDefaultsConnector.getString(withKey: "screen_name"),
-            let headerName = userDefaultsConnector.getString(withKey: "screen_name"),
             let name = userDefaultsConnector.getString(withKey: "name"),
-            let profileImageUrlHttps = userDefaultsConnector.getString(withKey: "profile_image_url_https") else {
+            let userId = userDefaultsConnector.getString(withKey: "user_id") else {
                 return defaultObservable
         }
-        let user = User(name: name, screenName: screenName, profileImageUrlHttps: profileImageUrlHttps)
-        let account = Account(user: user, headerName: headerName)
+        let user = User(id: userId,
+                        name: name,
+                        username: screenName,
+                        profileImageUrl: userDefaultsConnector.getString(withKey: "profile_image_url_https"))
+        let account = Account(user: user, headerName: screenName)
         return Observable<Account>.create { observer in
             observer.onNext(account)
             return Disposables.create()
         }
     }
-    
+
     private func updateAccount() {
-        guard let apiKey = PlistConnector.shared.getApiKey(),
-            let apiSecret = PlistConnector.shared.getApiSecret(),
-            let accessToken = UserDefaultsConnector.shared.getString(withKey: "oauth_token"),
-            let accessTokenSecret = UserDefaultsConnector.shared.getString(withKey: "oauth_token_secret"),
-            let urlRequest = ApiRequestFactory(apiKey: apiKey,
-                                               apiSecret: apiSecret,
-                                               oauthNonce: "0000",
-                                               accessTokenSecret: accessTokenSecret,
-                                               accessToken: accessToken).createVerifyCredentialsRequest() else { return }
-        guard let headerName = userDefaultsConnector.getString(withKey: "screen_name") else { return }
-        self.apiClient.executeHttpRequest(urlRequest: urlRequest)
-            .map { [unowned self] in
-                guard let user = self.toUser(data: $0) else { return }
+        self.downloadMyAccount()
+            .map { [weak self] user in
+                guard let self = self, let user = user else { return }
                 self.saveUserInfo(user: user)
-                self._currentAccount.accept(Account(user: user, headerName: headerName))
+                //ヘッダ名にusernameを使うのは、取得できた値だけでアカウント表示を
+                //組み立てるため。UserDefaults側は保存が済んだ後でないと揃わない
+                self._currentAccount.accept(Account(user: user, headerName: user.username))
         }
         .subscribe()
         .disposed(by: disposeBag)
     }
-    
+
+    private func downloadMyAccount() -> Observable<User?> {
+        guard let urlRequest = V2ApiRequestFactory.shared.createMyAccountRequest() else {
+            return Observable<User?>.just(nil)
+        }
+        return self.xAuthClient
+            .executeAuthorizedRequest(urlRequest: urlRequest)
+            .map { [weak self] result -> User? in
+                guard let self = self else { return nil }
+                self.discardSessionIfUnauthorized(result: result)
+                return self.toUser(result: result)
+        }
+    }
+
+    //401のまま戻るということは、リフレッシュも通らずX側で連携が切れている。
+    //端末側を残すと、ログイン表示のまま何も取得できない状態が続く
+    private func discardSessionIfUnauthorized(result: Result<Data, ApiError>) {
+        guard case .failure(.unauthorized) = result else { return }
+        self.xAuthClient.discardSession()
+        self.deleteAccountInfo()
+        self._isLoggedIn.accept(self.getLoggedInStatus())
+    }
+
     private func getCurrentNyanNyanAccount() -> Observable<NyanNyanUser> {
         let defaultNyanNyanUser = NyanNyanUser(firestoreUserRecord: ["np": 99999, "tc": 0],
                                                firestoreDegreeRecords: ["0": ["nam": R.string.stringValues.settings_teacher_rank(),
@@ -280,11 +263,11 @@ class AuthRepository: BaseAuthRepository {
         if !self.getLoggedInStatus() {
             return defaultObservable
         }
-        
+
         guard let sealedTwitterId = self.userDefaultsConnector.getString(withKey: "user_id")?.md5() else {
             return Observable<NyanNyanUser>.empty()
         }
-        
+
         return Observable.combineLatest(
             self.firebaseClient.readDatabase(dbName: "users", key: sealedTwitterId, completionHandler: { res, error in
                 if (res?.data() == nil) && (error == nil) {
@@ -299,7 +282,7 @@ class AuthRepository: BaseAuthRepository {
                              firestoreDegreeRecords: rankConfig)
         }
     }
-    
+
     private func updateNyanNyanAccount() {
         guard let sealedTwitterId = self.userDefaultsConnector.getString(withKey: "user_id")?.md5() else {
             return
@@ -314,7 +297,7 @@ class AuthRepository: BaseAuthRepository {
             .bind(to: self._currentNyanNyanAccount)
             .disposed(by: disposeBag)
     }
-    
+
     private func createNyanNyanAccount(completionHandler: @escaping ((Error?)->Void)) {
         guard let sealedTwitterId = self.userDefaultsConnector.getString(withKey: "user_id")?.md5() else {
             return
@@ -323,70 +306,59 @@ class AuthRepository: BaseAuthRepository {
                                        data: ["np": 0, "tc": 0],
                                        completionHandler: completionHandler)
     }
-    
+
+    //アイコンを含めないのは、持たない利用者では永久に揃わず、
+    //更新のたびに取り直しが走り続けるため
     private func isAllAccountInfoFetched() -> Bool {
         let requiredKeys = ["screen_name",
                             "name",
-                            "profile_image_url_https"]
+                            "user_id"]
         return requiredKeys.reduce(true) { [unowned self] (current: Bool, additive: String) -> Bool in
             return current && (self.userDefaultsConnector.getString(withKey: additive) != nil)
         }
     }
-    
-    private func toUser(data: Data?) -> User? {
+
+    private func toUser(result: Result<Data, ApiError>) -> User? {
+        guard case .success(let data) = result else { return nil }
         let decorder = JSONDecoder()
         decorder.keyDecodingStrategy = .convertFromSnakeCase
-        guard let d = data else { return nil }
-        return try? decorder.decode(User.self, from: d)
+        return (try? decorder.decode(V2UserResponse.self, from: data))?.data
     }
-    
-    private func toAuthTokenValue(data: Data?) -> URL? {
-        guard let d = data,
-            let str = String(data: d, encoding: .utf8) else { return nil }
-        return URL(string: "https://api.twitter.com/oauth/authorize?" + str)
-    }
-    
-    private func parseTokens(accessTokenApiResponse: Data?) -> [URLQueryItem]? {
-        guard let d = accessTokenApiResponse,
-            let str = String(data: d, encoding: .utf8) else { return nil }
-        return  NSURLComponents(string: "https://nyannyanengine.firebaseapp.com/tekitou?" + str)?.queryItems
-    }
-    
-    private func saveTokens(accessTokenApiResponseQuery: [URLQueryItem]) {
-        //原因は不明だが、アカウントによってはoauth_tokenやoauth_token_secretにSANITIZEDが設定されたレスポンスが返ってくる場合がある。無効なものなので、保存しない
-        if accessTokenApiResponseQuery.map({ $0.value }).contains("SANITIZED") {
-            return
-        }
-        
-        accessTokenApiResponseQuery.forEach { [unowned self] item in
-            print(item)
-            guard let value = item.value else { return }
-            self.userDefaultsConnector.registerString(key: item.name, value: value)
-        }
-    }
-    
+
     private func saveUserInfo(user: User?) {
-        guard let name = user?.name,
-            let profileImageUrlHttps = user?.profileImageUrlHttps else { return }
-        let records = ["name": name,
-                       "profile_image_url_https": profileImageUrlHttps]
+        guard let user = user else { return }
+        let records = ["user_id": user.id,
+                       "screen_name": user.username,
+                       "name": user.name]
         records.forEach { [unowned self] in
             self.userDefaultsConnector.registerString(key: $0.key, value: $0.value)
         }
+        //アイコンだけ分けているのは、値が無いときに空文字を保存すると
+        //「取得済み」と見なされ、取り直しの機会を失うため
+        guard let profileImageUrl = user.profileImageUrl else { return }
+        self.userDefaultsConnector.registerString(key: "profile_image_url_https", value: profileImageUrl)
     }
-    
+
+    //1.6.2 までの版は、OAuth 1.0a の認証情報を UserDefaults に置いていた。
+    //X側で失効済みのため、残っていると廃止された v1.1 を叩き続ける状態で
+    //起動する。痕跡を見つけたら捨てて、未ログインからやり直してもらう
+    private func discardOAuth1CredentialsIfNeeded() {
+        let hasOAuth1Credentials = self.oauth1CredentialKeys
+            .contains { self.userDefaultsConnector.getString(withKey: $0) != nil }
+        guard hasOAuth1Credentials else { return }
+        self.deleteAccountInfo()
+    }
+
+    //OAuth 1.0a の認証情報を最後に消すのは、これが「移行がまだ」の目印を
+    //兼ねているため。先に消すと、途中で終了したときに残りを消しそびれた
+    //まま、目印だけが失われる
     private func deleteAccountInfo() {
-        let accountKeys = [
-            "oauth_token",
-            "oauth_token_secret",
-            "user_id",
-            "screen_name",
-            "name",
-            "profile_image_url_https"
-        ]
-        accountKeys.forEach { [unowned self] key in
-            self.userDefaultsConnector.deleteRecord(forKey: key)
+        let accountInfoKeys = ["user_id",
+                               "screen_name",
+                               "name",
+                               "profile_image_url_https"]
+        (accountInfoKeys + self.oauth1CredentialKeys).forEach {
+            self.userDefaultsConnector.deleteRecord(forKey: $0)
         }
-        print("delete token completed")
     }
 }
