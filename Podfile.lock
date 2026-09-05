@@ -1188,6 +1188,12 @@ PODS:
     - abseil/meta/type_traits
     - abseil/xcprivacy
   - abseil/xcprivacy (1.20240722.0)
+  - AppAuth (3.0.0):
+    - AppAuth/Core (= 3.0.0)
+    - AppAuth/ExternalUserAgent (= 3.0.0)
+  - AppAuth/Core (3.0.0)
+  - AppAuth/ExternalUserAgent (3.0.0):
+    - AppAuth/Core
   - BoringSSL-GRPC (0.0.37):
     - BoringSSL-GRPC/Implementation (= 0.0.37)
     - BoringSSL-GRPC/Interface (= 0.0.37)
@@ -1468,6 +1474,7 @@ PODS:
   - RxSwift (6.9.0)
 
 DEPENDENCIES:
+  - AppAuth (~> 3.0)
   - CryptoSwift (~> 1.8)
   - Firebase/Analytics (~> 12.0)
   - Firebase/Auth (~> 12.0)
@@ -1482,6 +1489,7 @@ DEPENDENCIES:
 SPEC REPOS:
   trunk:
     - abseil
+    - AppAuth
     - BoringSSL-GRPC
     - CryptoSwift
     - Differentiator
@@ -1521,6 +1529,7 @@ SPEC REPOS:
 
 SPEC CHECKSUMS:
   abseil: a05cc83bf02079535e17169a73c5be5ba47f714b
+  AppAuth: 5dec4b6a833eb0342b26bacbc5f3af694f71274a
   BoringSSL-GRPC: dded2a44897e45f28f08ae87a55ee4bcd19bc508
   CryptoSwift: e2e7776512f250e66205955da748e7a4e4abffe0
   Differentiator: e8497ceab83c1b10ca233716d547b9af21b9344d
@@ -1558,6 +1567,6 @@ SPEC CHECKSUMS:
   RxRelay: 6b0c930e5cef57d5fe2032571e5e65b78e3cbdb1
   RxSwift: 31649ace6aceeb422e16ff71c60804f9c3281ed9
 
-PODFILE CHECKSUM: 6c0ac99ce3c4879486eba60492f3a7a8a9ec2720
+PODFILE CHECKSUM: 23c010f212e67002ae3eded707adaf17000e0c6f
 
 COCOAPODS: 1.17.0

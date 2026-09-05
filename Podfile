@@ -14,6 +14,7 @@ target 'NyanNyanEngine' do
   pod 'RxCocoa',                '~> 6.9'
   pod 'RxDataSources',          '~> 5.0'
   pod 'CryptoSwift',            '~> 1.8'
+  pod 'AppAuth',                '~> 3.0'
   # Nuke 11以降はSPM専用配布のため、CocoaPods継続の間は10系に留める（SPM移行時に最新化）
   pod 'Nuke',                   '~> 10'
 
@@ -32,6 +33,7 @@ target 'NyanNyanEngine' do
     pod 'RxCocoa',                '~> 6.9'
     pod 'RxDataSources',          '~> 5.0'
     pod 'CryptoSwift',            '~> 1.8'
+    pod 'AppAuth',                '~> 3.0'
     pod 'Nuke',                   '~> 10'
     # Pods for testing
   end
