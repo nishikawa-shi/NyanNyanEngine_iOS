@@ -40,6 +40,7 @@
 		67A1B2DA2A00000100000018 /* XAuthClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67A1B2D92A00000100000017 /* XAuthClient.swift */; };
 		67A1B2DD2A0000010000001B /* ApiClientTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67A1B2DC2A0000010000001A /* ApiClientTests.swift */; };
 		67A1B2DF2A0000010000001D /* AuthRepositoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67A1B2DE2A0000010000001C /* AuthRepositoryTests.swift */; };
+		67A1B3052A00000200000002 /* TweetsRepositoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67A1B3052A00000200000001 /* TweetsRepositoryTests.swift */; };
 		67A1B2E12A0000010000001F /* XAuthClientTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67A1B2E02A0000010000001E /* XAuthClientTests.swift */; };
 		67A1B2E32A00000100000021 /* AuthorizationSheetPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67A1B2E22A00000100000020 /* AuthorizationSheetPresenter.swift */; };
 		670E397E227FB4F7002318AE /* NekosanConverterTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 670E397D227FB4F7002318AE /* NekosanConverterTest.swift */; };
@@ -144,6 +145,7 @@
 		67A1B2D92A00000100000017 /* XAuthClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XAuthClient.swift; sourceTree = "<group>"; };
 		67A1B2DC2A0000010000001A /* ApiClientTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApiClientTests.swift; sourceTree = "<group>"; };
 		67A1B2DE2A0000010000001C /* AuthRepositoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthRepositoryTests.swift; sourceTree = "<group>"; };
+		67A1B3052A00000200000001 /* TweetsRepositoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TweetsRepositoryTests.swift; sourceTree = "<group>"; };
 		67A1B2E02A0000010000001E /* XAuthClientTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XAuthClientTests.swift; sourceTree = "<group>"; };
 		67A1B2E22A00000100000020 /* AuthorizationSheetPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthorizationSheetPresenter.swift; sourceTree = "<group>"; };
 		670E397D227FB4F7002318AE /* NekosanConverterTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NekosanConverterTest.swift; sourceTree = "<group>"; };
@@ -418,6 +420,7 @@
 				67A1B2D12A0000010000000F /* V2JsonDecodeTests.swift */,
 				67A1B2DC2A0000010000001A /* ApiClientTests.swift */,
 				67A1B2DE2A0000010000001C /* AuthRepositoryTests.swift */,
+				67A1B3052A00000200000001 /* TweetsRepositoryTests.swift */,
 				67A1B2E02A0000010000001E /* XAuthClientTests.swift */,
 			);
 			path = NyanNyanEngineTests;
@@ -822,6 +825,7 @@
 				67A1B2D82A00000100000016 /* URLRequestBuildingTests.swift in Sources */,
 				67A1B2DD2A0000010000001B /* ApiClientTests.swift in Sources */,
 				67A1B2DF2A0000010000001D /* AuthRepositoryTests.swift in Sources */,
+				67A1B3052A00000200000002 /* TweetsRepositoryTests.swift in Sources */,
 				67A1B2E12A0000010000001F /* XAuthClientTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

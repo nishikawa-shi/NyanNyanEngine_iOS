@@ -20,7 +20,7 @@ protocol BaseAuthRepository: AnyObject {
 
     func getLoggedInStatus() -> Bool
 
-    func updateNyanNyanAccount(postedStatus: Status)
+    func updateNyanNyanAccount(postedText: String)
 
     func useMultiplierValue(completion: @escaping ((Int) -> Void))
 
@@ -144,7 +144,7 @@ class AuthRepository: BaseAuthRepository {
         }.disposed(by: disposeBag)
     }
 
-    func updateNyanNyanAccount(postedStatus: Status) {
+    func updateNyanNyanAccount(postedText: String) {
         guard let sealedTwitterId = self.userDefaultsConnector.getString(withKey: "user_id")?.md5() else { return }
 
         self.firebaseClient.readDatabase(dbName: "users", key: sealedTwitterId, completionHandler: { res, error in
@@ -156,7 +156,7 @@ class AuthRepository: BaseAuthRepository {
                                                      completionHandler:{_, _ in})
                         .subscribe { res in
                             let multiplier = (res.element??["v"] as? Int) ?? 1
-                            let tweetNekosanPoint = NekosanRank.getNekosanPoint(nekogoStr: postedStatus.text)
+                            let tweetNekosanPoint = NekosanRank.getNekosanPoint(nekogoStr: postedText)
                             let nekosanPoint = tweetNekosanPoint * multiplier
                             FirebaseClient.shared.incrementData(dbName: "users",
                                                                 documentName: sealedTwitterId,
@@ -173,7 +173,7 @@ class AuthRepository: BaseAuthRepository {
                                              completionHandler:{_, _ in})
                 .subscribe { res in
                     let multiplier = (res.element??["v"] as? Int) ?? 1
-                    let tweetNekosanPoint = NekosanRank.getNekosanPoint(nekogoStr: postedStatus.text)
+                    let tweetNekosanPoint = NekosanRank.getNekosanPoint(nekogoStr: postedText)
                     let nekosanPoint = tweetNekosanPoint * multiplier
                     FirebaseClient.shared.incrementData(dbName: "users",
                                                         documentName: sealedTwitterId,
