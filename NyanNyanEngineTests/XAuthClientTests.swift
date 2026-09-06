@@ -7,6 +7,7 @@
 //
 
 import XCTest
+import UIKit
 import AppAuth
 import RxSwift
 @testable import NyanNyanEngine

@@ -49,9 +49,6 @@ jobs:
         with:
           bundler-cache: true
 
-      - name: pod install
-        run: bundle exec pod install
-
       - name: Resolve available iOS Simulator
         run: |
           xcrun simctl list devices
@@ -62,12 +59,12 @@ jobs:
       - name: Run unit tests
         run: |
           xcodebuild \
-            -sdk iphonesimulator \
-            -workspace NyanNyanEngine.xcworkspace \
+            -project NyanNyanEngine.xcodeproj \
             -scheme NyanNyanEngineTests \
             -destination "platform=iOS Simulator,name=$SIM_DEVICE_NAME" \
             -testLanguage en -testRegion US \
             -skip-testing:NyanNyanEngineUITests \
+            -skipPackagePluginValidation \
             test
 
   beta:
@@ -88,9 +85,6 @@ jobs:
       - uses: ruby/setup-ruby@v1
         with:
           bundler-cache: true
-
-      - name: pod install
-        run: bundle exec pod install
 
       - name: Setup SSH for match repo
         uses: webfactory/ssh-agent@v0.10.0
@@ -143,9 +137,6 @@ jobs:
       - uses: ruby/setup-ruby@v1
         with:
           bundler-cache: true
-
-      - name: pod install
-        run: bundle exec pod install
 
       - name: Setup SSH for match repo
         uses: webfactory/ssh-agent@v0.10.0

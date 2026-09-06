@@ -7,6 +7,23 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		67A1B3032A00000200000001 /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 67A1B3022A00000200000001 /* FirebaseAnalytics */; };
+		67A1B3032A00000200000002 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 67A1B3022A00000200000002 /* FirebaseAuth */; };
+		67A1B3032A00000200000003 /* FirebaseCrashlytics in Frameworks */ = {isa = PBXBuildFile; productRef = 67A1B3022A00000200000003 /* FirebaseCrashlytics */; };
+		67A1B3032A00000200000004 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 67A1B3022A00000200000004 /* FirebaseFirestore */; };
+		67A1B3032A00000200000005 /* RswiftLibrary in Frameworks */ = {isa = PBXBuildFile; productRef = 67A1B3022A00000200000005 /* RswiftLibrary */; };
+		67A1B3032A00000200000006 /* RxSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 67A1B3022A00000200000006 /* RxSwift */; };
+		67A1B3032A00000200000007 /* RxCocoa in Frameworks */ = {isa = PBXBuildFile; productRef = 67A1B3022A00000200000007 /* RxCocoa */; };
+		67A1B3032A00000200000008 /* RxRelay in Frameworks */ = {isa = PBXBuildFile; productRef = 67A1B3022A00000200000008 /* RxRelay */; };
+		67A1B3032A00000200000009 /* RxDataSources in Frameworks */ = {isa = PBXBuildFile; productRef = 67A1B3022A00000200000009 /* RxDataSources */; };
+		67A1B3032A0000020000000A /* Differentiator in Frameworks */ = {isa = PBXBuildFile; productRef = 67A1B3022A0000020000000A /* Differentiator */; };
+		67A1B3032A0000020000000B /* CryptoSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 67A1B3022A0000020000000B /* CryptoSwift */; };
+		67A1B3032A0000020000000C /* AppAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 67A1B3022A0000020000000C /* AppAuth */; };
+		67A1B3032A0000020000000D /* Nuke in Frameworks */ = {isa = PBXBuildFile; productRef = 67A1B3022A0000020000000D /* Nuke */; };
+		67A1B3032A0000020000000E /* RswiftLibrary in Frameworks */ = {isa = PBXBuildFile; productRef = 67A1B3022A0000020000000E /* RswiftLibrary */; };
+		67A1B3032A0000020000000F /* RxSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 67A1B3022A0000020000000F /* RxSwift */; };
+		67A1B3032A00000200000010 /* CryptoSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 67A1B3022A00000200000010 /* CryptoSwift */; };
+		67A1B3032A00000200000011 /* AppAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 67A1B3022A00000200000011 /* AppAuth */; };
 		670777FE22B61CE30057B457 /* DataSourceFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 670777FD22B61CE30057B457 /* DataSourceFactory.swift */; };
 		670B66FC229ADF09006DFC73 /* GoogleService-Info-Release.plist in Resources */ = {isa = PBXBuildFile; fileRef = 670B66FB229ADF09006DFC73 /* GoogleService-Info-Release.plist */; };
 		670E3979227E4738002318AE /* LoadingStatusRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 670E3978227E4738002318AE /* LoadingStatusRepository.swift */; };
@@ -76,7 +93,6 @@
 		678C6B4423E5764000B5F8E9 /* NyanNyanUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 678C6B4323E5764000B5F8E9 /* NyanNyanUser.swift */; };
 		678C6B4D23E59CFE00B5F8E9 /* AccountAttributeCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 678C6B4B23E59CFE00B5F8E9 /* AccountAttributeCell.swift */; };
 		678C6B4E23E59CFE00B5F8E9 /* AccountAttributeCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 678C6B4C23E59CFE00B5F8E9 /* AccountAttributeCell.xib */; };
-		678E360E229A9E7600CBBCCC /* R.generated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 678E360D229A9E7600CBBCCC /* R.generated.swift */; };
 		678E3614229A9F9200CBBCCC /* StringValues.strings in Resources */ = {isa = PBXBuildFile; fileRef = 678E3616229A9F9200CBBCCC /* StringValues.strings */; };
 		678E361F229AD6EE00CBBCCC /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 678E3621229AD6EE00CBBCCC /* InfoPlist.strings */; };
 		679A5E60227B1F250043D0E1 /* ApiRequestFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 679A5E5F227B1F250043D0E1 /* ApiRequestFactory.swift */; };
@@ -92,9 +108,6 @@
 		67F7C6052351E7120017BAF3 /* HomeTimeline.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 67F7C6072351E7120017BAF3 /* HomeTimeline.storyboard */; };
 		67F7C60A2351E7650017BAF3 /* PostNekogo.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 67F7C60C2351E7650017BAF3 /* PostNekogo.storyboard */; };
 		67F88C0A227C2484004DF44A /* UserDefaultsConnector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67F88C09227C2484004DF44A /* UserDefaultsConnector.swift */; };
-		6F5BA197BD1E09035F139B1E /* Pods_NyanNyanEngine.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 22F15CDA51217BED9A8C46EE /* Pods_NyanNyanEngine.framework */; };
-		6FF050F48A96D90D84F701B4 /* Pods_NyanNyanEngineUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B02F5D1000EC7AB0F34DA4A /* Pods_NyanNyanEngineUITests.framework */; };
-		FAA69D91809A0A4616F08E1A /* Pods_NyanNyanEngineTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BE755143DE368FD814693628 /* Pods_NyanNyanEngineTests.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -115,10 +128,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		057DF2DAC5577F0E33463505 /* Pods-NyanNyanEngine.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NyanNyanEngine.release.xcconfig"; path = "Target Support Files/Pods-NyanNyanEngine/Pods-NyanNyanEngine.release.xcconfig"; sourceTree = "<group>"; };
-		22F15CDA51217BED9A8C46EE /* Pods_NyanNyanEngine.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_NyanNyanEngine.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		401699EB18A3F18693A976EF /* Pods-NyanNyanEngineUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NyanNyanEngineUITests.release.xcconfig"; path = "Target Support Files/Pods-NyanNyanEngineUITests/Pods-NyanNyanEngineUITests.release.xcconfig"; sourceTree = "<group>"; };
-		4B02F5D1000EC7AB0F34DA4A /* Pods_NyanNyanEngineUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_NyanNyanEngineUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		670777FD22B61CE30057B457 /* DataSourceFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataSourceFactory.swift; sourceTree = "<group>"; };
 		670B66FB229ADF09006DFC73 /* GoogleService-Info-Release.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info-Release.plist"; sourceTree = "<group>"; };
 		670E3978227E4738002318AE /* LoadingStatusRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingStatusRepository.swift; sourceTree = "<group>"; };
@@ -196,7 +205,6 @@
 		678C6B4323E5764000B5F8E9 /* NyanNyanUser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NyanNyanUser.swift; sourceTree = "<group>"; };
 		678C6B4B23E59CFE00B5F8E9 /* AccountAttributeCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountAttributeCell.swift; sourceTree = "<group>"; };
 		678C6B4C23E59CFE00B5F8E9 /* AccountAttributeCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AccountAttributeCell.xib; sourceTree = "<group>"; };
-		678E360D229A9E7600CBBCCC /* R.generated.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = R.generated.swift; sourceTree = SOURCE_ROOT; };
 		678E3615229A9F9200CBBCCC /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/StringValues.strings; sourceTree = "<group>"; };
 		678E3617229A9FC700CBBCCC /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/Main.strings; sourceTree = "<group>"; };
 		678E3618229A9FC700CBBCCC /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
@@ -218,11 +226,6 @@
 		67F7C60B2351E7650017BAF3 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/PostNekogo.storyboard; sourceTree = "<group>"; };
 		67F7C60E2351E7730017BAF3 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/PostNekogo.strings; sourceTree = "<group>"; };
 		67F88C09227C2484004DF44A /* UserDefaultsConnector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaultsConnector.swift; sourceTree = "<group>"; };
-		8FDB047AE69187502EE591B0 /* Pods-NyanNyanEngine.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NyanNyanEngine.debug.xcconfig"; path = "Target Support Files/Pods-NyanNyanEngine/Pods-NyanNyanEngine.debug.xcconfig"; sourceTree = "<group>"; };
-		96632DB3A66A1575955499B0 /* Pods-NyanNyanEngineUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NyanNyanEngineUITests.debug.xcconfig"; path = "Target Support Files/Pods-NyanNyanEngineUITests/Pods-NyanNyanEngineUITests.debug.xcconfig"; sourceTree = "<group>"; };
-		A8194B8590CC3EDB7E1AAE24 /* Pods-NyanNyanEngineTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NyanNyanEngineTests.debug.xcconfig"; path = "Target Support Files/Pods-NyanNyanEngineTests/Pods-NyanNyanEngineTests.debug.xcconfig"; sourceTree = "<group>"; };
-		BE755143DE368FD814693628 /* Pods_NyanNyanEngineTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_NyanNyanEngineTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		D9C30616DF4736E43ACF52E9 /* Pods-NyanNyanEngineTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NyanNyanEngineTests.release.xcconfig"; path = "Target Support Files/Pods-NyanNyanEngineTests/Pods-NyanNyanEngineTests.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -230,7 +233,19 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				6F5BA197BD1E09035F139B1E /* Pods_NyanNyanEngine.framework in Frameworks */,
+				67A1B3032A00000200000001 /* FirebaseAnalytics in Frameworks */,
+				67A1B3032A00000200000002 /* FirebaseAuth in Frameworks */,
+				67A1B3032A00000200000003 /* FirebaseCrashlytics in Frameworks */,
+				67A1B3032A00000200000004 /* FirebaseFirestore in Frameworks */,
+				67A1B3032A00000200000005 /* RswiftLibrary in Frameworks */,
+				67A1B3032A00000200000006 /* RxSwift in Frameworks */,
+				67A1B3032A00000200000007 /* RxCocoa in Frameworks */,
+				67A1B3032A00000200000008 /* RxRelay in Frameworks */,
+				67A1B3032A00000200000009 /* RxDataSources in Frameworks */,
+				67A1B3032A0000020000000A /* Differentiator in Frameworks */,
+				67A1B3032A0000020000000B /* CryptoSwift in Frameworks */,
+				67A1B3032A0000020000000C /* AppAuth in Frameworks */,
+				67A1B3032A0000020000000D /* Nuke in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -238,7 +253,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				FAA69D91809A0A4616F08E1A /* Pods_NyanNyanEngineTests.framework in Frameworks */,
+				67A1B3032A0000020000000E /* RswiftLibrary in Frameworks */,
+				67A1B3032A0000020000000F /* RxSwift in Frameworks */,
+				67A1B3032A00000200000010 /* CryptoSwift in Frameworks */,
+				67A1B3032A00000200000011 /* AppAuth in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -246,7 +264,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				6FF050F48A96D90D84F701B4 /* Pods_NyanNyanEngineUITests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -350,7 +367,6 @@
 				6766617B227527FF004C886C /* NyanNyanEngineTests */,
 				67666186227527FF004C886C /* NyanNyanEngineUITests */,
 				67666162227527FF004C886C /* Products */,
-				D737DB20B57B04D0BFE4D4B3 /* Pods */,
 				F1F51CBA1057DC99C5733BC7 /* Frameworks */,
 			);
 			sourceTree = "<group>";
@@ -373,7 +389,6 @@
 				6767B0D422791CF9008913EA /* ui */,
 				6723B27F22767C680004FB3D /* model */,
 				67666164227527FF004C886C /* AppDelegate.swift */,
-				678E360D229A9E7600CBBCCC /* R.generated.swift */,
 				67666168227527FF004C886C /* Main.storyboard */,
 				6766616E227527FF004C886C /* Assets.xcassets */,
 				67666170227527FF004C886C /* LaunchScreen.storyboard */,
@@ -545,25 +560,9 @@
 			path = postNekogo;
 			sourceTree = "<group>";
 		};
-		D737DB20B57B04D0BFE4D4B3 /* Pods */ = {
-			isa = PBXGroup;
-			children = (
-				8FDB047AE69187502EE591B0 /* Pods-NyanNyanEngine.debug.xcconfig */,
-				057DF2DAC5577F0E33463505 /* Pods-NyanNyanEngine.release.xcconfig */,
-				A8194B8590CC3EDB7E1AAE24 /* Pods-NyanNyanEngineTests.debug.xcconfig */,
-				D9C30616DF4736E43ACF52E9 /* Pods-NyanNyanEngineTests.release.xcconfig */,
-				96632DB3A66A1575955499B0 /* Pods-NyanNyanEngineUITests.debug.xcconfig */,
-				401699EB18A3F18693A976EF /* Pods-NyanNyanEngineUITests.release.xcconfig */,
-			);
-			path = Pods;
-			sourceTree = "<group>";
-		};
 		F1F51CBA1057DC99C5733BC7 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				22F15CDA51217BED9A8C46EE /* Pods_NyanNyanEngine.framework */,
-				BE755143DE368FD814693628 /* Pods_NyanNyanEngineTests.framework */,
-				4B02F5D1000EC7AB0F34DA4A /* Pods_NyanNyanEngineUITests.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -575,18 +574,31 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 6766618C227527FF004C886C /* Build configuration list for PBXNativeTarget "NyanNyanEngine" */;
 			buildPhases = (
-				A484A11229198E21B72DBE01 /* [CP] Check Pods Manifest.lock */,
-				67EB6486229A66D700D72E80 /* Run Script */,
 				6766615D227527FF004C886C /* Sources */,
 				6766615E227527FF004C886C /* Frameworks */,
 				6766615F227527FF004C886C /* Resources */,
-				563E308AC8BC79433801154A /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				67A1B3042A00000200000001 /* PBXTargetDependency */,
 			);
 			name = NyanNyanEngine;
+			packageProductDependencies = (
+				67A1B3022A00000200000001 /* FirebaseAnalytics */,
+				67A1B3022A00000200000002 /* FirebaseAuth */,
+				67A1B3022A00000200000003 /* FirebaseCrashlytics */,
+				67A1B3022A00000200000004 /* FirebaseFirestore */,
+				67A1B3022A00000200000005 /* RswiftLibrary */,
+				67A1B3022A00000200000006 /* RxSwift */,
+				67A1B3022A00000200000007 /* RxCocoa */,
+				67A1B3022A00000200000008 /* RxRelay */,
+				67A1B3022A00000200000009 /* RxDataSources */,
+				67A1B3022A0000020000000A /* Differentiator */,
+				67A1B3022A0000020000000B /* CryptoSwift */,
+				67A1B3022A0000020000000C /* AppAuth */,
+				67A1B3022A0000020000000D /* Nuke */,
+			);
 			productName = NyanNyanEngine;
 			productReference = 67666161227527FF004C886C /* NyanNyanEngine.app */;
 			productType = "com.apple.product-type.application";
@@ -595,7 +607,6 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 6766618F227527FF004C886C /* Build configuration list for PBXNativeTarget "NyanNyanEngineTests" */;
 			buildPhases = (
-				82DCDE583A04805FF41E971C /* [CP] Check Pods Manifest.lock */,
 				67666174227527FF004C886C /* Sources */,
 				67666175227527FF004C886C /* Frameworks */,
 				67666176227527FF004C886C /* Resources */,
@@ -606,6 +617,12 @@
 				6766617A227527FF004C886C /* PBXTargetDependency */,
 			);
 			name = NyanNyanEngineTests;
+			packageProductDependencies = (
+				67A1B3022A0000020000000E /* RswiftLibrary */,
+				67A1B3022A0000020000000F /* RxSwift */,
+				67A1B3022A00000200000010 /* CryptoSwift */,
+				67A1B3022A00000200000011 /* AppAuth */,
+			);
 			productName = NyanNyanEngineTests;
 			productReference = 67666178227527FF004C886C /* NyanNyanEngineTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
@@ -614,11 +631,9 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 67666192227527FF004C886C /* Build configuration list for PBXNativeTarget "NyanNyanEngineUITests" */;
 			buildPhases = (
-				58CFA0DFE145C0925000B2FB /* [CP] Check Pods Manifest.lock */,
 				6766617F227527FF004C886C /* Sources */,
 				67666180227527FF004C886C /* Frameworks */,
 				67666181227527FF004C886C /* Resources */,
-				464322734A93F3579D4A6A54 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -668,6 +683,15 @@
 				ja,
 			);
 			mainGroup = 67666158227527FF004C886C;
+			packageReferences = (
+				67A1B3012A00000200000001 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+				67A1B3012A00000200000002 /* XCRemoteSwiftPackageReference "R.swift" */,
+				67A1B3012A00000200000003 /* XCRemoteSwiftPackageReference "RxSwift" */,
+				67A1B3012A00000200000004 /* XCRemoteSwiftPackageReference "RxDataSources" */,
+				67A1B3012A00000200000005 /* XCRemoteSwiftPackageReference "CryptoSwift" */,
+				67A1B3012A00000200000006 /* XCRemoteSwiftPackageReference "AppAuth-iOS" */,
+				67A1B3012A00000200000007 /* XCRemoteSwiftPackageReference "Nuke" */,
+			);
 			productRefGroup = 67666162227527FF004C886C /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -723,128 +747,6 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
-/* Begin PBXShellScriptBuildPhase section */
-		464322734A93F3579D4A6A54 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-NyanNyanEngineUITests/Pods-NyanNyanEngineUITests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-NyanNyanEngineUITests/Pods-NyanNyanEngineUITests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-NyanNyanEngineUITests/Pods-NyanNyanEngineUITests-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		563E308AC8BC79433801154A /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-NyanNyanEngine/Pods-NyanNyanEngine-frameworks-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-NyanNyanEngine/Pods-NyanNyanEngine-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-NyanNyanEngine/Pods-NyanNyanEngine-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		58CFA0DFE145C0925000B2FB /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-NyanNyanEngineUITests-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		67EB6486229A66D700D72E80 /* Run Script */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"$TEMP_DIR/rswift-lastrun",
-			);
-			name = "Run Script";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				$SRCROOT/R.generated.swift,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\n\"$PODS_ROOT/R.swift/rswift\" generate \"$SRCROOT/R.generated.swift\"\n";
-		};
-		82DCDE583A04805FF41E971C /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-NyanNyanEngineTests-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		A484A11229198E21B72DBE01 /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-NyanNyanEngine-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		6766615D227527FF004C886C /* Sources */ = {
@@ -881,7 +783,6 @@
 				67A1B2DA2A00000100000018 /* XAuthClient.swift in Sources */,
 				67A1B2E32A00000100000021 /* AuthorizationSheetPresenter.swift in Sources */,
 				673E5CC123372256000E1A65 /* SettingsSectionHeader.swift in Sources */,
-				678E360E229A9E7600CBBCCC /* R.generated.swift in Sources */,
 				67B787E522C8427400BDC612 /* LoadingCell.swift in Sources */,
 				6723B2922277DFD60004FB3D /* HomeTimelineViewModel.swift in Sources */,
 				6723B28A2276926B0004FB3D /* User.swift in Sources */,
@@ -936,6 +837,10 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		67A1B3042A00000200000001 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			productRef = 67A1B3022A00000200000012 /* RswiftGenerateInternalResources */;
+		};
 		6766617A227527FF004C886C /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 67666160227527FF004C886C /* NyanNyanEngine */;
@@ -1143,7 +1048,6 @@
 		};
 		6766618D227527FF004C886C /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 8FDB047AE69187502EE591B0 /* Pods-NyanNyanEngine.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon${BUNDLE_ID_SUFFIX}";
 				BUNDLE_ID_SUFFIX = .debug;
@@ -1168,7 +1072,6 @@
 		};
 		6766618E227527FF004C886C /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 057DF2DAC5577F0E33463505 /* Pods-NyanNyanEngine.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon${BUNDLE_ID_SUFFIX}";
 				BUNDLE_ID_SUFFIX = "";
@@ -1195,7 +1098,6 @@
 		};
 		67666190227527FF004C886C /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = A8194B8590CC3EDB7E1AAE24 /* Pods-NyanNyanEngineTests.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
@@ -1217,7 +1119,6 @@
 		};
 		67666191227527FF004C886C /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = D9C30616DF4736E43ACF52E9 /* Pods-NyanNyanEngineTests.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
@@ -1239,7 +1140,6 @@
 		};
 		67666193227527FF004C886C /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 96632DB3A66A1575955499B0 /* Pods-NyanNyanEngineUITests.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(inherited)";
 				CODE_SIGN_STYLE = Automatic;
@@ -1260,7 +1160,6 @@
 		};
 		67666194227527FF004C886C /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 401699EB18A3F18693A976EF /* Pods-NyanNyanEngineUITests.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(inherited)";
 				CODE_SIGN_STYLE = Automatic;
@@ -1332,6 +1231,157 @@
 			versionGroupType = wrapper.xcdatamodel;
 		};
 /* End XCVersionGroup section */
+/* Begin XCRemoteSwiftPackageReference section */
+		67A1B3012A00000200000001 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 12.0.0;
+			};
+		};
+		67A1B3012A00000200000002 /* XCRemoteSwiftPackageReference "R.swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/mac-cain13/R.swift";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 7.0.0;
+			};
+		};
+		67A1B3012A00000200000003 /* XCRemoteSwiftPackageReference "RxSwift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/ReactiveX/RxSwift";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 6.9.0;
+			};
+		};
+		67A1B3012A00000200000004 /* XCRemoteSwiftPackageReference "RxDataSources" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/RxSwiftCommunity/RxDataSources";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.0.0;
+			};
+		};
+		67A1B3012A00000200000005 /* XCRemoteSwiftPackageReference "CryptoSwift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/krzyzanowskim/CryptoSwift";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.8.0;
+			};
+		};
+		67A1B3012A00000200000006 /* XCRemoteSwiftPackageReference "AppAuth-iOS" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/openid/AppAuth-iOS";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 3.0.0;
+			};
+		};
+		67A1B3012A00000200000007 /* XCRemoteSwiftPackageReference "Nuke" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/kean/Nuke";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 10.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		67A1B3022A00000200000001 /* FirebaseAnalytics */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 67A1B3012A00000200000001 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAnalytics;
+		};
+		67A1B3022A00000200000002 /* FirebaseAuth */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 67A1B3012A00000200000001 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAuth;
+		};
+		67A1B3022A00000200000003 /* FirebaseCrashlytics */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 67A1B3012A00000200000001 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseCrashlytics;
+		};
+		67A1B3022A00000200000004 /* FirebaseFirestore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 67A1B3012A00000200000001 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseFirestore;
+		};
+		67A1B3022A00000200000005 /* RswiftLibrary */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 67A1B3012A00000200000002 /* XCRemoteSwiftPackageReference "R.swift" */;
+			productName = RswiftLibrary;
+		};
+		67A1B3022A00000200000006 /* RxSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 67A1B3012A00000200000003 /* XCRemoteSwiftPackageReference "RxSwift" */;
+			productName = RxSwift;
+		};
+		67A1B3022A00000200000007 /* RxCocoa */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 67A1B3012A00000200000003 /* XCRemoteSwiftPackageReference "RxSwift" */;
+			productName = RxCocoa;
+		};
+		67A1B3022A00000200000008 /* RxRelay */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 67A1B3012A00000200000003 /* XCRemoteSwiftPackageReference "RxSwift" */;
+			productName = RxRelay;
+		};
+		67A1B3022A00000200000009 /* RxDataSources */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 67A1B3012A00000200000004 /* XCRemoteSwiftPackageReference "RxDataSources" */;
+			productName = RxDataSources;
+		};
+		67A1B3022A0000020000000A /* Differentiator */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 67A1B3012A00000200000004 /* XCRemoteSwiftPackageReference "RxDataSources" */;
+			productName = Differentiator;
+		};
+		67A1B3022A0000020000000B /* CryptoSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 67A1B3012A00000200000005 /* XCRemoteSwiftPackageReference "CryptoSwift" */;
+			productName = CryptoSwift;
+		};
+		67A1B3022A0000020000000C /* AppAuth */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 67A1B3012A00000200000006 /* XCRemoteSwiftPackageReference "AppAuth-iOS" */;
+			productName = AppAuth;
+		};
+		67A1B3022A0000020000000D /* Nuke */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 67A1B3012A00000200000007 /* XCRemoteSwiftPackageReference "Nuke" */;
+			productName = Nuke;
+		};
+		67A1B3022A0000020000000E /* RswiftLibrary */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 67A1B3012A00000200000002 /* XCRemoteSwiftPackageReference "R.swift" */;
+			productName = RswiftLibrary;
+		};
+		67A1B3022A0000020000000F /* RxSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 67A1B3012A00000200000003 /* XCRemoteSwiftPackageReference "RxSwift" */;
+			productName = RxSwift;
+		};
+		67A1B3022A00000200000010 /* CryptoSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 67A1B3012A00000200000005 /* XCRemoteSwiftPackageReference "CryptoSwift" */;
+			productName = CryptoSwift;
+		};
+		67A1B3022A00000200000011 /* AppAuth */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 67A1B3012A00000200000006 /* XCRemoteSwiftPackageReference "AppAuth-iOS" */;
+			productName = AppAuth;
+		};
+		67A1B3022A00000200000012 /* RswiftGenerateInternalResources */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 67A1B3012A00000200000002 /* XCRemoteSwiftPackageReference "R.swift" */;
+			productName = "plugin:RswiftGenerateInternalResources";
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 67666159227527FF004C886C /* Project object */;
 }
