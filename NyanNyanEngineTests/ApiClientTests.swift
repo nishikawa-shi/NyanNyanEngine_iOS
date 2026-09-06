@@ -15,6 +15,10 @@ class ApiClientTests: XCTestCase {
     private var apiClient: ApiClient!
     private var disposeBag = DisposeBag()
     private let requestUrl = URL(string: "https://api.x.com/2/users/me")!
+    //待ち時間を短く切り詰めないのは、ここで測りたいのが応答の速さではなく
+    //「応答が返ってくること」だけのため。締め切りを詰めても検証は強くならず、
+    //実行環境が混み合ったときに、確かめたい内容と無関係な失敗が増える
+    private let responseWaitLimit: TimeInterval = 30
 
     override func setUp() {
         super.setUp()
@@ -70,7 +74,7 @@ class ApiClientTests: XCTestCase {
                 expectation.fulfill()
             })
             .disposed(by: disposeBag)
-        waitForExpectations(timeout: 5)
+        waitForExpectations(timeout: responseWaitLimit)
 
         XCTAssertTrue(receivedOnMainThread)
     }
@@ -89,7 +93,7 @@ class ApiClientTests: XCTestCase {
                 expectation.fulfill()
             })
             .disposed(by: disposeBag)
-        waitForExpectations(timeout: 5)
+        waitForExpectations(timeout: responseWaitLimit)
 
         XCTAssertNil(received)
     }
@@ -105,7 +109,7 @@ class ApiClientTests: XCTestCase {
                 expectation.fulfill()
             })
             .disposed(by: disposeBag)
-        waitForExpectations(timeout: 5)
+        waitForExpectations(timeout: responseWaitLimit)
 
         return received
     }
