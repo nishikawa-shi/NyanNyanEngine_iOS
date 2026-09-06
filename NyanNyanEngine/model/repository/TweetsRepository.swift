@@ -28,7 +28,9 @@ class TweetsRepository: BaseTweetsRepository {
     private let disposeBag = DisposeBag()
     private let apiClient: BaseApiClient
     private let userDefaultsConnector: BaseUserDefaultsConnector
-    
+    private let xAuthClient: BaseXAuthClient
+    private let authRepository: BaseAuthRepository
+
     private var currentMinId = Int.max
     
     let nyanNyanStatuses: Observable<[NyanNyan]?>
@@ -40,11 +42,16 @@ class TweetsRepository: BaseTweetsRepository {
     var nekogoToggleExecutedAt: AnyObserver<IndexPath>? = nil
     var postExecutedAs: AnyObserver<String?>? = nil
     
-    private init(apiClient: BaseApiClient = ApiClient.shared,
-                 userDefaultsConnector: BaseUserDefaultsConnector = UserDefaultsConnector.shared) {
+    //private init にしていないのは、テストが XAuthClient と AuthRepository を差し替えるため
+    init(apiClient: BaseApiClient = ApiClient.shared,
+         userDefaultsConnector: BaseUserDefaultsConnector = UserDefaultsConnector.shared,
+         xAuthClient: BaseXAuthClient = XAuthClient.shared,
+         authRepository: BaseAuthRepository = AuthRepository.shared) {
         self.apiClient = apiClient
         self.userDefaultsConnector = userDefaultsConnector
-        
+        self.xAuthClient = xAuthClient
+        self.authRepository = authRepository
+
         let _statuses = BehaviorRelay<[NyanNyan]?>(value: nil)
         self.nyanNyanStatuses = _statuses.asObservable()
         
@@ -127,14 +134,12 @@ class TweetsRepository: BaseTweetsRepository {
                 .map { $0.getTweetText() }
                 .reduce(nekosanTextBody) { [$0, $1].joined(separator: " ") }
             self.postTweets(nekosanText: decoratedBody)
-                .map {
-                    let postedStatus = $0 ?? Status(id: 2828,
-                                                    text: "にゃにゃーーーおん",
-                                                    createdAt: "99日前",
-                                                    user: Status.TimelineUser(name: "エラー猫さん",
-                                                                              screenName: "neko_error",
-                                                                              profileImageUrlHttps: nil))
-                    AuthRepository.shared.updateNyanNyanAccount(postedStatus: postedStatus)
+                .map { postedText in
+                    //届かなかった猫語にねこさんポイントを払わないのは、投稿していない
+                    //回数ぶん階級が上がると、階級が投稿の記録として読めなくなるため
+                    if let postedText = postedText {
+                        self.authRepository.updateNyanNyanAccount(postedText: postedText)
+                    }
                     //Observerの型をラムダ式ではなくStringにしたかったのでここでLoadingStatusRepositoryへの依存が生まれてしまっている。
                     //モジュール性が若干下がるので、構成を見直した方が良いかもしれない・・・
                     LoadingStatusRepository.shared.loadingStatusChangedTo.onNext(false)
@@ -165,22 +170,15 @@ class TweetsRepository: BaseTweetsRepository {
             .map { [unowned self] in self.toNyanNyan(rawTweets: $0) }
     }
     
-    private func postTweets(nekosanText: String) -> Observable<Status?> {
-        guard let apiKey = PlistConnector.shared.getApiKey(),
-            let apiSecret = PlistConnector.shared.getApiSecret(),
-            let accessToken = UserDefaultsConnector.shared.getString(withKey: "oauth_token"),
-            let accessTokenSecret = UserDefaultsConnector.shared.getString(withKey: "oauth_token_secret"),
-            let urlRequest = ApiRequestFactory(apiKey: apiKey,
-                                               apiSecret: apiSecret,
-                                               oauthNonce: "0000",
-                                               accessTokenSecret: accessTokenSecret,
-                                               accessToken: accessToken)
-                .createPostTweetRequest(tweetBody: nekosanText) else {
-                    return Observable<Status?>.just(nil)
+    //投稿できたかをHTTPの成否だけで決め、採点する本文を別に決めているのは、
+    //応答を読めなかったときに、投稿が成立した事実まで巻き添えで失わないため
+    private func postTweets(nekosanText: String) -> Observable<String?> {
+        guard let urlRequest = V2ApiRequestFactory.shared.createPostTweetRequest(tweetBody: nekosanText) else {
+            return Observable<String?>.just(nil)
         }
-        return self.apiClient
-            .executeHttpRequest(urlRequest: urlRequest)
-            .map { [unowned self] in self.toStatus(data: $0)}
+        return self.xAuthClient
+            .executeAuthorizedRequest(urlRequest: urlRequest)
+            .map { $0.toPostedText(fallingBackTo: nekosanText) }
     }
     
     private func updateMin(statuses: [NyanNyan]?) {
@@ -198,13 +196,6 @@ class TweetsRepository: BaseTweetsRepository {
         return try? decoder.decode([Status].self, from: d)
     }
     
-    private func toStatus(data: Data?) -> Status? {
-        let decoder = JSONDecoder()
-        decoder.keyDecodingStrategy = .convertFromSnakeCase
-        guard let d = data else { return nil }
-        return try? decoder.decode(Status.self, from: d)
-    }
-    
     private func toNyanNyan(rawTweets: [Status]?) -> [NyanNyan] {
         return rawTweets?.map {
             NyanNyan(id: $0.id,
@@ -216,5 +207,21 @@ class TweetsRepository: BaseTweetsRepository {
                      ningengo: $0.text,
                      isNekogo: true)
             } ?? []
+    }
+}
+
+//この変換の主語は応答であって呼び出し元ではないため、Resultを受け手にしている。
+//privateにしているのは、投稿の応答の読み方をこのファイルの外へ広げないため
+private extension Result where Success == Data, Failure == ApiError {
+    //読めなかったときに諦めず送った本文へ落ちるのは、投稿の成否をHTTPが既に
+    //決めており、本文を読めないことを失敗として扱うと、Xに猫語が残ったまま
+    //ポイントだけ消えるため。v2は値を持たない属性を応答へ書かない規約のため、
+    //応答の形は将来も動きうる。属性ごとにオプショナルを増やさないのは、
+    //どれが欠けてもデコードは同じように失敗し、ここ1か所で受け止めきれるため
+    func toPostedText(fallingBackTo sentText: String) -> String? {
+        guard case .success(let data) = self else { return nil }
+        let decoder = JSONDecoder()
+        decoder.keyDecodingStrategy = .convertFromSnakeCase
+        return (try? decoder.decode(V2TweetResponse.self, from: data))?.data.text ?? sentText
     }
 }
