@@ -126,6 +126,21 @@ class TweetsRepositoryTests: XCTestCase {
         XCTAssertEqual(received, "にゃーん🐾")
     }
 
+    //失敗をnilで伝える。本文を流すと、画面は獲得していないポイント額を
+    //「獲得した」と告げ、表示とFirestoreの値が食い違う
+    func testNotifiesNothingWhenPostFails() {
+        xAuthClient.requestResult = .failure(.forbidden)
+        let repository = createRepository()
+        var received: String? = "初期値のまま流れてこないことを見分けるための値"
+
+        repository.postedStatus
+            .subscribe(onNext: { received = $0 })
+            .disposed(by: disposeBag)
+        repository.postExecutedAs?.onNext("にゃーん🐾")
+
+        XCTAssertNil(received)
+    }
+
     //ApiClientとUserDefaultsを実物のまま渡しているのは、ここで確かめる投稿の
     //経路がXAuthClient側を通り、どちらにも触れないため
     private func createRepository() -> TweetsRepository {

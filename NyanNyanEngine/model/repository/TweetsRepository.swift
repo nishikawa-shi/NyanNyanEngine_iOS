@@ -143,7 +143,9 @@ class TweetsRepository: BaseTweetsRepository {
                     //Observerの型をラムダ式ではなくStringにしたかったのでここでLoadingStatusRepositoryへの依存が生まれてしまっている。
                     //モジュール性が若干下がるので、構成を見直した方が良いかもしれない・・・
                     LoadingStatusRepository.shared.loadingStatusChangedTo.onNext(false)
-                    return nekosanTextBody
+                    //失敗をnilで伝えるのは、加算していないポイント額を「獲得した」と
+                    //告げるトーストが出て、画面とFirestoreの値が食い違うため
+                    return postedText == nil ? nil : nekosanTextBody
             }
             .bind(to: _postedStatus)
             .disposed(by: self.disposeBag)
