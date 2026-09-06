@@ -19,6 +19,10 @@ class XAuthClientTests: XCTestCase {
     private var disposeBag = DisposeBag()
     private let authStateKey = "x_auth_state"
     private let clientId = "nyannyan-client-id"
+    //待ち時間を短く切り詰めないのは、ここで測りたいのが応答の速さではなく
+    //「応答が返ってくること」だけのため。締め切りを詰めても検証は強くならず、
+    //実行環境が混み合ったときに、確かめたい内容と無関係な失敗が増える
+    private let responseWaitLimit: TimeInterval = 30
 
     override func setUp() {
         super.setUp()
@@ -75,7 +79,7 @@ class XAuthClientTests: XCTestCase {
         service.executeAuthorizedRequest(urlRequest: URLRequest(url: URL(string: "https://api.x.com/2/users/me")!))
             .subscribe(onNext: { _ in expectation.fulfill() })
             .disposed(by: disposeBag)
-        waitForExpectations(timeout: 5)
+        waitForExpectations(timeout: responseWaitLimit)
 
         XCTAssertEqual(apiClient.executedRequests.first?.value(forHTTPHeaderField: "Authorization"),
                        "Bearer あくせすとーくん")
@@ -94,7 +98,7 @@ class XAuthClientTests: XCTestCase {
                 expectation.fulfill()
             })
             .disposed(by: disposeBag)
-        waitForExpectations(timeout: 5)
+        waitForExpectations(timeout: responseWaitLimit)
 
         XCTAssertEqual(received, .failure(.unauthorized))
         XCTAssertTrue(apiClient.executedRequests.isEmpty)
@@ -177,7 +181,7 @@ class XAuthClientTests: XCTestCase {
             authorized = $0
             expectation.fulfill()
         }
-        waitForExpectations(timeout: 5)
+        waitForExpectations(timeout: responseWaitLimit)
 
         XCTAssertFalse(authorized)
     }
@@ -206,7 +210,7 @@ class XAuthClientTests: XCTestCase {
                 expectation.fulfill()
             })
             .disposed(by: disposeBag)
-        waitForExpectations(timeout: 5)
+        waitForExpectations(timeout: responseWaitLimit)
 
         return revoked
     }
