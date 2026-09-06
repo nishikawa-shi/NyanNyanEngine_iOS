@@ -1,0 +1,52 @@
+# npm依存の検証
+#
+# npm は Firebase CLI のバージョンを固定するためだけに使っており、iOSのビルドとは
+# 独立している。ci.yml は npmファイルだけの変更では走らないため、そのままでは
+# Dependabot が起こす更新が一度も検証されずにmasterへ入る。ここで最低限の健全性を見る。
+#
+# ubuntu を使うのは、macOSランナーの5〜10倍の課金レートを避けるため。publicリポジトリ
+# では無料枠の制限が無いとはいえ、iOSのビルドを必要としない検証にmacOSを使う理由がない。
+#
+# 秘密情報を一切使わないため、Secretsが渡らないDependabotのPullRequestでも成立する。
+
+name: npm
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - 'package.json'
+      - 'package-lock.json'
+      - '.github/workflows/npm.yml'
+  pull_request:
+    paths:
+      - 'package.json'
+      - 'package-lock.json'
+      - '.github/workflows/npm.yml'
+  workflow_dispatch:
+
+concurrency:
+  group: npm-${{ github.ref }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/master' }}
+
+jobs:
+  verify:
+    name: 依存検証ステージ
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 'lts/*'
+
+      # npm install ではなく npm ci を使うのは、package-lock.json と package.json が
+      # 食い違っているときに黙って解決せず失敗させるため。CIの配布ステージも npm ci を
+      # 使っており、そこで初めて壊れているのが分かる事態を避ける
+      - name: Install dependencies
+        run: npm ci
+
+      # 入っただけでは起動するとは限らないため、実際に呼び出して応答を確かめる
+      - name: Verify Firebase CLI runs
+        run: npx firebase --version
