@@ -90,7 +90,12 @@ class TweetsRepository: BaseTweetsRepository {
 
         _refreshRequested
             .flatMap { [weak self] notifyFinished -> Observable<[NyanNyan]?> in
-                guard let self = self else { return Observable<[NyanNyan]?>.empty() }
+                //取得を始められないときにも知らせるのは、知らせないままだと
+                //画面が終わりを待ち続け、インジケータが回ったままになるため
+                guard let self = self else {
+                    notifyFinished()
+                    return Observable<[NyanNyan]?>.empty()
+                }
                 return self.getHomeTimeLine()
                     .do(onNext: { _ in notifyFinished() })
             }

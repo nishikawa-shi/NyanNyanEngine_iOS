@@ -15,6 +15,7 @@ class TweetsRepositoryTests: XCTestCase {
 
     private var xAuthClient: StubXAuthClient!
     private var authRepository: StubAuthRepository!
+    private var repository: TweetsRepository!
     private var disposeBag = DisposeBag()
 
     //2026-08-30 に実際の POST /2/tweets から受け取った応答
@@ -35,12 +36,19 @@ class TweetsRepositoryTests: XCTestCase {
         xAuthClient = StubXAuthClient()
         authRepository = StubAuthRepository()
         disposeBag = DisposeBag()
+        //テストケースのプロパティで持つのは、ARCが「最後の使用」より先に
+        //解放しうるため。ローカル変数へ束ねても生存はスコープ末尾まで保証されず、
+        //解放されるとリポジトリのDisposeBagごと購読が外れて要求がどこへも流れない
+        //ApiClientとUserDefaultsを実物のまま渡しているのは、ここで確かめる投稿の
+        //経路がXAuthClient側を通り、どちらにも触れないため
+        repository = TweetsRepository(apiClient: ApiClient.shared,
+                                      userDefaultsConnector: UserDefaultsConnector.shared,
+                                      xAuthClient: xAuthClient,
+                                      authRepository: authRepository)
     }
 
     func testPostsToV2TweetsEndpoint() {
         xAuthClient.requestResult = .success(Data(postedTweetJson.utf8))
-
-        let repository = createRepository()
 
         repository.postExecutedAs?.onNext("にゃーん🐾")
 
@@ -54,8 +62,6 @@ class TweetsRepositoryTests: XCTestCase {
     //一致ではなく包含で見るのは、ハッシュタグ設定が本文の末尾へ足されるため
     func testCarriesNekogoInJsonBody() {
         xAuthClient.requestResult = .success(Data(postedTweetJson.utf8))
-
-        let repository = createRepository()
 
         repository.postExecutedAs?.onNext("にゃーん🐾")
 
@@ -71,8 +77,6 @@ class TweetsRepositoryTests: XCTestCase {
     func testAwardsNekosanPointWithTextXKept() {
         xAuthClient.requestResult = .success(Data(postedTweetJson.utf8))
 
-        let repository = createRepository()
-
         repository.postExecutedAs?.onNext("にゃーん🐾")
 
         XCTAssertEqual(authRepository.postedTexts, ["にゃーん🐾"])
@@ -82,8 +86,6 @@ class TweetsRepositoryTests: XCTestCase {
     //階級が投稿の記録として読めなくなる
     func testAwardsNoNekosanPointWhenPostFails() {
         xAuthClient.requestResult = .failure(.unauthorized)
-
-        let repository = createRepository()
 
         repository.postExecutedAs?.onNext("にゃーん🐾")
 
@@ -104,8 +106,6 @@ class TweetsRepositoryTests: XCTestCase {
             """
         xAuthClient.requestResult = .success(Data(textlessJson.utf8))
 
-        let repository = createRepository()
-
         repository.postExecutedAs?.onNext("にゃーん🐾")
 
         XCTAssertTrue(authRepository.postedTexts.first?.contains("にゃーん🐾") ?? false)
@@ -114,8 +114,6 @@ class TweetsRepositoryTests: XCTestCase {
     //応答をまったく読めなかったときも、Xが受け取った事実はHTTPの成否が示している
     func testAwardsNekosanPointFromSentNekogoWhenResponseIsUnreadable() {
         xAuthClient.requestResult = .success(Data("{}".utf8))
-
-        let repository = createRepository()
 
         repository.postExecutedAs?.onNext("にゃーん🐾")
 
@@ -127,7 +125,6 @@ class TweetsRepositoryTests: XCTestCase {
     //ハッシュタグ設定が足されており、打った内容と一致しない
     func testNotifiesNekogoTheUserTyped() {
         xAuthClient.requestResult = .success(Data(postedTweetJson.utf8))
-        let repository = createRepository()
         var received: String? = nil
 
         repository.postedStatus
@@ -142,7 +139,6 @@ class TweetsRepositoryTests: XCTestCase {
     //「獲得した」と告げ、表示とFirestoreの値が食い違う
     func testNotifiesNothingWhenPostFails() {
         xAuthClient.requestResult = .failure(.forbidden)
-        let repository = createRepository()
         var received: String? = "初期値のまま流れてこないことを見分けるための値"
 
         repository.postedStatus
@@ -151,18 +147,6 @@ class TweetsRepositoryTests: XCTestCase {
         repository.postExecutedAs?.onNext("にゃーん🐾")
 
         XCTAssertNil(received)
-    }
-
-    //戻り値を変数へ束ねてから使うのは、リポジトリが自分の購読から
-    //強参照されなくなったため。式の途中で生成すると、onNextが届く前に
-    //解放されて、要求がどこへも流れない
-    //ApiClientとUserDefaultsを実物のまま渡しているのは、ここで確かめる投稿の
-    //経路がXAuthClient側を通り、どちらにも触れないため
-    private func createRepository() -> TweetsRepository {
-        return TweetsRepository(apiClient: ApiClient.shared,
-                                userDefaultsConnector: UserDefaultsConnector.shared,
-                                xAuthClient: xAuthClient,
-                                authRepository: authRepository)
     }
 }
 
