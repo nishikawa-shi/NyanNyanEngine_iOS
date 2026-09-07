@@ -40,7 +40,9 @@ class TweetsRepositoryTests: XCTestCase {
     func testPostsToV2TweetsEndpoint() {
         xAuthClient.requestResult = .success(Data(postedTweetJson.utf8))
 
-        createRepository().postExecutedAs?.onNext("にゃーん🐾")
+        let repository = createRepository()
+
+        repository.postExecutedAs?.onNext("にゃーん🐾")
 
         let request = xAuthClient.executedRequests.first
         XCTAssertEqual(request?.url?.absoluteString, "https://api.x.com/2/tweets")
@@ -53,7 +55,9 @@ class TweetsRepositoryTests: XCTestCase {
     func testCarriesNekogoInJsonBody() {
         xAuthClient.requestResult = .success(Data(postedTweetJson.utf8))
 
-        createRepository().postExecutedAs?.onNext("にゃーん🐾")
+        let repository = createRepository()
+
+        repository.postExecutedAs?.onNext("にゃーん🐾")
 
         guard let body = xAuthClient.executedRequests.first?.httpBody,
             let decoded = try? JSONDecoder().decode([String: String].self, from: body) else {
@@ -67,7 +71,9 @@ class TweetsRepositoryTests: XCTestCase {
     func testAwardsNekosanPointWithTextXKept() {
         xAuthClient.requestResult = .success(Data(postedTweetJson.utf8))
 
-        createRepository().postExecutedAs?.onNext("にゃーん🐾")
+        let repository = createRepository()
+
+        repository.postExecutedAs?.onNext("にゃーん🐾")
 
         XCTAssertEqual(authRepository.postedTexts, ["にゃーん🐾"])
     }
@@ -77,7 +83,9 @@ class TweetsRepositoryTests: XCTestCase {
     func testAwardsNoNekosanPointWhenPostFails() {
         xAuthClient.requestResult = .failure(.unauthorized)
 
-        createRepository().postExecutedAs?.onNext("にゃーん🐾")
+        let repository = createRepository()
+
+        repository.postExecutedAs?.onNext("にゃーん🐾")
 
         XCTAssertTrue(authRepository.postedTexts.isEmpty)
     }
@@ -96,7 +104,9 @@ class TweetsRepositoryTests: XCTestCase {
             """
         xAuthClient.requestResult = .success(Data(textlessJson.utf8))
 
-        createRepository().postExecutedAs?.onNext("にゃーん🐾")
+        let repository = createRepository()
+
+        repository.postExecutedAs?.onNext("にゃーん🐾")
 
         XCTAssertTrue(authRepository.postedTexts.first?.contains("にゃーん🐾") ?? false)
     }
@@ -105,7 +115,9 @@ class TweetsRepositoryTests: XCTestCase {
     func testAwardsNekosanPointFromSentNekogoWhenResponseIsUnreadable() {
         xAuthClient.requestResult = .success(Data("{}".utf8))
 
-        createRepository().postExecutedAs?.onNext("にゃーん🐾")
+        let repository = createRepository()
+
+        repository.postExecutedAs?.onNext("にゃーん🐾")
 
         XCTAssertEqual(authRepository.postedTexts.count, 1)
         XCTAssertTrue(authRepository.postedTexts.first?.contains("にゃーん🐾") ?? false)
@@ -141,6 +153,9 @@ class TweetsRepositoryTests: XCTestCase {
         XCTAssertNil(received)
     }
 
+    //戻り値を変数へ束ねてから使うのは、リポジトリが自分の購読から
+    //強参照されなくなったため。式の途中で生成すると、onNextが届く前に
+    //解放されて、要求がどこへも流れない
     //ApiClientとUserDefaultsを実物のまま渡しているのは、ここで確かめる投稿の
     //経路がXAuthClient側を通り、どちらにも触れないため
     private func createRepository() -> TweetsRepository {

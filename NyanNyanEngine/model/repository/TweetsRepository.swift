@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import UIKit
 import RxSwift
 import RxRelay
 
@@ -16,32 +15,28 @@ protocol BaseTweetsRepository: AnyObject {
     var postedStatus: Observable<String?> { get }
     var listScrollUpExecuted: Observable<Bool>{ get }
     var buttonRefreshExecutedAt: AnyObserver<(() -> Void)>? { get }
-    var pullToRefreshExecutedAt: AnyObserver<UIRefreshControl?>? { get }
-    var infiniteScrollExecutedAt: AnyObserver<(() -> Void)>? { get }
+    var pullToRefreshExecutedAt: AnyObserver<(() -> Void)>? { get }
     var nekogoToggleExecutedAt: AnyObserver<IndexPath>? { get }
     var postExecutedAs: AnyObserver<String?>? { get }
 }
 
 class TweetsRepository: BaseTweetsRepository {
     static let shared = TweetsRepository()
-    
+
     private let disposeBag = DisposeBag()
     private let apiClient: BaseApiClient
     private let userDefaultsConnector: BaseUserDefaultsConnector
     private let xAuthClient: BaseXAuthClient
     private let authRepository: BaseAuthRepository
 
-    private var currentMinId = Int.max
-    
     let nyanNyanStatuses: Observable<[NyanNyan]?>
     let postedStatus: Observable<String?>
     let listScrollUpExecuted: Observable<Bool>
     var buttonRefreshExecutedAt: AnyObserver<(() -> Void)>? = nil
-    var pullToRefreshExecutedAt: AnyObserver<UIRefreshControl?>? = nil
-    var infiniteScrollExecutedAt: AnyObserver<(() -> Void)>? = nil
+    var pullToRefreshExecutedAt: AnyObserver<(() -> Void)>? = nil
     var nekogoToggleExecutedAt: AnyObserver<IndexPath>? = nil
     var postExecutedAs: AnyObserver<String?>? = nil
-    
+
     //private init にしていないのは、テストが XAuthClient と AuthRepository を差し替えるため
     init(apiClient: BaseApiClient = ApiClient.shared,
          userDefaultsConnector: BaseUserDefaultsConnector = UserDefaultsConnector.shared,
@@ -54,106 +49,88 @@ class TweetsRepository: BaseTweetsRepository {
 
         let _statuses = BehaviorRelay<[NyanNyan]?>(value: nil)
         self.nyanNyanStatuses = _statuses.asObservable()
-        
+
         let _postedStatus = PublishRelay<String?>()
         self.postedStatus = _postedStatus.asObservable()
-        
+
         let _listScrollUpExecuted = PublishRelay<Bool>()
         self.listScrollUpExecuted = _listScrollUpExecuted.asObservable()
-        
-        self.buttonRefreshExecutedAt = AnyObserver<(() -> Void)> { [unowned self] stopActivityIndicator in
+
+        //要求をいったんRelayへ預けてから購読を1本だけ張るのは、要求のたびに
+        //購読を作ると、このクラスがシングルトンでDisposeBagが解放されないため、
+        //完了した購読が起動中ずっと積み上がるため
+        let _refreshRequested = PublishRelay<(() -> Void)>()
+        let _postRequested = PublishRelay<String>()
+
+        self.buttonRefreshExecutedAt = AnyObserver<(() -> Void)> { notifyFinished in
+            guard let notifyFinished = notifyFinished.element else { return }
             _listScrollUpExecuted.accept(true)
-            self.getHomeTimeLine()
-                .map { [unowned self] in
-                    stopActivityIndicator.element?()
-                    
-                    guard let statusValueResponse = $0 else {
-                        return _statuses.value ?? []
-                    }
-                    self.updateMin(statuses: statusValueResponse)
-                    
-                    if(statusValueResponse.isEmpty) {
-                        return _statuses.value ?? []
-                    }
-                    
-                    return statusValueResponse
-            }
-            .bind(to: _statuses)
-            .disposed(by: self.disposeBag)
+            _refreshRequested.accept(notifyFinished)
         }
-        
-        self.pullToRefreshExecutedAt = AnyObserver<UIRefreshControl?> { [unowned self] uiRefreshControl in
-            self.getHomeTimeLine()
-                .map { [unowned self] in
-                    sleep(1)
-                    uiRefreshControl.element??.endRefreshing()
-                    
-                    guard let statusValueResponse = $0 else {
-                        return _statuses.value ?? []
-                    }
-                    
-                    if(statusValueResponse.isEmpty) {
-                        return _statuses.value ?? []
-                    }
-                    self.updateMin(statuses: statusValueResponse)
-                    
-                    return statusValueResponse
-            }
-            .bind(to: _statuses)
-            .disposed(by: self.disposeBag)
+
+        //UIRefreshControlではなく「終わったことを知らせる手段」を受け取るのは、
+        //止めるべき部品を知っているのが画面の側で、model層が画面部品の型を
+        //知る理由がないため
+        self.pullToRefreshExecutedAt = AnyObserver<(() -> Void)> { notifyFinished in
+            guard let notifyFinished = notifyFinished.element else { return }
+            _refreshRequested.accept(notifyFinished)
         }
-        
-        self.infiniteScrollExecutedAt = AnyObserver<(() -> Void)> { stopActivityIndicator in
-            let currentStatuses = _statuses.value ?? []
-            self.getHomeTimeLine(maxId: String(self.currentMinId))
-                .map { [unowned self] in
-                    stopActivityIndicator.element?()
-                    self.updateMin(statuses: $0)
-                    guard var additive = $0 else { return $0 }
-                    if(!additive.isEmpty) {
-                        additive.removeFirst()
-                    }
-                    return additive
-            }
-            .map { currentStatuses + ($0 ?? []) }
-            .bind(to: _statuses)
-            .disposed(by: self.disposeBag)
-        }
-        
+
         self.nekogoToggleExecutedAt = AnyObserver<IndexPath> {
             guard let row = $0.element?.row else { return }
             var statuses = _statuses.value
             statuses?[row].isNekogo.toggle()
             _statuses.accept(statuses)
         }
-        
+
         self.postExecutedAs = AnyObserver<String?> {
             guard let nekosanTextBody = $0.element as? String else { return }
-            let decoratedBody = LocalSettingsRepository.HashTagTypes.allCases
-                .filter{LocalSettingsRepository.shared.getHashTagSetting(type: $0).isEnabled}
-                .map { $0.getTweetText() }
-                .reduce(nekosanTextBody) { [$0, $1].joined(separator: " ") }
-            self.postTweets(nekosanText: decoratedBody)
-                .map { postedText in
-                    //届かなかった猫語にねこさんポイントを払わないのは、投稿していない
-                    //回数ぶん階級が上がると、階級が投稿の記録として読めなくなるため
-                    if let postedText = postedText {
-                        self.authRepository.updateNyanNyanAccount(postedText: postedText)
-                    }
-                    //Observerの型をラムダ式ではなくStringにしたかったのでここでLoadingStatusRepositoryへの依存が生まれてしまっている。
-                    //モジュール性が若干下がるので、構成を見直した方が良いかもしれない・・・
-                    LoadingStatusRepository.shared.loadingStatusChangedTo.onNext(false)
-                    //失敗をnilで伝えるのは、加算していないポイント額を「獲得した」と
-                    //告げるトーストが出て、画面とFirestoreの値が食い違うため
-                    return postedText == nil ? nil : nekosanTextBody
+            _postRequested.accept(nekosanTextBody)
+        }
+
+        _refreshRequested
+            .flatMap { [weak self] notifyFinished -> Observable<[NyanNyan]?> in
+                guard let self = self else { return Observable<[NyanNyan]?>.empty() }
+                return self.getHomeTimeLine()
+                    .do(onNext: { _ in notifyFinished() })
+            }
+            //読めなかったときに手元の一覧を残すのは、取得できなかったことを
+            //空の画面として見せると、ねこさんが居なくなったように見えるため
+            .map { fetchedStatuses -> [NyanNyan] in
+                guard let fetchedStatuses = fetchedStatuses,
+                    !fetchedStatuses.isEmpty else { return _statuses.value ?? [] }
+                return fetchedStatuses
+            }
+            .bind(to: _statuses)
+            .disposed(by: self.disposeBag)
+
+        _postRequested
+            .flatMap { [weak self] nekosanTextBody -> Observable<String?> in
+                guard let self = self else { return Observable<String?>.empty() }
+                let decoratedBody = LocalSettingsRepository.HashTagTypes.allCases
+                    .filter{LocalSettingsRepository.shared.getHashTagSetting(type: $0).isEnabled}
+                    .map { $0.getTweetText() }
+                    .reduce(nekosanTextBody) { [$0, $1].joined(separator: " ") }
+                return self.postTweets(nekosanText: decoratedBody)
+                    .map { postedText in
+                        //届かなかった猫語にねこさんポイントを払わないのは、投稿していない
+                        //回数ぶん階級が上がると、階級が投稿の記録として読めなくなるため
+                        if let postedText = postedText {
+                            self.authRepository.updateNyanNyanAccount(postedText: postedText)
+                        }
+                        //Observerの型をラムダ式ではなくStringにしたかったのでここでLoadingStatusRepositoryへの依存が生まれてしまっている。
+                        //モジュール性が若干下がるので、構成を見直した方が良いかもしれない・・・
+                        LoadingStatusRepository.shared.loadingStatusChangedTo.onNext(false)
+                        //失敗をnilで伝えるのは、加算していないポイント額を「獲得した」と
+                        //告げるトーストが出て、画面とFirestoreの値が食い違うため
+                        return postedText == nil ? nil : nekosanTextBody
+                }
             }
             .bind(to: _postedStatus)
             .disposed(by: self.disposeBag)
-        }
     }
-    
-    private func getHomeTimeLine(maxId: String? = nil,
-                                 uiRefreshControl: UIRefreshControl? = nil) -> Observable<[NyanNyan]?> {
+
+    private func getHomeTimeLine() -> Observable<[NyanNyan]?> {
         guard let apiKey = PlistConnector.shared.getApiKey(),
             let apiSecret = PlistConnector.shared.getApiSecret(),
             let accessToken = UserDefaultsConnector.shared.getString(withKey: "oauth_token"),
@@ -162,16 +139,14 @@ class TweetsRepository: BaseTweetsRepository {
                                                apiSecret: apiSecret,
                                                oauthNonce: "0000",
                                                accessTokenSecret: accessTokenSecret,
-                                               accessToken: accessToken).createHomeTimelineRequest(maxId: maxId) else {
-                                                uiRefreshControl?.endRefreshing()
+                                               accessToken: accessToken).createHomeTimelineRequest() else {
                                                 return Observable<[NyanNyan]?>.just(DefaultNekosan().nyanNyanStatuses)}
-        
+
         return self.apiClient
             .executeHttpRequest(urlRequest: urlRequest)
-            .map { [unowned self] in self.toStatuses(data: $0) }
-            .map { [unowned self] in self.toNyanNyan(rawTweets: $0) }
+            .map { $0?.toStatuses()?.toNyanNyan() }
     }
-    
+
     //投稿できたかをHTTPの成否だけで決め、採点する本文を別に決めているのは、
     //応答を読めなかったときに、投稿が成立した事実まで巻き添えで失わないため
     private func postTweets(nekosanText: String) -> Observable<String?> {
@@ -182,24 +157,21 @@ class TweetsRepository: BaseTweetsRepository {
             .executeAuthorizedRequest(urlRequest: urlRequest)
             .map { $0.toPostedText(fallingBackTo: nekosanText) }
     }
-    
-    private func updateMin(statuses: [NyanNyan]?) {
-        guard let statuses = statuses,
-            let minId = statuses.map({$0.id}).min() else { return }
-        if (minId < self.currentMinId) || (self.currentMinId == DefaultNekosan().nyanNyanStatuses[0].id) {
-            self.currentMinId = minId
-        }
-    }
-    
-    private func toStatuses(data: Data?) -> [Status]? {
+}
+
+//変換の主語を応答と一覧の側に置いているのは、リポジトリのメソッドにすると
+//リポジトリそのものを猫語へ変換しているように読めるため
+private extension Data {
+    func toStatuses() -> [Status]? {
         let decoder = JSONDecoder()
         decoder.keyDecodingStrategy = .convertFromSnakeCase
-        guard let d = data else { return nil }
-        return try? decoder.decode([Status].self, from: d)
+        return try? decoder.decode([Status].self, from: self)
     }
-    
-    private func toNyanNyan(rawTweets: [Status]?) -> [NyanNyan] {
-        return rawTweets?.map {
+}
+
+private extension Array where Element == Status {
+    func toNyanNyan() -> [NyanNyan] {
+        return self.map {
             NyanNyan(id: $0.id,
                      profileUrl: $0.user.getFineImageUrl(),
                      userName: $0.user.name,
@@ -208,7 +180,7 @@ class TweetsRepository: BaseTweetsRepository {
                      nekogo: Nekosan().createNekogo(sourceStr: $0.text),
                      ningengo: $0.text,
                      isNekogo: true)
-            } ?? []
+        }
     }
 }
 

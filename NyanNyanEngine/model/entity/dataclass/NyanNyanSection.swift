@@ -11,19 +11,20 @@ import RxDataSources
 
 struct NyanNyanSection {
     var items: [Item]
-    var idSuffix: String
 }
 extension NyanNyanSection: SectionModelType {
     typealias Item = NyanNyan
-    
+
     init(original: NyanNyanSection, items: [NyanNyan]) {
         self = original
         self.items = items
     }
 }
 extension NyanNyanSection: AnimatableSectionModelType {
+    //値を持たせていないのは、一覧のセクションが1つしかなく、
+    //区別する相手が居ないため
     var identity: String {
-        return "NyanNyan" + idSuffix
+        return "NyanNyan"
     }
     typealias Identity = String
 }
