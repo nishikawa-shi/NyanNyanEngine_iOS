@@ -42,28 +42,28 @@ class AccountViewController: UIViewController {
         configureSettingsList()
         
         output.currentAccount
-            .subscribe { [unowned self] in
-                self.account = $0.element
-                self.settingsList.reloadData()
+            .subscribe { [weak self] in
+                self?.account = $0.element
+                self?.settingsList.reloadData()
         }
         .disposed(by: disposeBag)
         
         output.currentNyanNyanAccount
-            .subscribe { [unowned self] in
-                self.nyanNyanUser = $0.element
-                self.settingsList.reloadData()
+            .subscribe { [weak self] in
+                self?.nyanNyanUser = $0.element
+                self?.settingsList.reloadData()
         }.disposed(by: disposeBag)
         
         output.isLoading
-            .subscribe { [unowned self] in
-                ($0.element ?? false) ? self.activityIndicator.startAnimating() : self.activityIndicator.stopAnimating()
+            .subscribe { [weak self] in
+                ($0.element ?? false) ? self?.activityIndicator.startAnimating() : self?.activityIndicator.stopAnimating()
         }
         .disposed(by: disposeBag)
         
         output.logoutSucceeded?
             .map { return $0 ? R.string.stringValues.logout_pop_succeeded() : R.string.stringValues.logout_pop_failed() }
-            .subscribe { [unowned self] in
-                guard let message = $0.element else { return }
+            .subscribe { [weak self] in
+                guard let self = self, let message = $0.element else { return }
                 self.popNoticeToast(message: message)
         }
         .disposed(by: disposeBag)
@@ -73,8 +73,8 @@ class AccountViewController: UIViewController {
         let alert = UIAlertController(title: nil,
                                       message: nil,
                                       preferredStyle: .actionSheet)
-        let logout = UIAlertAction(title: R.string.stringValues.logout_sheet_exec(), style: .destructive) { [unowned self] _ in
-            self.input.logoutExecutedAt?.onNext("nya-on")
+        let logout = UIAlertAction(title: R.string.stringValues.logout_sheet_exec(), style: .destructive) { [weak self] _ in
+            self?.input.logoutExecutedAt?.onNext("nya-on")
         }
         let cancel = UIAlertAction(title: R.string.stringValues.logout_sheet_cancel(), style: .cancel)
         
@@ -90,19 +90,19 @@ class AccountViewController: UIViewController {
         
         self.noticeToast.alpha = 0.0
         self.noticeToast.isHidden = false
-        UIView.animate(withDuration: 0.5, animations: { [unowned self] in
-            self.noticeToast.alpha = 1.0
+        UIView.animate(withDuration: 0.5, animations: { [weak self] in
+            self?.noticeToast.alpha = 1.0
         })
         
-        DispatchQueue.main.asyncAfter(deadline: .now()+1.0) {
+        DispatchQueue.main.asyncAfter(deadline: .now()+1.0) { [weak self] in
             UIView.animate(withDuration: 0.5,
-                           animations: { [unowned self] in
-                            self.noticeToast.alpha = 0.0
+                           animations: { [weak self] in
+                            self?.noticeToast.alpha = 0.0
                 },
-                           completion: { [unowned self] _ in
-                            self.noticeToast.isHidden = true
-                            self.noticeToast.alpha = 1.0
-                            self.noticeToast.text = "にゃーおんにゃーおんにゃーおん\nにゃんにゃにゃ！"
+                           completion: { [weak self] _ in
+                            self?.noticeToast.isHidden = true
+                            self?.noticeToast.alpha = 1.0
+                            self?.noticeToast.text = "にゃーおんにゃーおんにゃーおん\nにゃんにゃにゃ！"
             })
         }
     }

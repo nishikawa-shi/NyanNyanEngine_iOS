@@ -28,8 +28,8 @@ final class AppDelegateModel: AppDelegateModelInput, AppDelegateModelOutput {
     init(authRepository: BaseAuthRepository = AuthRepository.shared) {
         self.authRepository = authRepository
         
-        self.authExecutedAt = AnyObserver<String> { [unowned self] _ in
-            self.authRepository.authAppUser()
+        self.authExecutedAt = AnyObserver<String> { [weak self] _ in
+            self?.authRepository.authAppUser()
         }
     }
 

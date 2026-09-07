@@ -15,6 +15,7 @@ class TweetsRepositoryTests: XCTestCase {
 
     private var xAuthClient: StubXAuthClient!
     private var authRepository: StubAuthRepository!
+    private var repository: TweetsRepository!
     private var disposeBag = DisposeBag()
 
     //2026-08-30 に実際の POST /2/tweets から受け取った応答
@@ -35,12 +36,21 @@ class TweetsRepositoryTests: XCTestCase {
         xAuthClient = StubXAuthClient()
         authRepository = StubAuthRepository()
         disposeBag = DisposeBag()
+        //テストケースのプロパティで持つのは、ARCが「最後の使用」より先に
+        //解放しうるため。ローカル変数へ束ねても生存はスコープ末尾まで保証されず、
+        //解放されるとリポジトリのDisposeBagごと購読が外れて要求がどこへも流れない
+        //ApiClientとUserDefaultsを実物のまま渡しているのは、ここで確かめる投稿の
+        //経路がXAuthClient側を通り、どちらにも触れないため
+        repository = TweetsRepository(apiClient: ApiClient.shared,
+                                      userDefaultsConnector: UserDefaultsConnector.shared,
+                                      xAuthClient: xAuthClient,
+                                      authRepository: authRepository)
     }
 
     func testPostsToV2TweetsEndpoint() {
         xAuthClient.requestResult = .success(Data(postedTweetJson.utf8))
 
-        createRepository().postExecutedAs?.onNext("にゃーん🐾")
+        repository.postExecutedAs?.onNext("にゃーん🐾")
 
         let request = xAuthClient.executedRequests.first
         XCTAssertEqual(request?.url?.absoluteString, "https://api.x.com/2/tweets")
@@ -53,7 +63,7 @@ class TweetsRepositoryTests: XCTestCase {
     func testCarriesNekogoInJsonBody() {
         xAuthClient.requestResult = .success(Data(postedTweetJson.utf8))
 
-        createRepository().postExecutedAs?.onNext("にゃーん🐾")
+        repository.postExecutedAs?.onNext("にゃーん🐾")
 
         guard let body = xAuthClient.executedRequests.first?.httpBody,
             let decoded = try? JSONDecoder().decode([String: String].self, from: body) else {
@@ -67,7 +77,7 @@ class TweetsRepositoryTests: XCTestCase {
     func testAwardsNekosanPointWithTextXKept() {
         xAuthClient.requestResult = .success(Data(postedTweetJson.utf8))
 
-        createRepository().postExecutedAs?.onNext("にゃーん🐾")
+        repository.postExecutedAs?.onNext("にゃーん🐾")
 
         XCTAssertEqual(authRepository.postedTexts, ["にゃーん🐾"])
     }
@@ -77,7 +87,7 @@ class TweetsRepositoryTests: XCTestCase {
     func testAwardsNoNekosanPointWhenPostFails() {
         xAuthClient.requestResult = .failure(.unauthorized)
 
-        createRepository().postExecutedAs?.onNext("にゃーん🐾")
+        repository.postExecutedAs?.onNext("にゃーん🐾")
 
         XCTAssertTrue(authRepository.postedTexts.isEmpty)
     }
@@ -96,7 +106,7 @@ class TweetsRepositoryTests: XCTestCase {
             """
         xAuthClient.requestResult = .success(Data(textlessJson.utf8))
 
-        createRepository().postExecutedAs?.onNext("にゃーん🐾")
+        repository.postExecutedAs?.onNext("にゃーん🐾")
 
         XCTAssertTrue(authRepository.postedTexts.first?.contains("にゃーん🐾") ?? false)
     }
@@ -105,7 +115,7 @@ class TweetsRepositoryTests: XCTestCase {
     func testAwardsNekosanPointFromSentNekogoWhenResponseIsUnreadable() {
         xAuthClient.requestResult = .success(Data("{}".utf8))
 
-        createRepository().postExecutedAs?.onNext("にゃーん🐾")
+        repository.postExecutedAs?.onNext("にゃーん🐾")
 
         XCTAssertEqual(authRepository.postedTexts.count, 1)
         XCTAssertTrue(authRepository.postedTexts.first?.contains("にゃーん🐾") ?? false)
@@ -115,7 +125,6 @@ class TweetsRepositoryTests: XCTestCase {
     //ハッシュタグ設定が足されており、打った内容と一致しない
     func testNotifiesNekogoTheUserTyped() {
         xAuthClient.requestResult = .success(Data(postedTweetJson.utf8))
-        let repository = createRepository()
         var received: String? = nil
 
         repository.postedStatus
@@ -130,7 +139,6 @@ class TweetsRepositoryTests: XCTestCase {
     //「獲得した」と告げ、表示とFirestoreの値が食い違う
     func testNotifiesNothingWhenPostFails() {
         xAuthClient.requestResult = .failure(.forbidden)
-        let repository = createRepository()
         var received: String? = "初期値のまま流れてこないことを見分けるための値"
 
         repository.postedStatus
@@ -139,15 +147,6 @@ class TweetsRepositoryTests: XCTestCase {
         repository.postExecutedAs?.onNext("にゃーん🐾")
 
         XCTAssertNil(received)
-    }
-
-    //ApiClientとUserDefaultsを実物のまま渡しているのは、ここで確かめる投稿の
-    //経路がXAuthClient側を通り、どちらにも触れないため
-    private func createRepository() -> TweetsRepository {
-        return TweetsRepository(apiClient: ApiClient.shared,
-                                userDefaultsConnector: UserDefaultsConnector.shared,
-                                xAuthClient: xAuthClient,
-                                authRepository: authRepository)
     }
 }
 

@@ -28,15 +28,16 @@ final class MainViewModel: MainViewModelInput, MainViewModelOutput {
          loadingStatusRepository: BaseLoadingStatusRepository = LoadingStatusRepository.shared) {
         self.tweetsRepository = tweetsRepository
         self.loadingStatusRepository = loadingStatusRepository
-        self.extraTimelineItemTap = AnyObserver<String>() { execetedAt in
+        self.extraTimelineItemTap = AnyObserver<String>() { [weak self] execetedAt in
+            guard let self = self else { return }
             self.loadingStatusRepository
                 .loadingStatusChangedTo
                 .onNext(true)
             
             self.tweetsRepository
                 .buttonRefreshExecutedAt?
-                .onNext() { [unowned self] in
-                    self.loadingStatusRepository.loadingStatusChangedTo.onNext(false)
+                .onNext() { [weak self] in
+                    self?.loadingStatusRepository.loadingStatusChangedTo.onNext(false)
             }
         }
     }
