@@ -76,7 +76,8 @@ class AuthRepository: BaseAuthRepository {
         self._logoutSucceeded = PublishRelay<Bool>()
         self.logoutSucceeded = _logoutSucceeded.asObservable()
 
-        self.accountUpdatedAt = AnyObserver<String> { [unowned self] executedAt in
+        self.accountUpdatedAt = AnyObserver<String> { [weak self] executedAt in
+            guard let self = self else { return }
             self.getCurrentAccount()
                 .bind(to: self._currentAccount)
                 .disposed(by: self.disposeBag)
@@ -112,8 +113,9 @@ class AuthRepository: BaseAuthRepository {
     func invalidateAccountInfo(modelUpdateLogic: @escaping (() -> Void)) -> Observable<Bool> {
         return self.xAuthClient
             .revokeSession()
-            .map { [unowned self] _ in self.deleteAccountInfo() }
-            .map { [unowned self] in
+            .map { [weak self] _ -> Void in
+                guard let self = self else { return }
+                self.deleteAccountInfo()
                 self._isLoggedIn.accept(self.getLoggedInStatus())
                 //失効の成否をログアウトの成否として扱わないのは、Xへ届かなくても
                 //端末からは消えており、利用者から見たログアウトは成立しているため
@@ -124,8 +126,8 @@ class AuthRepository: BaseAuthRepository {
 
     func authAppUser() {
         self.firebaseClient.authAnonymously()
-            .subscribe { [unowned self] event in
-                guard let appUserId = event.element else { return }
+            .subscribe { [weak self] event in
+                guard let self = self, let appUserId = event.element else { return }
                 self.userDefaultsConnector.registerString(key: "app_user_id", value: appUserId)
         }.disposed(by: disposeBag)
     }
@@ -161,8 +163,8 @@ class AuthRepository: BaseAuthRepository {
                             FirebaseClient.shared.incrementData(dbName: "users",
                                                                 documentName: sealedTwitterId,
                                                                 key: "np",
-                                                                increaseValue: nekosanPoint) { [unowned self] _ in
-                                                                    self.updateNyanNyanAccount()
+                                                                increaseValue: nekosanPoint) { [weak self] _ in
+                                                                    self?.updateNyanNyanAccount()
                             }
                     }.disposed(by: self.disposeBag)
                 }
@@ -178,8 +180,8 @@ class AuthRepository: BaseAuthRepository {
                     FirebaseClient.shared.incrementData(dbName: "users",
                                                         documentName: sealedTwitterId,
                                                         key: "np",
-                                                        increaseValue: nekosanPoint) { [unowned self] _ in
-                                                            self.updateNyanNyanAccount()
+                                                        increaseValue: nekosanPoint) { [weak self] _ in
+                                                            self?.updateNyanNyanAccount()
                     }
             }.disposed(by: self.disposeBag)
 
@@ -313,7 +315,7 @@ class AuthRepository: BaseAuthRepository {
         let requiredKeys = ["screen_name",
                             "name",
                             "user_id"]
-        return requiredKeys.reduce(true) { [unowned self] (current: Bool, additive: String) -> Bool in
+        return requiredKeys.reduce(true) { (current: Bool, additive: String) -> Bool in
             return current && (self.userDefaultsConnector.getString(withKey: additive) != nil)
         }
     }
@@ -330,7 +332,7 @@ class AuthRepository: BaseAuthRepository {
         let records = ["user_id": user.id,
                        "screen_name": user.username,
                        "name": user.name]
-        records.forEach { [unowned self] in
+        records.forEach {
             self.userDefaultsConnector.registerString(key: $0.key, value: $0.value)
         }
         //アイコンだけ分けているのは、値が無いときに空文字を保存すると
