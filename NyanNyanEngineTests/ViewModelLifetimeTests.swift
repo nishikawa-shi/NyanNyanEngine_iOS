@@ -67,6 +67,23 @@ class ViewModelLifetimeTests: XCTestCase {
                        "閉じたはずの投稿画面がタイムラインを取りにいっている")
     }
 
+    //投稿が成功すると画面は閉じる。取得の終わりはそのあとに届くため、消灯を画面に
+    //持たせていると取りこぼし、共有のインジケータが回ったままになる
+    func testLoadingStopsEvenAfterPostScreenGoesAway() {
+        autoreleasepool {
+            let viewModel = PostNekogoViewModel(tweetsRepository: tweetsRepository,
+                                                authRepository: authRepository,
+                                                loadingStatusRepository: loadingStatusRepository)
+            tweetsRepository.emitPostedStatus("にゃーん🐾")
+            XCTAssertNotNil(viewModel)
+        }
+
+        tweetsRepository.finishPendingRefresh()
+
+        XCTAssertEqual(loadingStatusRepository.changes, [true, false],
+                       "画面が閉じたあと、ローディングの消灯が届いていない")
+    }
+
     //生きている画面は反応する。上のテストが「誰も反応しない」だけで通ってしまうと、
     //購読が壊れていることを取り違えるため
     func testLivePostScreenRequestsTimelineOnce() {
@@ -83,6 +100,7 @@ class ViewModelLifetimeTests: XCTestCase {
 
 private class StubTweetsRepository: BaseTweetsRepository {
     private let _postedStatus = PublishRelay<String?>()
+    private var pendingRefreshCompletions: [() -> Void] = []
     private(set) var refreshRequestCount = 0
 
     let nyanNyanStatuses: Observable<[NyanNyan]?> = Observable<[NyanNyan]?>.empty()
@@ -95,13 +113,23 @@ private class StubTweetsRepository: BaseTweetsRepository {
 
     init() {
         self.postedStatus = _postedStatus.asObservable()
-        self.buttonRefreshExecutedAt = AnyObserver<(() -> Void)> { [weak self] _ in
+        //その場で呼ばずに溜めるのは、v2へ移すと取得が通信を待つようになり、
+        //画面が閉じたあとに終わりが届く順になるため
+        self.buttonRefreshExecutedAt = AnyObserver<(() -> Void)> { [weak self] event in
+            guard let notifyFinished = event.element else { return }
             self?.refreshRequestCount += 1
+            self?.pendingRefreshCompletions.append(notifyFinished)
         }
     }
 
     func emitPostedStatus(_ text: String?) {
         _postedStatus.accept(text)
+    }
+
+    func finishPendingRefresh() {
+        let completions = pendingRefreshCompletions
+        pendingRefreshCompletions = []
+        completions.forEach { $0() }
     }
 }
 
@@ -137,6 +165,12 @@ private class StubAuthRepository: BaseAuthRepository {
 }
 
 private class StubLoadingStatusRepository: BaseLoadingStatusRepository {
+    private(set) var changes: [Bool] = []
+
     let isLoading: Observable<Bool> = Observable<Bool>.empty()
-    let loadingStatusChangedTo: AnyObserver<Bool> = AnyObserver<Bool> { _ in }
+    //lazyにしているのは、全プロパティの初期化が済むまでselfを掴めないため
+    lazy var loadingStatusChangedTo: AnyObserver<Bool> = AnyObserver<Bool> { [weak self] event in
+        guard let isLoading = event.element else { return }
+        self?.changes.append(isLoading)
+    }
 }

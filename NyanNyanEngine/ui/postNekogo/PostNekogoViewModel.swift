@@ -64,19 +64,22 @@ final class PostNekogoViewModel: PostNekogoViewModelInput, PostNekogoViewModelOu
             tweetsRepository.postExecutedAs?.onNext(labelValue)
         }
         
-        //weakにしているのは、購読を保持するのがシングルトンのリポジトリ側であり、
-        //強く掴むと画面を閉じたあともこの画面が投稿へ反応し続けるため。
-        //反応するたびにタイムラインを取りに行くので、残った画面の数だけ課金される
-        self.tweetsRepository.postedStatus.subscribe { [weak self] _ in
-            guard let self = self else { return }
-            self.loadingStatusRepository
+        //selfを掴まないのは、購読を保持するのがシングルトンのリポジトリ側であり、
+        //掴むと画面を閉じたあともこの画面が投稿へ反応し続けるため。反応するたびに
+        //タイムラインを取りに行くので、残った画面の数だけ課金される。
+        //掴まなくても購読はこのクラスのDisposeBagに入っており、画面と一緒に畳まれる
+        self.tweetsRepository.postedStatus.subscribe { _ in
+            loadingStatusRepository
                 .loadingStatusChangedTo
                 .onNext(true)
 
-            self.tweetsRepository
+            tweetsRepository
                 .buttonRefreshExecutedAt?
-                .onNext() { [weak self] in
-                    self?.loadingStatusRepository.loadingStatusChangedTo.onNext(false)
+                //消灯をこの画面に持たせないのは、投稿が成功すると画面が閉じ、
+                //取得が終わる前に解放されるため。取りこぼすと共有のインジケータが
+                //回ったままになる
+                .onNext() {
+                    loadingStatusRepository.loadingStatusChangedTo.onNext(false)
             }
         }
         .disposed(by: self.disposeBag)

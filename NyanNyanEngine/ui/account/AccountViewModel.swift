@@ -58,8 +58,10 @@ final class AccountViewModel: AccountViewModelInput, AccountViewModelOutput {
 
                 self.tweetsRepository
                     .buttonRefreshExecutedAt?
-                    .onNext() { [weak self] in
-                        self?.loadingStatusRepository.loadingStatusChangedTo.onNext(false)
+                    //消灯をこの画面に持たせないのは、取得が終わる前に画面を離れると
+                    //解放され、取りこぼすと共有のインジケータが回ったままになるため
+                    .onNext() {
+                        loadingStatusRepository.loadingStatusChangedTo.onNext(false)
                 }
             }
             .subscribe()
