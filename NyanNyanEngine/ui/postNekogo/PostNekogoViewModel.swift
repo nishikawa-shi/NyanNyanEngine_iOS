@@ -50,31 +50,45 @@ final class PostNekogoViewModel: PostNekogoViewModelInput, PostNekogoViewModelOu
         self.postSucceeded = tweetsRepository.postedStatus
         self.isLoading = loadingStatusRepository.isLoading
         
+        //selfを掴まないのは、この観測子を自分自身が保持しており、掴むと
+        //画面を閉じてもViewModelが解放されなくなるため
         self.originalTextChangedTo = AnyObserver<String?> {
             guard let originalText = $0.element as? String else { return }
             _nekogoText.accept(Nekosan().createNekogo(sourceStr: originalText))
-            _allowTweet.accept(authRepository.getLoggedInStatus() && self.isInputedValidText(inputedText: originalText))
+            _allowTweet.accept(authRepository.getLoggedInStatus() && originalText.isPostable)
         }
         
         self.postExecutedAs = AnyObserver<String?> {
             guard let labelValue = $0.element else { return }
-            self.loadingStatusRepository.loadingStatusChangedTo.onNext(true)
+            loadingStatusRepository.loadingStatusChangedTo.onNext(true)
             tweetsRepository.postExecutedAs?.onNext(labelValue)
         }
         
-        self.tweetsRepository.postedStatus.subscribe { _ in
+        //weakにしているのは、購読を保持するのがシングルトンのリポジトリ側であり、
+        //強く掴むと画面を閉じたあともこの画面が投稿へ反応し続けるため。
+        //反応するたびにタイムラインを取りに行くので、残った画面の数だけ課金される
+        self.tweetsRepository.postedStatus.subscribe { [weak self] _ in
+            guard let self = self else { return }
             self.loadingStatusRepository
                 .loadingStatusChangedTo
                 .onNext(true)
-            
+
             self.tweetsRepository
                 .buttonRefreshExecutedAt?
-                .onNext() { self.loadingStatusRepository.loadingStatusChangedTo.onNext(false) }
+                .onNext() { [weak self] in
+                    self?.loadingStatusRepository.loadingStatusChangedTo.onNext(false)
+            }
         }
         .disposed(by: self.disposeBag)
     }
-    
-    private func isInputedValidText(inputedText: String) -> Bool {
-        return (inputedText != (R.string.stringValues.default_post_original_text()) && (!inputedText.isEmpty))
+}
+
+//判定の主語を文字列の側に置いているのは、ViewModelのメソッドにすると
+//ViewModel自身が有効かを問うているように読めるため
+private extension String {
+    //案内文のままを弾くのは、まだ何も打っていない状態を打った内容として扱うと、
+    //案内文がそのまま猫語になって投稿されるため
+    var isPostable: Bool {
+        return self != R.string.stringValues.default_post_original_text() && !self.isEmpty
     }
 }

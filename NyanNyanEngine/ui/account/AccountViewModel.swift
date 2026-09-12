@@ -45,16 +45,22 @@ final class AccountViewModel: AccountViewModelInput, AccountViewModelOutput {
         self.isLoading = loadingStatusRepository.isLoading
         self.logoutSucceeded = authRepository.logoutSucceeded
         
-        self.logoutExecutedAt = AnyObserver<String>() { executedAt in
+        //weakにしているのは、この観測子を自分自身が保持しており、強く掴むと
+        //画面を閉じてもViewModelが解放されなくなるため
+        self.logoutExecutedAt = AnyObserver<String>() { [weak self] executedAt in
+            guard let self = self else { return }
             self.loadingStatusRepository.loadingStatusChangedTo.onNext(true)
-            self.authRepository.invalidateAccountInfo() {
+            self.authRepository.invalidateAccountInfo() { [weak self] in
+                guard let self = self else { return }
                 self.authRepository
                     .accountUpdatedAt?
                     .onNext("")
-                
+
                 self.tweetsRepository
                     .buttonRefreshExecutedAt?
-                    .onNext() { self.loadingStatusRepository.loadingStatusChangedTo.onNext(false) }
+                    .onNext() { [weak self] in
+                        self?.loadingStatusRepository.loadingStatusChangedTo.onNext(false)
+                }
             }
             .subscribe()
             .disposed(by: self.disposeBag)
