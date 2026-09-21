@@ -25,8 +25,25 @@ class V2ApiRequestFactoryTests: XCTestCase {
     func testRequestsCarryNoAuthorizationHeader() {
         XCTAssertNil(factory.createMyAccountRequest()?
             .value(forHTTPHeaderField: "Authorization"))
+        XCTAssertNil(factory.createHomeTimelineRequest(userId: "1568466609035161600", maxResults: 10)?
+            .value(forHTTPHeaderField: "Authorization"))
         XCTAssertNil(factory.createPostTweetRequest(tweetBody: "にゃーん")?
             .value(forHTTPHeaderField: "Authorization"))
+    }
+
+    //URLを丸ごと固定しているのは、v2が既定では id と text しか返さないため。
+    //属性の書き漏れは誤りとして返らず、その情報だけが欠けて届く。
+    //取得件数がそのまま支払い額になるので、件数も同じ場所で見張る
+    func testHomeTimelineRequestAsksForEverythingTheListShows() {
+        let request = factory.createHomeTimelineRequest(userId: "1568466609035161600", maxResults: 10)
+
+        XCTAssertEqual(request?.url?.absoluteString,
+                       "https://api.x.com/2/users/1568466609035161600/timelines/reverse_chronological"
+                        + "?max_results=10"
+                        + "&tweet.fields=created_at,author_id"
+                        + "&expansions=author_id"
+                        + "&user.fields=name,username,profile_image_url")
+        XCTAssertEqual(request?.httpMethod, "GET")
     }
 
     func testPostTweetRequestSendsTextAsJson() {

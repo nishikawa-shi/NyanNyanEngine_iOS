@@ -45,9 +45,6 @@
 
 "nekosan_rank_collection_name" = "np_rank_en";
 
-"time_suffix_min" = "min";
-"time_suffix_hour" = "h";
-"time_suffix_day" = "day";
 
 "siri_title" = "MeowMeowEngine [Timeline]";
 "siri_suggested_invocation_phrase" = "Cat-san Viewer";

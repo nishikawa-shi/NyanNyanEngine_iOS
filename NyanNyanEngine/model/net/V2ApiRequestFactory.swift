@@ -10,6 +10,7 @@ import Foundation
 
 protocol BaseV2ApiRequestFactory: AnyObject {
     func createMyAccountRequest() -> URLRequest?
+    func createHomeTimelineRequest(userId: String, maxResults: Int) -> URLRequest?
     func createPostTweetRequest(tweetBody: String) -> URLRequest?
     func createRevokeTokenRequest(token: String, tokenTypeHint: String, clientId: String) -> URLRequest?
 }
@@ -26,6 +27,26 @@ class V2ApiRequestFactory: BaseV2ApiRequestFactory {
 
     func createMyAccountRequest() -> URLRequest? {
         guard let url = URL(string: myAccountApiUrl) else { return nil }
+        return URLRequest(url: url,
+                          cachePolicy: .reloadIgnoringLocalCacheData,
+                          timeoutInterval: 10)
+    }
+
+    //URLを他の宛先のように定数で持たないのは、これだけが引数で変わるため。
+    //組み立てを分けて持つと、実際に投げる形がどこにも書かれていない状態になる。
+    //欲しい属性を並べているのは、v2が既定では id と text しか返さないため。
+    //書き漏れた属性は誤りとして返らず、その情報だけが欠けて届く。
+    //取得件数を引数で受け取るのは、何件が妥当かを決める材料（利用者の設定と
+    //Xへの支払い）をこのクラスが持たないため。読み取りは取得したツイート1件
+    //ごとに課金されるので、ここで既定値を持つと支払い額の出どころが散る
+    func createHomeTimelineRequest(userId: String, maxResults: Int) -> URLRequest? {
+        let homeTimelineApiUrl = "https://api.x.com/2/users/\(userId)/timelines/reverse_chronological"
+            + "?max_results=\(maxResults)"
+            + "&tweet.fields=created_at,author_id"
+            + "&expansions=author_id"
+            + "&user.fields=name,username,profile_image_url"
+        guard let url = URL(string: homeTimelineApiUrl) else { return nil }
+
         return URLRequest(url: url,
                           cachePolicy: .reloadIgnoringLocalCacheData,
                           timeoutInterval: 10)
