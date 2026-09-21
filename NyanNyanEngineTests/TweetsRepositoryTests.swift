@@ -15,6 +15,7 @@ class TweetsRepositoryTests: XCTestCase {
 
     private var xAuthClient: StubXAuthClient!
     private var authRepository: StubAuthRepository!
+    private var userDefaultsConnector: StubUserDefaultsConnector!
     private var repository: TweetsRepository!
     private var disposeBag = DisposeBag()
 
@@ -31,18 +32,44 @@ class TweetsRepositoryTests: XCTestCase {
         }
         """
 
+    //2026-09-21時点の公式スキーマから組み立てた応答。タイムライン取得は
+    //1回叩くごとにXへの支払いが発生するため、形の確認のためだけには呼んでいない
+    private let timelineJson = """
+        {
+            "data": [
+                {
+                    "created_at": "2019-12-15T12:00:00.000Z",
+                    "id": "2093888122887221687",
+                    "edit_history_tweet_ids": ["2093888122887221687"],
+                    "text": "28日は、ちょーいい日で、めっちゃ笑って、水飲んで寝た",
+                    "author_id": "1568466609035161600"
+                }
+            ],
+            "includes": {
+                "users": [
+                    {
+                        "id": "1568466609035161600",
+                        "name": "nishik",
+                        "username": "nishik75",
+                        "profile_image_url": "https://pbs.twimg.com/profile_images/1568466676425039874/vCcKwevh_normal.png"
+                    }
+                ]
+            }
+        }
+        """
+
     override func setUp() {
         super.setUp()
         xAuthClient = StubXAuthClient()
         authRepository = StubAuthRepository()
+        //ログイン済みの状態から始めるのは、v2のホームタイムラインが
+        //「誰の」タイムラインかをURLで名指しし、自分のIDが要るため
+        userDefaultsConnector = StubUserDefaultsConnector(records: ["user_id": "1568466609035161600"])
         disposeBag = DisposeBag()
         //テストケースのプロパティで持つのは、ARCが「最後の使用」より先に
         //解放しうるため。ローカル変数へ束ねても生存はスコープ末尾まで保証されず、
         //解放されるとリポジトリのDisposeBagごと購読が外れて要求がどこへも流れない
-        //ApiClientとUserDefaultsを実物のまま渡しているのは、ここで確かめる投稿の
-        //経路がXAuthClient側を通り、どちらにも触れないため
-        repository = TweetsRepository(apiClient: ApiClient.shared,
-                                      userDefaultsConnector: UserDefaultsConnector.shared,
+        repository = TweetsRepository(userDefaultsConnector: userDefaultsConnector,
                                       xAuthClient: xAuthClient,
                                       authRepository: authRepository)
     }
@@ -145,6 +172,160 @@ class TweetsRepositoryTests: XCTestCase {
         XCTAssertFalse(scrolledToTop)
     }
 
+    //v1.1のホームタイムラインは2026年に廃止されている。取得先が移ったことと、
+    //何件ぶん支払うかを、URLの一致で固定しておく
+    func testFetchesTimelineFromV2Endpoint() {
+        xAuthClient.requestResult = .success(Data(timelineJson.utf8))
+
+        repository.refreshTimeline(scrollingToTop: false) { }
+
+        let request = xAuthClient.executedRequests.first
+        XCTAssertEqual(request?.url?.absoluteString,
+                       "https://api.x.com/2/users/1568466609035161600/timelines/reverse_chronological"
+                        + "?max_results=10"
+                        + "&tweet.fields=created_at,author_id"
+                        + "&expansions=author_id"
+                        + "&user.fields=name,username,profile_image_url")
+        XCTAssertEqual(request?.httpMethod, "GET")
+    }
+
+    //v2はツイートと投稿者を別の場所へ返すため、突き合わせて初めて
+    //一覧の1行が揃う。v1.1では1件の中に投稿者が入っていた
+    func testComposesNyanNyanFromPostAndItsAuthor() {
+        xAuthClient.requestResult = .success(Data(timelineJson.utf8))
+        var received: [NyanNyan]? = nil
+
+        repository.nyanNyanStatuses
+            .subscribe(onNext: { received = $0 })
+            .disposed(by: disposeBag)
+        repository.refreshTimeline(scrollingToTop: false) { }
+
+        XCTAssertEqual(received?.count, 1)
+        XCTAssertEqual(received?.first?.id, "2093888122887221687")
+        XCTAssertEqual(received?.first?.userName, "nishik")
+        XCTAssertEqual(received?.first?.userId, "nishik75")
+        XCTAssertEqual(received?.first?.ningengo, "28日は、ちょーいい日で、めっちゃ笑って、水飲んで寝た")
+        //時刻の言い回しをOSが決めるため、読めたかどうかだけを見る。
+        //言い回しを固定すると、端末の言語でも、時が経つだけでも落ちる
+        XCTAssertNotEqual(received?.first?.nyanedAt, "秘密")
+    }
+
+    //高解像度版へ読み替える処理がUserへ1本化されたことを確かめる。
+    //v1.1の頃は同じ書き換えがStatusの中にも居た
+    func testReadsAuthorImageAtFineResolution() {
+        xAuthClient.requestResult = .success(Data(timelineJson.utf8))
+        var received: [NyanNyan]? = nil
+
+        repository.nyanNyanStatuses
+            .subscribe(onNext: { received = $0 })
+            .disposed(by: disposeBag)
+        repository.refreshTimeline(scrollingToTop: false) { }
+
+        XCTAssertEqual(received?.first?.profileUrl,
+                       "https://pbs.twimg.com/profile_images/1568466676425039874/vCcKwevh.png")
+    }
+
+    //既定値で埋めると、名前の欄がにゃんにゃ先生で埋まり、先生が言っていない
+    //ことを言ったことになる。出せないものは出さない。
+    //引き当てられる投稿を同じ応答へ混ぜているのは、空になったことだけを見ると
+    //「落とした」のか「応答を読めなかった」のか区別がつかず、
+    //取得そのものが壊れていても通るテストになるため
+    func testDropsOnlyThePostWhoseAuthorIsMissing() {
+        let halfAuthorlessJson = """
+            {
+                "data": [
+                    {
+                        "created_at": "2019-12-15T12:00:00.000Z",
+                        "id": "2093888122887221687",
+                        "text": "28日は、ちょーいい日で、めっちゃ笑って、水飲んで寝た",
+                        "author_id": "9999999999999999999"
+                    },
+                    {
+                        "created_at": "2019-12-15T12:00:00.000Z",
+                        "id": "2093888122887221688",
+                        "text": "にゃーん🐾",
+                        "author_id": "1568466609035161600"
+                    }
+                ],
+                "includes": {
+                    "users": [
+                        {
+                            "id": "1568466609035161600",
+                            "name": "nishik",
+                            "username": "nishik75"
+                        }
+                    ]
+                }
+            }
+            """
+        xAuthClient.requestResult = .success(Data(halfAuthorlessJson.utf8))
+        var received: [NyanNyan]? = nil
+
+        repository.nyanNyanStatuses
+            .subscribe(onNext: { received = $0 })
+            .disposed(by: disposeBag)
+        repository.refreshTimeline(scrollingToTop: false) { }
+
+        XCTAssertEqual(received?.count, 1)
+        XCTAssertEqual(received?.first?.id, "2093888122887221688")
+        XCTAssertEqual(received?.first?.userName, "nishik")
+    }
+
+    //未ログインでXを叩かないのは、通らない要求であるうえ、読み取りが
+    //取得したツイート1件ごとの課金であるため
+    func testShowsSenseiWithoutAskingXWhenNotLoggedIn() {
+        userDefaultsConnector.records.removeValue(forKey: "user_id")
+        var received: [NyanNyan]? = nil
+
+        repository.nyanNyanStatuses
+            .subscribe(onNext: { received = $0 })
+            .disposed(by: disposeBag)
+        repository.refreshTimeline(scrollingToTop: false) { }
+
+        XCTAssertTrue(xAuthClient.executedRequests.isEmpty)
+        XCTAssertEqual(received?.first?.userName, R.string.stringValues.default_user_name())
+    }
+
+    //v2移行で取得が同期から非同期になった。終わりを告げるのが応答より先だと、
+    //画面は取得中のまま次の操作を受け付ける
+    func testNotifiesFinishedOnlyAfterXAnswers() {
+        xAuthClient.requestResult = .success(Data(timelineJson.utf8))
+        xAuthClient.holdsResponse = true
+        var finished = false
+
+        repository.refreshTimeline(scrollingToTop: false) { finished = true }
+        XCTAssertFalse(finished)
+
+        xAuthClient.deliverHeldResponse()
+        XCTAssertTrue(finished)
+    }
+
+    //知らせないままだと、画面が終わりを待ち続けてインジケータが回り続ける
+    func testNotifiesFinishedWhenFetchFails() {
+        xAuthClient.requestResult = .failure(.rateLimited)
+        var finished = false
+
+        repository.refreshTimeline(scrollingToTop: false) { finished = true }
+
+        XCTAssertTrue(finished)
+    }
+
+    //読めなかったことを空の画面として見せると、ねこさんが居なくなったように見える
+    func testKeepsNekosanOnScreenWhenFetchFails() {
+        xAuthClient.requestResult = .success(Data(timelineJson.utf8))
+        var received: [NyanNyan]? = nil
+
+        repository.nyanNyanStatuses
+            .subscribe(onNext: { received = $0 })
+            .disposed(by: disposeBag)
+        repository.refreshTimeline(scrollingToTop: false) { }
+
+        xAuthClient.requestResult = .failure(.serverError)
+        repository.refreshTimeline(scrollingToTop: false) { }
+
+        XCTAssertEqual(received?.first?.userName, "nishik")
+    }
+
     //投稿欄へ返すのは利用者が打った猫語。Xが返した本文には
     //ハッシュタグ設定が足されており、打った内容と一致しない
     func testNotifiesNekogoTheUserTyped() {
@@ -177,6 +358,10 @@ class TweetsRepositoryTests: XCTestCase {
 private class StubXAuthClient: BaseXAuthClient {
     var requestResult: Result<Data, ApiError> = .failure(.noResponse)
     var executedRequests: [URLRequest] = []
+    //応答を手元で止められるようにしているのは、v2移行で取得が同期から
+    //非同期になり、「いつ終わったことになるか」が初めて意味を持つため
+    var holdsResponse = false
+    private var heldObservers: [AnyObserver<Result<Data, ApiError>>] = []
 
     func authorize(presenter: AuthorizationSheetPresenter, completion: @escaping ((Bool) -> Void)) {
         completion(true)
@@ -184,7 +369,20 @@ private class StubXAuthClient: BaseXAuthClient {
 
     func executeAuthorizedRequest(urlRequest: URLRequest) -> Observable<Result<Data, ApiError>> {
         executedRequests.append(urlRequest)
-        return Observable<Result<Data, ApiError>>.just(requestResult)
+        guard holdsResponse else { return Observable<Result<Data, ApiError>>.just(requestResult) }
+        return Observable<Result<Data, ApiError>>.create { [weak self] observer in
+            self?.heldObservers.append(observer)
+            return Disposables.create()
+        }
+    }
+
+    func deliverHeldResponse() {
+        let observers = heldObservers
+        heldObservers = []
+        observers.forEach {
+            $0.onNext(requestResult)
+            $0.onCompleted()
+        }
     }
 
     func resumeAuthorization(with url: URL) -> Bool {
@@ -235,5 +433,29 @@ private class StubAuthRepository: BaseAuthRepository {
 
     func useMultiplierValue(completion: @escaping ((Int) -> Void)) {
         completion(1)
+    }
+}
+
+private class StubUserDefaultsConnector: BaseUserDefaultsConnector {
+    var records: [String: String]
+
+    init(records: [String: String] = [:]) {
+        self.records = records
+    }
+
+    func registerString(key: String, value: String) {
+        records[key] = value
+    }
+
+    func getString(withKey key: String) -> String? {
+        return records[key]
+    }
+
+    func isRegistered(withKey key: String) -> Bool {
+        return records[key] != nil
+    }
+
+    func deleteRecord(forKey key: String) {
+        records.removeValue(forKey: key)
     }
 }

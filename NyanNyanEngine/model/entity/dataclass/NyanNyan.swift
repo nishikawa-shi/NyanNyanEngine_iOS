@@ -10,7 +10,9 @@ import Foundation
 import Differentiator
 
 struct NyanNyan: Equatable {
-    let id: Int
+    //idが文字列なのは、v2のツイートIDがsnowflake IDの文字列表現で、
+    //Intへ収めると桁が落ちて別のツイートと同じidになりうるため
+    let id: String
     let profileUrl: String?
     let userName: String
     let userId: String
@@ -20,7 +22,7 @@ struct NyanNyan: Equatable {
     var isNekogo: Bool = true
 }
 extension NyanNyan: IdentifiableType {
-    var identity: Int {
+    var identity: String {
         return id
     }
 }

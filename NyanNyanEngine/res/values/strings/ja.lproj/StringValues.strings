@@ -45,9 +45,6 @@
 
 "nekosan_rank_collection_name" = "np_rank_ja";
 
-"time_suffix_min" = "分前";
-"time_suffix_hour" = "時間前";
-"time_suffix_day" = "日前";
 
 "siri_title" = "にゃんにゃんエンジン [タイムライン]";
 "siri_suggested_invocation_phrase" = "猫さんビューアー";

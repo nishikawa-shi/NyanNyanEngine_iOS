@@ -8,7 +8,7 @@
 
 struct DefaultNekosan {
     let nyanNyanStatuses: [NyanNyan] = [
-        NyanNyan(id: 28,
+        NyanNyan(id: "28",
                  profileUrl: nil,
                  userName: R.string.stringValues.default_user_name(),
                  userId: R.string.stringValues.default_user_id(),

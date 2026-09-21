@@ -25,10 +25,15 @@ class TweetsRepository: BaseTweetsRepository {
     static let shared = TweetsRepository()
 
     private let disposeBag = DisposeBag()
-    private let apiClient: BaseApiClient
     private let userDefaultsConnector: BaseUserDefaultsConnector
     private let xAuthClient: BaseXAuthClient
     private let authRepository: BaseAuthRepository
+
+    //何件取るかをここに置いているのは、読み取りが取得したツイート1件ごとに
+    //課金されるため、支払い額を決める値が1か所から読めるようにするため。
+    //Firestoreから配れるようにするのは従量課金の安全装置を入れるときで、
+    //それまではアプリの更新なしに絞れない
+    private let timelineCount = 10
 
     private let _statuses: BehaviorRelay<[NyanNyan]?>
     private let _listScrollUpExecuted: PublishRelay<Bool>
@@ -40,11 +45,9 @@ class TweetsRepository: BaseTweetsRepository {
     let listScrollUpExecuted: Observable<Bool>
 
     //private init にしていないのは、テストが XAuthClient と AuthRepository を差し替えるため
-    init(apiClient: BaseApiClient = ApiClient.shared,
-         userDefaultsConnector: BaseUserDefaultsConnector = UserDefaultsConnector.shared,
+    init(userDefaultsConnector: BaseUserDefaultsConnector = UserDefaultsConnector.shared,
          xAuthClient: BaseXAuthClient = XAuthClient.shared,
          authRepository: BaseAuthRepository = AuthRepository.shared) {
-        self.apiClient = apiClient
         self.userDefaultsConnector = userDefaultsConnector
         self.xAuthClient = xAuthClient
         self.authRepository = authRepository
@@ -134,21 +137,19 @@ class TweetsRepository: BaseTweetsRepository {
         self._postRequested.accept(nekogo)
     }
 
+    //自分のIDが要るのは、v2のホームタイムラインが「誰の」タイムラインかを
+    //URLで名指しするため。手元に無いのは未ログインのときなので、
+    //Xへ問い合わせず、にゃんにゃ先生に出てきてもらう
     private func getHomeTimeLine() -> Observable<[NyanNyan]?> {
-        guard let apiKey = PlistConnector.shared.getApiKey(),
-            let apiSecret = PlistConnector.shared.getApiSecret(),
-            let accessToken = UserDefaultsConnector.shared.getString(withKey: "oauth_token"),
-            let accessTokenSecret = UserDefaultsConnector.shared.getString(withKey: "oauth_token_secret"),
-            let urlRequest = ApiRequestFactory(apiKey: apiKey,
-                                               apiSecret: apiSecret,
-                                               oauthNonce: "0000",
-                                               accessTokenSecret: accessTokenSecret,
-                                               accessToken: accessToken).createHomeTimelineRequest() else {
-                                                return Observable<[NyanNyan]?>.just(DefaultNekosan().nyanNyanStatuses)}
+        guard let userId = self.userDefaultsConnector.getString(withKey: "user_id"),
+            let urlRequest = V2ApiRequestFactory.shared
+                .createHomeTimelineRequest(userId: userId,
+                                           maxResults: self.timelineCount) else {
+                                            return Observable<[NyanNyan]?>.just(DefaultNekosan().nyanNyanStatuses)}
 
-        return self.apiClient
-            .executeHttpRequest(urlRequest: urlRequest)
-            .map { $0?.toStatuses()?.toNyanNyan() }
+        return self.xAuthClient
+            .executeAuthorizedRequest(urlRequest: urlRequest)
+            .map { $0.toNyanNyan() }
     }
 
     //投稿できたかをHTTPの成否だけで決め、採点する本文を別に決めているのは、
@@ -164,26 +165,44 @@ class TweetsRepository: BaseTweetsRepository {
 }
 
 //変換の主語を応答と一覧の側に置いているのは、リポジトリのメソッドにすると
-//リポジトリそのものを猫語へ変換しているように読めるため
-private extension Data {
-    func toStatuses() -> [Status]? {
+//リポジトリそのものを猫語へ変換しているように読めるため。
+//読めなかったときにnilを返すのは、空の一覧と区別するため。空を返すと
+//「ねこさんが1匹も居ない」として手元の一覧が消える
+private extension Result where Success == Data, Failure == ApiError {
+    func toNyanNyan() -> [NyanNyan]? {
+        guard case .success(let data) = self else { return nil }
         let decoder = JSONDecoder()
         decoder.keyDecodingStrategy = .convertFromSnakeCase
-        return try? decoder.decode([Status].self, from: self)
+        return (try? decoder.decode(V2TimelineResponse.self, from: data))?.toNyanNyan()
     }
 }
 
-private extension Array where Element == Status {
+private extension V2TimelineResponse {
+    //投稿者を辞書へ組み替えてから引くのは、v2がツイートと投稿者を別の場所へ
+    //返し、突き合わせの手がかりがauthorIdしか無いため
     func toNyanNyan() -> [NyanNyan] {
-        return self.map {
-            NyanNyan(id: $0.id,
-                     profileUrl: $0.user.getFineImageUrl(),
-                     userName: $0.user.name,
-                     userId: $0.user.screenName,
-                     nyanedAt: TwitterDateFormatter().getNyanNyanTimeStamp(apiTimeStamp: $0.createdAt),
-                     nekogo: Nekosan().createNekogo(sourceStr: $0.text),
-                     ningengo: $0.text,
-                     isNekogo: true)
+        //同じidが二度現れても先に来た方を採るのは、重複で組み立てを止める
+        //イニシャライザだと、応答の形が想定とずれた瞬間に落ちるため
+        let authors = Dictionary((self.includes?.users ?? []).map { ($0.id, $0) },
+                                 uniquingKeysWith: { firstAuthor, _ in firstAuthor })
+        //投稿ごとに作らないのは、内側に抱えているRelativeDateTimeFormatterが
+        //生成の重い型で、使い回す前提で持たせているため
+        let postedAtFormatter = PostedAtFormatter()
+
+        //投稿者を引き当てられないツイートを落としているのは、名前の欄を
+        //埋める相手が居ないため。既定値で埋めるとにゃんにゃ先生の投稿として
+        //並び、先生が言っていないことを言ったことになる
+        return (self.data ?? []).compactMap { post in
+            guard let author = post.authorId.flatMap({ authors[$0] }) else { return nil }
+            return NyanNyan(id: post.id,
+                            profileUrl: author.getFineImageUrl(),
+                            userName: author.name,
+                            userId: author.username,
+                            nyanedAt: postedAtFormatter
+                                .getNyanNyanTimeStamp(apiTimeStamp: post.createdAt ?? ""),
+                            nekogo: Nekosan().createNekogo(sourceStr: post.text),
+                            ningengo: post.text,
+                            isNekogo: true)
         }
     }
 }
