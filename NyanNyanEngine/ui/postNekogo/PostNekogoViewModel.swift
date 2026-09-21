@@ -11,8 +11,8 @@ import RxSwift
 import RxRelay
 
 protocol PostNekogoViewModelInput: AnyObject {
-    var originalTextChangedTo: AnyObserver<String?>? { get }
-    var postExecutedAs: AnyObserver<String?>? { get }
+    func changeOriginalText(to originalText: String?)
+    func post(nekogo: String?)
 }
 
 protocol PostNekogoViewModelOutput: AnyObject {
@@ -27,11 +27,11 @@ final class PostNekogoViewModel: PostNekogoViewModelInput, PostNekogoViewModelOu
     private let authRepository: BaseAuthRepository
     private let loadingStatusRepository: BaseLoadingStatusRepository
     private let disposeBag = DisposeBag()
-    
-    var originalTextChangedTo: AnyObserver<String?>? = nil
-    var postExecutedAs: AnyObserver<String?>? = nil
-    
-    var nekogoText: Observable<String?>
+
+    private let _nekogoText: BehaviorRelay<String?>
+    private let _allowTweet: BehaviorRelay<Bool>
+
+    let nekogoText: Observable<String?>
     let allowTweet: Observable<Bool>
     let postSucceeded: Observable<String?>
     let isLoading: Observable<Bool>
@@ -44,25 +44,13 @@ final class PostNekogoViewModel: PostNekogoViewModelInput, PostNekogoViewModelOu
         self.loadingStatusRepository = loadingStatusRepository
         
         let _nekogoText = BehaviorRelay<String?>(value: nil)
+        self._nekogoText = _nekogoText
         self.nekogoText = _nekogoText.asObservable()
         let _allowTweet = BehaviorRelay<Bool>(value: false)
+        self._allowTweet = _allowTweet
         self.allowTweet = _allowTweet.asObservable()
         self.postSucceeded = tweetsRepository.postedStatus
         self.isLoading = loadingStatusRepository.isLoading
-        
-        //selfを掴まないのは、この観測子を自分自身が保持しており、掴むと
-        //画面を閉じてもViewModelが解放されなくなるため
-        self.originalTextChangedTo = AnyObserver<String?> {
-            guard let originalText = $0.element as? String else { return }
-            _nekogoText.accept(Nekosan().createNekogo(sourceStr: originalText))
-            _allowTweet.accept(authRepository.getLoggedInStatus() && originalText.isPostable)
-        }
-        
-        self.postExecutedAs = AnyObserver<String?> {
-            guard let labelValue = $0.element else { return }
-            loadingStatusRepository.loadingStatusChangedTo.onNext(true)
-            tweetsRepository.postExecutedAs?.onNext(labelValue)
-        }
         
         //selfを掴まないのは、購読を保持するのがシングルトンのリポジトリ側であり、
         //掴むと画面を閉じたあともこの画面が投稿へ反応し続けるため。反応するたびに
@@ -73,16 +61,26 @@ final class PostNekogoViewModel: PostNekogoViewModelInput, PostNekogoViewModelOu
                 .loadingStatusChangedTo
                 .onNext(true)
 
-            tweetsRepository
-                .buttonRefreshExecutedAt?
-                //消灯をこの画面に持たせないのは、投稿が成功すると画面が閉じ、
-                //取得が終わる前に解放されるため。取りこぼすと共有のインジケータが
-                //回ったままになる
-                .onNext() {
-                    loadingStatusRepository.loadingStatusChangedTo.onNext(false)
+            //消灯をこの画面に持たせないのは、投稿が成功すると画面が閉じ、
+            //取得が終わる前に解放されるため。取りこぼすと共有のインジケータが
+            //回ったままになる
+            tweetsRepository.refreshTimeline(scrollingToTop: true) {
+                loadingStatusRepository.loadingStatusChangedTo.onNext(false)
             }
         }
         .disposed(by: self.disposeBag)
+    }
+
+    func changeOriginalText(to originalText: String?) {
+        guard let originalText = originalText else { return }
+        self._nekogoText.accept(Nekosan().createNekogo(sourceStr: originalText))
+        self._allowTweet.accept(self.authRepository.getLoggedInStatus() && originalText.isPostable)
+    }
+
+    func post(nekogo: String?) {
+        guard let nekogo = nekogo else { return }
+        self.loadingStatusRepository.loadingStatusChangedTo.onNext(true)
+        self.tweetsRepository.post(nekogo: nekogo)
     }
 }
 

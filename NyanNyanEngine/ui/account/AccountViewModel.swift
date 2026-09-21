@@ -10,8 +10,7 @@ import Foundation
 import RxSwift
 
 protocol AccountViewModelInput: AnyObject {
-    //TODO: 後々、日付型っぽいやつにする
-    var logoutExecutedAt: AnyObserver<String>? { get }
+    func logout()
 }
 
 protocol AccountViewModelOutput: AnyObject {
@@ -27,7 +26,6 @@ final class AccountViewModel: AccountViewModelInput, AccountViewModelOutput {
     private let loadingStatusRepository: LoadingStatusRepository
     private let disposeBag = DisposeBag()
     
-    var logoutExecutedAt: AnyObserver<String>? = nil
     let currentAccount: Observable<Account>
     let currentNyanNyanAccount: Observable<NyanNyanUser>
     let isLoading: Observable<Bool>
@@ -44,28 +42,23 @@ final class AccountViewModel: AccountViewModelInput, AccountViewModelOutput {
         self.currentNyanNyanAccount = authRepository.currentNyanNyanAccount
         self.isLoading = loadingStatusRepository.isLoading
         self.logoutSucceeded = authRepository.logoutSucceeded
-        
-        //weakにしているのは、この観測子を自分自身が保持しており、強く掴むと
-        //画面を閉じてもViewModelが解放されなくなるため
-        self.logoutExecutedAt = AnyObserver<String>() { [weak self] executedAt in
-            guard let self = self else { return }
-            self.loadingStatusRepository.loadingStatusChangedTo.onNext(true)
-            self.authRepository.invalidateAccountInfo() { [weak self] in
-                guard let self = self else { return }
-                self.authRepository
-                    .accountUpdatedAt?
-                    .onNext("")
+    }
 
-                self.tweetsRepository
-                    .buttonRefreshExecutedAt?
-                    //消灯をこの画面に持たせないのは、取得が終わる前に画面を離れると
-                    //解放され、取りこぼすと共有のインジケータが回ったままになるため
-                    .onNext() {
-                        loadingStatusRepository.loadingStatusChangedTo.onNext(false)
-                }
+    func logout() {
+        self.loadingStatusRepository.loadingStatusChangedTo.onNext(true)
+
+        //消灯の知らせを先に取り出してから渡すのは、取得が終わる前に画面を離れると
+        //解放され、取りこぼすと共有のインジケータが回ったままになるため
+        let loadingStatusRepository = self.loadingStatusRepository
+        self.authRepository.invalidateAccountInfo() { [weak self] in
+            guard let self = self else { return }
+            self.authRepository.reloadAccount()
+
+            self.tweetsRepository.refreshTimeline(scrollingToTop: true) {
+                loadingStatusRepository.loadingStatusChangedTo.onNext(false)
             }
-            .subscribe()
-            .disposed(by: self.disposeBag)
         }
+        .subscribe()
+        .disposed(by: self.disposeBag)
     }
 }
