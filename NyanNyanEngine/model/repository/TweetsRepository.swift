@@ -14,10 +14,11 @@ protocol BaseTweetsRepository: AnyObject {
     var nyanNyanStatuses: Observable<[NyanNyan]?> { get }
     var postedStatus: Observable<String?> { get }
     var listScrollUpExecuted: Observable<Bool>{ get }
-    var buttonRefreshExecutedAt: AnyObserver<(() -> Void)>? { get }
-    var pullToRefreshExecutedAt: AnyObserver<(() -> Void)>? { get }
-    var nekogoToggleExecutedAt: AnyObserver<IndexPath>? { get }
-    var postExecutedAs: AnyObserver<String?>? { get }
+    //終わったことを知らせる手段を受け取るのは、止めるべき部品を知っているのが
+    //画面の側で、model層が画面部品の型を知る理由がないため
+    func refreshTimeline(scrollingToTop: Bool, notifying notifyFinished: @escaping (() -> Void))
+    func toggleNekogo(at indexPath: IndexPath)
+    func post(nekogo: String)
 }
 
 class TweetsRepository: BaseTweetsRepository {
@@ -29,13 +30,14 @@ class TweetsRepository: BaseTweetsRepository {
     private let xAuthClient: BaseXAuthClient
     private let authRepository: BaseAuthRepository
 
+    private let _statuses: BehaviorRelay<[NyanNyan]?>
+    private let _listScrollUpExecuted: PublishRelay<Bool>
+    private let _refreshRequested: PublishRelay<(() -> Void)>
+    private let _postRequested: PublishRelay<String>
+
     let nyanNyanStatuses: Observable<[NyanNyan]?>
     let postedStatus: Observable<String?>
     let listScrollUpExecuted: Observable<Bool>
-    var buttonRefreshExecutedAt: AnyObserver<(() -> Void)>? = nil
-    var pullToRefreshExecutedAt: AnyObserver<(() -> Void)>? = nil
-    var nekogoToggleExecutedAt: AnyObserver<IndexPath>? = nil
-    var postExecutedAs: AnyObserver<String?>? = nil
 
     //private init にしていないのは、テストが XAuthClient と AuthRepository を差し替えるため
     init(apiClient: BaseApiClient = ApiClient.shared,
@@ -48,45 +50,23 @@ class TweetsRepository: BaseTweetsRepository {
         self.authRepository = authRepository
 
         let _statuses = BehaviorRelay<[NyanNyan]?>(value: nil)
+        self._statuses = _statuses
         self.nyanNyanStatuses = _statuses.asObservable()
 
         let _postedStatus = PublishRelay<String?>()
         self.postedStatus = _postedStatus.asObservable()
 
         let _listScrollUpExecuted = PublishRelay<Bool>()
+        self._listScrollUpExecuted = _listScrollUpExecuted
         self.listScrollUpExecuted = _listScrollUpExecuted.asObservable()
 
         //要求をいったんRelayへ預けてから購読を1本だけ張るのは、要求のたびに
         //購読を作ると、このクラスがシングルトンでDisposeBagが解放されないため、
         //完了した購読が起動中ずっと積み上がるため
         let _refreshRequested = PublishRelay<(() -> Void)>()
+        self._refreshRequested = _refreshRequested
         let _postRequested = PublishRelay<String>()
-
-        self.buttonRefreshExecutedAt = AnyObserver<(() -> Void)> { notifyFinished in
-            guard let notifyFinished = notifyFinished.element else { return }
-            _listScrollUpExecuted.accept(true)
-            _refreshRequested.accept(notifyFinished)
-        }
-
-        //UIRefreshControlではなく「終わったことを知らせる手段」を受け取るのは、
-        //止めるべき部品を知っているのが画面の側で、model層が画面部品の型を
-        //知る理由がないため
-        self.pullToRefreshExecutedAt = AnyObserver<(() -> Void)> { notifyFinished in
-            guard let notifyFinished = notifyFinished.element else { return }
-            _refreshRequested.accept(notifyFinished)
-        }
-
-        self.nekogoToggleExecutedAt = AnyObserver<IndexPath> {
-            guard let row = $0.element?.row else { return }
-            var statuses = _statuses.value
-            statuses?[row].isNekogo.toggle()
-            _statuses.accept(statuses)
-        }
-
-        self.postExecutedAs = AnyObserver<String?> {
-            guard let nekosanTextBody = $0.element as? String else { return }
-            _postRequested.accept(nekosanTextBody)
-        }
+        self._postRequested = _postRequested
 
         _refreshRequested
             .flatMap { [weak self] notifyFinished -> Observable<[NyanNyan]?> in
@@ -133,6 +113,25 @@ class TweetsRepository: BaseTweetsRepository {
             }
             .bind(to: _postedStatus)
             .disposed(by: self.disposeBag)
+    }
+
+    //先頭へ戻すかを引数で受け取るのは、取り直す中身がどちらも同じで、
+    //違うのが取り終えたあとの見せ方だけのため
+    func refreshTimeline(scrollingToTop: Bool, notifying notifyFinished: @escaping (() -> Void)) {
+        if scrollingToTop {
+            self._listScrollUpExecuted.accept(true)
+        }
+        self._refreshRequested.accept(notifyFinished)
+    }
+
+    func toggleNekogo(at indexPath: IndexPath) {
+        var statuses = self._statuses.value
+        statuses?[indexPath.row].isNekogo.toggle()
+        self._statuses.accept(statuses)
+    }
+
+    func post(nekogo: String) {
+        self._postRequested.accept(nekogo)
     }
 
     private func getHomeTimeLine() -> Observable<[NyanNyan]?> {

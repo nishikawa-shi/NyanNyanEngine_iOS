@@ -134,7 +134,7 @@ class AuthRepositoryTests: XCTestCase {
         repository.currentAccount
             .subscribe(onNext: { received = $0 })
             .disposed(by: disposeBag)
-        repository.accountUpdatedAt?.onNext("")
+        repository.reloadAccount()
 
         XCTAssertEqual(received?.user.username, "nishik75")
         XCTAssertNil(received?.user.profileImageUrl)

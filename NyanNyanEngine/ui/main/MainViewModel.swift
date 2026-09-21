@@ -11,8 +11,7 @@ import Foundation
 import RxSwift
 
 protocol MainViewModelInput: AnyObject {
-    //TODO: 後々、日付型っぽいやつにする
-    var extraTimelineItemTap: AnyObserver<String>? { get }
+    func refreshTimeline()
 }
 
 protocol MainViewModelOutput: AnyObject {
@@ -22,23 +21,22 @@ final class MainViewModel: MainViewModelInput, MainViewModelOutput {
     private let tweetsRepository: BaseTweetsRepository
     private let loadingStatusRepository: BaseLoadingStatusRepository
     
-    var extraTimelineItemTap: AnyObserver<String>? = nil
-    
     init(tweetsRepository: BaseTweetsRepository = TweetsRepository.shared,
          loadingStatusRepository: BaseLoadingStatusRepository = LoadingStatusRepository.shared) {
         self.tweetsRepository = tweetsRepository
         self.loadingStatusRepository = loadingStatusRepository
-        self.extraTimelineItemTap = AnyObserver<String>() { [weak self] execetedAt in
-            guard let self = self else { return }
-            self.loadingStatusRepository
-                .loadingStatusChangedTo
-                .onNext(true)
-            
-            self.tweetsRepository
-                .buttonRefreshExecutedAt?
-                .onNext() { [weak self] in
-                    self?.loadingStatusRepository.loadingStatusChangedTo.onNext(false)
-            }
+    }
+
+    func refreshTimeline() {
+        self.loadingStatusRepository
+            .loadingStatusChangedTo
+            .onNext(true)
+
+        //消灯の知らせを先に取り出してから渡すのは、渡す先のリポジトリが
+        //シングルトンで、自分自身を掴んだまま応答を待ててしまうため
+        let loadingStatusRepository = self.loadingStatusRepository
+        self.tweetsRepository.refreshTimeline(scrollingToTop: true) {
+            loadingStatusRepository.loadingStatusChangedTo.onNext(false)
         }
     }
 }

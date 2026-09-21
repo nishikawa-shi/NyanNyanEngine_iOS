@@ -50,7 +50,7 @@ class TweetsRepositoryTests: XCTestCase {
     func testPostsToV2TweetsEndpoint() {
         xAuthClient.requestResult = .success(Data(postedTweetJson.utf8))
 
-        repository.postExecutedAs?.onNext("にゃーん🐾")
+        repository.post(nekogo: "にゃーん🐾")
 
         let request = xAuthClient.executedRequests.first
         XCTAssertEqual(request?.url?.absoluteString, "https://api.x.com/2/tweets")
@@ -63,7 +63,7 @@ class TweetsRepositoryTests: XCTestCase {
     func testCarriesNekogoInJsonBody() {
         xAuthClient.requestResult = .success(Data(postedTweetJson.utf8))
 
-        repository.postExecutedAs?.onNext("にゃーん🐾")
+        repository.post(nekogo: "にゃーん🐾")
 
         guard let body = xAuthClient.executedRequests.first?.httpBody,
             let decoded = try? JSONDecoder().decode([String: String].self, from: body) else {
@@ -77,7 +77,7 @@ class TweetsRepositoryTests: XCTestCase {
     func testAwardsNekosanPointWithTextXKept() {
         xAuthClient.requestResult = .success(Data(postedTweetJson.utf8))
 
-        repository.postExecutedAs?.onNext("にゃーん🐾")
+        repository.post(nekogo: "にゃーん🐾")
 
         XCTAssertEqual(authRepository.postedTexts, ["にゃーん🐾"])
     }
@@ -87,7 +87,7 @@ class TweetsRepositoryTests: XCTestCase {
     func testAwardsNoNekosanPointWhenPostFails() {
         xAuthClient.requestResult = .failure(.unauthorized)
 
-        repository.postExecutedAs?.onNext("にゃーん🐾")
+        repository.post(nekogo: "にゃーん🐾")
 
         XCTAssertTrue(authRepository.postedTexts.isEmpty)
     }
@@ -106,7 +106,7 @@ class TweetsRepositoryTests: XCTestCase {
             """
         xAuthClient.requestResult = .success(Data(textlessJson.utf8))
 
-        repository.postExecutedAs?.onNext("にゃーん🐾")
+        repository.post(nekogo: "にゃーん🐾")
 
         XCTAssertTrue(authRepository.postedTexts.first?.contains("にゃーん🐾") ?? false)
     }
@@ -115,10 +115,34 @@ class TweetsRepositoryTests: XCTestCase {
     func testAwardsNekosanPointFromSentNekogoWhenResponseIsUnreadable() {
         xAuthClient.requestResult = .success(Data("{}".utf8))
 
-        repository.postExecutedAs?.onNext("にゃーん🐾")
+        repository.post(nekogo: "にゃーん🐾")
 
         XCTAssertEqual(authRepository.postedTexts.count, 1)
         XCTAssertTrue(authRepository.postedTexts.first?.contains("にゃーん🐾") ?? false)
+    }
+
+    //2つの更新の違いは先頭へ戻すかどうかだけのため、両方向を固定しておく。
+    //どちらかへ倒れていると、引っ張って更新のたびに見ていた位置を失う
+    func testScrollsListToTopWhenAsked() {
+        var scrolledToTop = false
+        repository.listScrollUpExecuted
+            .subscribe(onNext: { _ in scrolledToTop = true })
+            .disposed(by: disposeBag)
+
+        repository.refreshTimeline(scrollingToTop: true) { }
+
+        XCTAssertTrue(scrolledToTop)
+    }
+
+    func testKeepsListPositionWhenNotAsked() {
+        var scrolledToTop = false
+        repository.listScrollUpExecuted
+            .subscribe(onNext: { _ in scrolledToTop = true })
+            .disposed(by: disposeBag)
+
+        repository.refreshTimeline(scrollingToTop: false) { }
+
+        XCTAssertFalse(scrolledToTop)
     }
 
     //投稿欄へ返すのは利用者が打った猫語。Xが返した本文には
@@ -130,7 +154,7 @@ class TweetsRepositoryTests: XCTestCase {
         repository.postedStatus
             .subscribe(onNext: { received = $0 })
             .disposed(by: disposeBag)
-        repository.postExecutedAs?.onNext("にゃーん🐾")
+        repository.post(nekogo: "にゃーん🐾")
 
         XCTAssertEqual(received, "にゃーん🐾")
     }
@@ -144,7 +168,7 @@ class TweetsRepositoryTests: XCTestCase {
         repository.postedStatus
             .subscribe(onNext: { received = $0 })
             .disposed(by: disposeBag)
-        repository.postExecutedAs?.onNext("にゃーん🐾")
+        repository.post(nekogo: "にゃーん🐾")
 
         XCTAssertNil(received)
     }
@@ -185,7 +209,8 @@ private class StubAuthRepository: BaseAuthRepository {
     let currentNyanNyanAccount: Observable<NyanNyanUser> = Observable<NyanNyanUser>.empty()
     var isLoggedIn: Observable<Bool>? = nil
     var logoutSucceeded: Observable<Bool>? = nil
-    var accountUpdatedAt: AnyObserver<String>? = nil
+
+    func reloadAccount() { }
 
     func updateNyanNyanAccount(postedText: String) {
         postedTexts.append(postedText)

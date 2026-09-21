@@ -47,11 +47,11 @@ class HomeTimelineViewController: UIViewController {
         authButton.rx.tap
             .throttle(DispatchTimeInterval.seconds(3), latest: false, scheduler: ConcurrentMainScheduler.instance)
             .compactMap { [weak self] _ -> AuthorizationSheetPresenter? in self }
-            .bind(to: input.authExecutedAt!)
+            .subscribe(onNext: { [weak self] in self?.input.beginAuthorization(presenter: $0) })
             .disposed(by: disposeBag)
 
         tweetList.rx.itemSelected
-            .bind(to: input.cellTapExecutedOn!)
+            .subscribe(onNext: { [weak self] in self?.input.toggleNekogo(at: $0) })
             .disposed(by: disposeBag)
 
         output.nyanNyanStatuses
@@ -93,14 +93,14 @@ class HomeTimelineViewController: UIViewController {
         }
         .disposed(by: disposeBag)
 
-        input.buttonRefreshExecutedAt?.onNext("2019/04/30 12:12:12")
+        input.refresh()
     }
 
     //インジケータを1秒残してから止めるのは、応答が速すぎると引っ張った手応えが
     //出ないため。待ちをmodel層のsleepで作らないのは、応答がメインスレッドへ
     //届くため、その場で眠ると画面ごと1秒止まるため
     @objc func refresh(sender: UIRefreshControl) {
-        input.pullToRefreshExecutedAt?.onNext { [weak sender] in
+        input.refreshByPull { [weak sender] in
             DispatchQueue.main.asyncAfter(deadline: .now()+1.0) { sender?.endRefreshing() }
         }
     }

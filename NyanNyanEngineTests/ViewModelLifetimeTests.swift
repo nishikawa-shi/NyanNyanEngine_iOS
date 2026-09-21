@@ -106,21 +106,21 @@ private class StubTweetsRepository: BaseTweetsRepository {
     let nyanNyanStatuses: Observable<[NyanNyan]?> = Observable<[NyanNyan]?>.empty()
     let postedStatus: Observable<String?>
     let listScrollUpExecuted: Observable<Bool> = Observable<Bool>.empty()
-    var buttonRefreshExecutedAt: AnyObserver<(() -> Void)>? = nil
-    var pullToRefreshExecutedAt: AnyObserver<(() -> Void)>? = nil
-    var nekogoToggleExecutedAt: AnyObserver<IndexPath>? = nil
-    var postExecutedAs: AnyObserver<String?>? = nil
 
     init() {
         self.postedStatus = _postedStatus.asObservable()
-        //その場で呼ばずに溜めるのは、v2へ移すと取得が通信を待つようになり、
-        //画面が閉じたあとに終わりが届く順になるため
-        self.buttonRefreshExecutedAt = AnyObserver<(() -> Void)> { [weak self] event in
-            guard let notifyFinished = event.element else { return }
-            self?.refreshRequestCount += 1
-            self?.pendingRefreshCompletions.append(notifyFinished)
-        }
     }
+
+    //その場で呼ばずに溜めるのは、v2へ移すと取得が通信を待つようになり、
+    //画面が閉じたあとに終わりが届く順になるため
+    func refreshTimeline(scrollingToTop: Bool, notifying notifyFinished: @escaping (() -> Void)) {
+        refreshRequestCount += 1
+        pendingRefreshCompletions.append(notifyFinished)
+    }
+
+    func toggleNekogo(at indexPath: IndexPath) { }
+
+    func post(nekogo: String) { }
 
     func emitPostedStatus(_ text: String?) {
         _postedStatus.accept(text)
@@ -138,7 +138,8 @@ private class StubAuthRepository: BaseAuthRepository {
     let currentNyanNyanAccount: Observable<NyanNyanUser> = Observable<NyanNyanUser>.empty()
     var isLoggedIn: Observable<Bool>? = nil
     var logoutSucceeded: Observable<Bool>? = nil
-    var accountUpdatedAt: AnyObserver<String>? = nil
+
+    func reloadAccount() { }
 
     func updateNyanNyanAccount(postedText: String) { }
 

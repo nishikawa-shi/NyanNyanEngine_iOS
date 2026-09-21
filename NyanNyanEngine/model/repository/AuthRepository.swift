@@ -29,7 +29,7 @@ protocol BaseAuthRepository: AnyObject {
     var isLoggedIn: Observable<Bool>? { get }
     var logoutSucceeded: Observable<Bool>? { get }
 
-    var accountUpdatedAt: AnyObserver<String>? { get }
+    func reloadAccount()
 }
 
 class AuthRepository: BaseAuthRepository {
@@ -52,8 +52,6 @@ class AuthRepository: BaseAuthRepository {
     var logoutSucceeded: Observable<Bool>? = nil
     private let _logoutSucceeded: PublishRelay<Bool>
 
-    var accountUpdatedAt: AnyObserver<String>? = nil
-
     //private init にしていないのは、テストが XAuthClient と UserDefaults を差し替えるため
     init(firebaseClient: BaseFirebaseClient = FirebaseClient.shared,
          userDefaultsConnector: BaseUserDefaultsConnector = UserDefaultsConnector.shared,
@@ -75,17 +73,6 @@ class AuthRepository: BaseAuthRepository {
 
         self._logoutSucceeded = PublishRelay<Bool>()
         self.logoutSucceeded = _logoutSucceeded.asObservable()
-
-        self.accountUpdatedAt = AnyObserver<String> { [weak self] executedAt in
-            guard let self = self else { return }
-            self.getCurrentAccount()
-                .bind(to: self._currentAccount)
-                .disposed(by: self.disposeBag)
-
-            self.getCurrentNyanNyanAccount()
-                .bind(to: self._currentNyanNyanAccount)
-                .disposed(by: self.disposeBag)
-        }
 
         self.discardOAuth1CredentialsIfNeeded()
     }
@@ -130,6 +117,16 @@ class AuthRepository: BaseAuthRepository {
                 guard let self = self, let appUserId = event.element else { return }
                 self.userDefaultsConnector.registerString(key: "app_user_id", value: appUserId)
         }.disposed(by: disposeBag)
+    }
+
+    func reloadAccount() {
+        self.getCurrentAccount()
+            .bind(to: self._currentAccount)
+            .disposed(by: self.disposeBag)
+
+        self.getCurrentNyanNyanAccount()
+            .bind(to: self._currentNyanNyanAccount)
+            .disposed(by: self.disposeBag)
     }
 
     func getLoggedInStatus() -> Bool {

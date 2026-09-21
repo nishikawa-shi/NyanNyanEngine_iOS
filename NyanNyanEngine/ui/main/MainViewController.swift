@@ -35,7 +35,7 @@ class MainViewController: UITabBarController {
     
     override func tabBar(_ tabBar: UITabBar, didSelect item: UITabBarItem) {
         if(self.isShowingTimelineView() && item.isTimelineItem()) {
-            self.input.extraTimelineItemTap?.onNext("0000/01/01 00:00:00")
+            self.input.refreshTimeline()
         }
     }
 }

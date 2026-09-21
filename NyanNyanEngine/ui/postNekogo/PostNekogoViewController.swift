@@ -45,12 +45,12 @@ class PostNekogoViewController: UIViewController {
         self.originalText.text = R.string.stringValues.default_post_original_text()
         
         originalText.rx.text
-            .bind(to: input.originalTextChangedTo!)
+            .subscribe(onNext: { [weak self] in self?.input.changeOriginalText(to: $0) })
             .disposed(by: disposeBag)
         
         tweetButton.rx.tap
             .compactMap { [weak self] in self?.nekogoText.text }
-            .bind(to: self.input.postExecutedAs!)
+            .subscribe(onNext: { [weak self] in self?.input.post(nekogo: $0) })
             .disposed(by: disposeBag)
         
         output.nekogoText
